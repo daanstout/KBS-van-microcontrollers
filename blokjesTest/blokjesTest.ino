@@ -10,31 +10,34 @@
 MI0283QT9 lcd;
 
 void pixel(int x, int y, String kleur){
-	lcd.drawRect(x,y,8,8,RGB(255,255,255));
+	lcd.drawRect(x,y,16,16,RGB(255,255,255));				//wit randje
 	
-	if(kleur == "groen"){
-		lcd.fillRect(x,y,7,7,RGB(0,100,0));
-		}else{
-		lcd.fillRect(x,y,7,7,RGB(0,0,0));
+	if(kleur == "groen"){								//onderste rij is groen
+		lcd.fillRect(x,y,15,15,RGB(0,100,0));
+		}
+		else{
+		lcd.fillRect(x,y,15,15,RGB(0,0,0));
 	}
 	
 }
 
 void vulScherm(){
-	for(int p = 0; p <= 240; p++){						//pixels verplaatsen
-		for(int j = p; j < 320; j += 8){				//pixels op alle plekken op de x-as zetten
-			for(int i = 0; i < 40; i += 8){				//pixels op bovenste rij y-as
-				pixel(j,i, "zwart");
-			}
-			for(int k = 160; k < 240; k += 8){			//pixels op onderste rij y-as
+	//for(int p = 0; p <= 240; p++){						//pixels verplaatsen
+		for(int j = 0; j < 320; j += 16){				//pixels op alle plekken op de x-as zetten
+			for(int k = 160; k < 240; k += 16){			//pixels op onderste rij y-as
 				pixel(j,k, "groen");
 			}
 		}
-		if(p == 240){
-			p = 0;
-		}
+		//if(p == 240){
+		//	p = 0;
+		//}
 		//_delay_ms(500);
-	}
+    //}
+}
+
+void obstakel(int hoogte){
+
+  lcd.fillRect(319 - 32,160 - (32*hoogte),32,32 * hoogte, RGB(255,0,0)); //blokje genereren met de opgegeven hoogte
 }
 
 int main(){
@@ -43,7 +46,7 @@ int main(){
 	lcd.fillScreen(RGB(255,255,255)); // scherm leeg
 	
 	vulScherm();
-	
+	obstakel(2);
 	
 	return 0;
 }
