@@ -35,6 +35,10 @@ void vulScherm(){
     //}
 }
 
+void tekenLijn(){
+	lcd.fillRect(0, 160,320,32,RGB(0,100,0));
+}
+
 void obstakel(int hoogte){
 
   lcd.fillRect(319 - 32, 160 - (32*hoogte),32,32 * hoogte, RGB(255,0,0));    //blokje genereren met de opgegeven hoogte
@@ -50,7 +54,7 @@ int main(){
 	lcd.begin();
 	lcd.fillScreen(RGB(255,255,255)); // scherm leeg
 	
-	vulScherm();
+	tekenLijn();
 	obstakel(2);
 	speler();
 	return 0;
