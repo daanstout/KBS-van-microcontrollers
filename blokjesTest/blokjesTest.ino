@@ -55,7 +55,7 @@ int main(){
 	lcd.fillScreen(RGB(255,255,255)); // scherm leeg
 	
 	tekenLijn();
-	obstakel(2);
+	obstakel(1);
 	speler();
 	return 0;
 }
