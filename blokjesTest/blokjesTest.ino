@@ -9,9 +9,9 @@
 
 
 MI0283QT9 lcd;
-int up = 35;
-int zbutton = 0;
-int in_air = 0;
+int up = 35; //hoogte van de sprong
+int zbutton = 0; //waarde van de Z knop
+int in_air = 0; //waarde om aan te geven of de speler al aan het springen is
 
 void pixel(int x, int y, String kleur){
 	lcd.drawRect(x,y,16,16,RGB(255,255,255)); //wit randje
@@ -51,40 +51,33 @@ void obstakel(int hoogte){
 
 void speler(){
   lcd.fillCircle(32, 160-16, 16, RGB(0,0,255)); //bolletje
-  while(zbutton == 1){
-  if (zbutton == 1 && in_air == 0) {
-    Serial.print("test speler");
+  while(zbutton == 1){  //controleren op indrukken van knop Z
+  if (zbutton == 1 && in_air == 0) { //bevind de speler zich al in de lucht? -> nee? -> voer uit if statement
     jump();
-    zbutton = 0;
+    zbutton = 0; //na springen knop weer op 0
   }
   }
 }
 
 void jump(){
-  in_air = 1;
-  int current = 159;
-  for(int i = 0; i <= up; i++){
-  
-  //Serial.print("test jump");
-   lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
-  lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
+  in_air = 1; //speler bevind zich nu in de lucht
+  int current = 159; //begin punt van de speler
+  for(int i = 0; i <= up; i++){ //voor de hoogte van int up, de speler omhoog verplaatsen
+    
+  lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
+  lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //teken een nieuwe ball
   _delay_ms(1);
-  current--;  //speler tekent bolletje steeds opnieuw vind oplossing
+  current--; //haal 1 van current af zodat de bal volgende keer door de loop weer 1 omhoog word verplaatst
   }
-  for(int i = 0; i <= up; i++){
-  
-  //Serial.print("test jump");
+  for(int i = 0; i <= up; i++){ //omgekeerd process van hierboven
  
-   lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
-   lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omlaag
-  _delay_ms(1);
-  current++;
+   lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); 
+   lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  
+   _delay_ms(1);
+   current++;
   }
-  //lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
-  //omgekeerd naar benede
-  in_air = 0;
-
-  }
+  in_air = 0; //zet op nul, speler is terug op de grond.
+}
 
 
 int main(){
@@ -93,14 +86,11 @@ int main(){
         Serial.begin(9600);
 	lcd.fillScreen(RGB(255,255,255)); // scherm leeg
 
-	nunchuck_setpowerpins();
+	nunchuck_setpowerpins(); 
 	nunchuck_init();
 
 	tekenLijn();
-	obstakel(1);
-	
-
-        
+	obstakel(1);   
         while(1){
                // Serial.print("main test");
 		nunchuck_get_data();
