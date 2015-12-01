@@ -37,7 +37,12 @@ void vulScherm(){
 
 void obstakel(int hoogte){
 
-  lcd.fillRect(319 - 32,160 - (32*hoogte),32,32 * hoogte, RGB(255,0,0)); //blokje genereren met de opgegeven hoogte
+  lcd.fillRect(319 - 32, 160 - (32*hoogte),32,32 * hoogte, RGB(255,0,0));    //blokje genereren met de opgegeven hoogte
+  
+}
+
+void speler(){
+  lcd.fillCircle(32, 160-16, 16, RGB(0,0,255));                     //bolletje
 }
 
 int main(){
@@ -47,6 +52,6 @@ int main(){
 	
 	vulScherm();
 	obstakel(2);
-	
+	speler();
 	return 0;
 }
