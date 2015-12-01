@@ -59,3 +59,4 @@ int main(){
 	speler();
 	return 0;
 }
+//hallo
