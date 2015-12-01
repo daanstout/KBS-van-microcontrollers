@@ -45,7 +45,7 @@ void tekenLijn(){
 
 void obstakel(int hoogte){
 
-  lcd.fillRect(319 - 32, 160 - (32*hoogte),32,32 * hoogte, RGB(255,0,0));    //blokje genereren met de opgegeven hoogte
+  lcd.fillRect(64, 160 - (32*hoogte),32,32 * hoogte, RGB(255,0,0));    //blokje genereren met de opgegeven hoogte
   
 }
 
@@ -55,6 +55,7 @@ void speler(){
   if (zbutton == 1 && in_air == 0) {
     Serial.print("test speler");
     jump();
+    zbutton = 0;
   }
   }
 }
@@ -65,10 +66,21 @@ void jump(){
   for(int i = 0; i <= up; i++){
   
   //Serial.print("test jump");
+   lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
   lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
-  lcd.fillCircle(32, (current - 1)-16, 16, RGB(0,0,0)); //verwijder vorige ball
-    current++;  //speler tekent bolletje steeds opnieuw vind oplossing
+  _delay_ms(1);
+  current--;  //speler tekent bolletje steeds opnieuw vind oplossing
   }
+  for(int i = 0; i <= up; i++){
+  
+  //Serial.print("test jump");
+ 
+   lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
+   lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omlaag
+  _delay_ms(1);
+  current++;
+  }
+  //lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
   //omgekeerd naar benede
   in_air = 0;
 
@@ -85,7 +97,7 @@ int main(){
 	nunchuck_init();
 
 	tekenLijn();
-	obstakel(2);
+	obstakel(1);
 	
 
         
