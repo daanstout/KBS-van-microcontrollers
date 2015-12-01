@@ -5,14 +5,18 @@
 #include <GraphicsLib.h>
 #include <MI0283QT9.h>
 #include <Arduino.h>
+#include "nunchuck_funcs.h"
 
 
 MI0283QT9 lcd;
+int up = 35;
+int zbutton = 0;
+int in_air = 0;
 
 void pixel(int x, int y, String kleur){
-	lcd.drawRect(x,y,16,16,RGB(255,255,255));				//wit randje
+	lcd.drawRect(x,y,16,16,RGB(255,255,255)); //wit randje
 	
-	if(kleur == "groen"){								//onderste rij is groen
+	if(kleur == "groen"){ //onderste rij is groen
 		lcd.fillRect(x,y,15,15,RGB(0,100,0));
 		}
 		else{
@@ -46,17 +50,51 @@ void obstakel(int hoogte){
 }
 
 void speler(){
-  lcd.fillCircle(32, 160-16, 16, RGB(0,0,255));                     //bolletje
+  lcd.fillCircle(32, 160-16, 16, RGB(0,0,255)); //bolletje
+  while(zbutton == 1){
+  if (zbutton == 1 && in_air == 0) {
+    Serial.print("test speler");
+    jump();
+  }
+  }
 }
+
+void jump(){
+  in_air = 1;
+  int current = 159;
+  for(int i = 0; i <= up; i++){
+  
+  //Serial.print("test jump");
+  lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
+  lcd.fillCircle(32, (current - 1)-16, 16, RGB(0,0,0)); //verwijder vorige ball
+    current++;  //speler tekent bolletje steeds opnieuw vind oplossing
+  }
+  //omgekeerd naar benede
+  in_air = 0;
+
+  }
+
 
 int main(){
 	init();
 	lcd.begin();
+        Serial.begin(9600);
 	lcd.fillScreen(RGB(255,255,255)); // scherm leeg
-	
+
+	nunchuck_setpowerpins();
+	nunchuck_init();
+
 	tekenLijn();
 	obstakel(2);
-	speler();
-	return 0;
+	
+
+        
+        while(1){
+               // Serial.print("main test");
+		nunchuck_get_data();
+                zbutton = nunchuck_zbutton();
+                speler();
+        }
+        
+        return 0;
 }
-//hallo
