@@ -39,14 +39,37 @@ void tekenLijn(){
 	lcd.fillRect(0, 160,320,32,RGB(0,100,0));
 }
 
-void obstakel(int hoogte){
-
-  lcd.fillRect(319 - 32, 160 - (32*hoogte),32,32 * hoogte, RGB(255,0,0));    //blokje genereren met de opgegeven hoogte
-  
+void obstakel(int x){
+  lcd.fillRect(x, 160 - (32),32,32, RGB(255,0,0));    //blokje genereren met de opgegeven hoogte
+}
+void resetObstakel(int x){
+	lcd.fillRect(x + 32, 160 - (32),1,32, RGB(255,255,255));    //laatste rij van obstakel resetten
 }
 
 void speler(){
-  lcd.fillCircle(32, 160-16, 16, RGB(0,0,255));                     //bolletje
+  lcd.fillCircle(32, 159-16, 16, RGB(0,0,255));                     //bolletje
+}
+
+void sidescroll(){
+   int last_x;
+   int x;
+   
+   
+   
+   for(x = 320; x >= -32 ; x--){
+      resetObstakel(last_x);
+      obstakel(x);
+      lcd.drawInteger(50,10, last_x , DEC, RGB(0,0,0), RGB(255,255,255), 1);
+      last_x = x;
+      lcd.drawInteger(10,10, x , DEC, RGB(0,0,0), RGB(255,255,255), 1);
+      
+      _delay_ms(1);
+      if(x == -32){
+        
+        x = 320;
+      }
+   }
+  
 }
 
 int main(){
@@ -55,7 +78,8 @@ int main(){
 	lcd.fillScreen(RGB(255,255,255)); // scherm leeg
 	
 	tekenLijn();
-	obstakel(1);
-	speler();
+  //speler();
+	sidescroll();
+	
 	return 0;
 }
