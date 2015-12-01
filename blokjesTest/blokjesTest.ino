@@ -63,6 +63,11 @@ void sidescroll(){
       lcd.drawInteger(50,10, last_x , DEC, RGB(0,0,0), RGB(255,255,255), 1);
       last_x = x;
       lcd.drawInteger(10,10, x , DEC, RGB(0,0,0), RGB(255,255,255), 1);
+
+      
+    nunchuck_get_data();
+    zbutton = nunchuck_zbutton();
+      speler();
       
       _delay_ms(1);
       if(x == -32){
@@ -113,13 +118,16 @@ int main(){
   init();
   lcd.begin();
   lcd.fillScreen(RGB(255,255,255)); // scherm leeg
-  
+  tekenLijn();
+  nunchuck_setpowerpins();
+  nunchuck_init();
+
+  zbutton = nunchuck_zbutton();
+  nunchuck_get_data();
   sidescroll();
   
-  tekenLijn();
-  while(1){
-     speler();
-  }
+  
+  
  
   
   
