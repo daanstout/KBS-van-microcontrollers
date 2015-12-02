@@ -9,11 +9,12 @@
 #include <util/delay.h>
 
 MI0283QT9 lcd;
-int up = 35;
+int up = 45;
 int zbutton = 0;
 int in_air = 0;
 int obstakelLocatie1 = 0;
 int obstakelActief1 = 0;
+int directie = 1;
 
 void pixel(int x, int y, String kleur){
   lcd.drawRect(x,y,16,16,RGB(255,255,255));       //wit randje
@@ -116,23 +117,40 @@ void speler(){
 void jump(){
   in_air = 1;
   int current = 159;
-  for(int i = 0; i <= up; i++){
-  
-
-   lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
-  lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
-  _delay_ms(1);
-  current--;  //speler tekent bolletje steeds opnieuw vind oplossing
+  if(directie == 1){
+    int i = 0;
+    lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
+    lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
+    _delay_ms(1);
+    current--;  //speler tekent bolletje steeds opnieuw vind oplossing
+    i++;
+    if(i == up){
+      directie = 0;
+    }
+  }else if(directie == 0){
+    int i = 0;
+    lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
+    lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omlaag
+    _delay_ms(1);
+    current++;
+    i++;
+    if(i == up){
+      directie = 1;
+    }
   }
-  for(int i = 0; i <= up; i++){
-  
-
- 
-   lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
-   lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omlaag
-  _delay_ms(1);
-  current++;
-  }
+//  for(int i = 0; i <= up; i++){
+//   lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
+//  lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
+//  _delay_ms(1);
+//  current--;  //speler tekent bolletje steeds opnieuw vind oplossing
+//  }
+//  
+//  for(int i = 0; i <= up; i++){
+//   lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
+//   lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omlaag
+//  _delay_ms(1);
+//  current++;
+//  }
 
   //omgekeerd naar benede
   in_air = 0;
