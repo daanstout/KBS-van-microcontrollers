@@ -11,6 +11,8 @@ MI0283QT9 lcd;
 int up = 35;
 int zbutton = 0;
 int in_air = 0;
+int obstakelLocatie1 = 0;
+int obstakelActief1 = 0;
 
 void pixel(int x, int y, String kleur){
   lcd.drawRect(x,y,16,16,RGB(255,255,255));       //wit randje
@@ -55,26 +57,45 @@ void sidescroll(){
    int last_x;
    int x;
    
-   
-   
-   for(x = 320; x >= -32 ; x--){
-      resetObstakel(last_x);
-      obstakel(x);
-
-      last_x = x;
-
-
-      
-      nunchuck_get_data();
-      zbutton = nunchuck_zbutton();
-      speler();
-      
-      _delay_ms(0);
-      if(x == -32){
+   if(obstakelActief1 == 0){
+     obstakelActief1 = 1;
+     obstakelLocatie1 = 320;
+     
+     resetObstakel(last_x);
+     obstakel(obstakelLocatie1);
+     
+     last_x = obstakelLocatie1;
+     
+     nunchuck_get_data();
+     zbutton = nunchuck_zbutton();
+     speler();
+     
+     _delay_ms(0);
+      if(obstakelLocatie1 == -32){
         
-        x = 320;
+        obstakelLocatie1 = 320;
+        obstakelActief1 = 0;
       }
    }
+   
+//   for(x = 320; x >= -32 ; x--){
+//      resetObstakel(last_x);
+//      obstakel(x);
+//
+//      last_x = x;
+//
+//
+//      
+//      nunchuck_get_data();
+//      zbutton = nunchuck_zbutton();
+//      speler();
+//      
+//      _delay_ms(0);
+//      if(x == -32){
+//        
+//        x = 320;
+//      }
+//   }
   
 }
 void speler(){
