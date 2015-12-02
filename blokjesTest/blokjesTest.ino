@@ -6,6 +6,7 @@
 #include <MI0283QT9.h>
 #include <Arduino.h>
 #include "nunchuck_funcs.h"
+#include <util/delay.h>
 
 MI0283QT9 lcd;
 int up = 35;
@@ -60,7 +61,8 @@ void sidescroll(){
    if(obstakelActief1 == 0){
      obstakelActief1 = 1;
      obstakelLocatie1 = 320;
-     
+   }
+   if(obstakelActief1 == 1){
      resetObstakel(last_x);
      obstakel(obstakelLocatie1);
      
@@ -70,12 +72,14 @@ void sidescroll(){
      zbutton = nunchuck_zbutton();
      speler();
      
-     _delay_ms(0);
+     //_delay_ms(0);
       if(obstakelLocatie1 == -32){
         
         obstakelLocatie1 = 320;
         obstakelActief1 = 0;
       }
+      
+      obstakelLocatie1--;
    }
    
 //   for(x = 320; x >= -32 ; x--){
