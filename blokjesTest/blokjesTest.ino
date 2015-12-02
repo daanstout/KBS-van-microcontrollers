@@ -43,7 +43,7 @@ void tekenLijn(){
 }
 
 void obstakel(int x){
-  lcd.fillRect(x, 160 - (32),32,32, RGB(255,0,0));    //blokje genereren met de opgegeven hoogte
+  lcd.fillRect(x, 160 - (32),1,32, RGB(255,0,0));    //eerste rij genereren 
 }
 void resetObstakel(int x){
   lcd.fillRect(x + 32, 160 - (32),1,32, RGB(255,255,255));    //laatste rij van obstakel resetten
@@ -60,16 +60,16 @@ void sidescroll(){
    for(x = 320; x >= -32 ; x--){
       resetObstakel(last_x);
       obstakel(x);
-      lcd.drawInteger(50,10, last_x , DEC, RGB(0,0,0), RGB(255,255,255), 1);
+
       last_x = x;
-      lcd.drawInteger(10,10, x , DEC, RGB(0,0,0), RGB(255,255,255), 1);
+
 
       
-    nunchuck_get_data();
-    zbutton = nunchuck_zbutton();
+      nunchuck_get_data();
+      zbutton = nunchuck_zbutton();
       speler();
       
-      _delay_ms(1);
+      _delay_ms(0);
       if(x == -32){
         
         x = 320;
