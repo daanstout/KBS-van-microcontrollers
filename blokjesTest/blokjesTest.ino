@@ -83,7 +83,7 @@ void sidescroll(){
    }
    
 //   for(x = 320; x >= -32 ; x--){
-//      resetObstakel(last_x);
+     resetObstakel(last_x);
 //      obstakel(x);
 //
 //      last_x = x;
@@ -147,11 +147,12 @@ int main(){
   nunchuck_setpowerpins();
   nunchuck_init();
 
+while(1){
   zbutton = nunchuck_zbutton();
   nunchuck_get_data();
   sidescroll();
   
-  
+}
   
  
   
