@@ -339,36 +339,30 @@ void inputScore(){
     lcd.drawText(110, 80, "TOP 5!", RGB(0,0,0), RGB(111,111,111), 2);
   }
   eerste2 = (String)eerste;
-  lcd.fillRoundRect(70, 110, 50, 25, 5, RGB(255,255,255));
-  lcd.drawRoundRect(70, 110, 50, 25, 5, RGB(0,0,0));
-  lcd.drawRoundRect(69, 109, 52, 27, 5, RGB(0,0,0));
-  lcd.drawText(75, 115, eerste2, RGB(0,0,0), RGB(255,255,255), 2);
-  lcd.drawLine(95, 110, 95, 135, RGB(0,0,0));
-  lcd.drawLine(95, 122, 120, 122, RGB(0,0,0));
-  lcd.fillTriangle(100, 120, 115, 120, 107, 112, RGB(0,0,0));
-  lcd.fillTriangle(100, 125, 115, 125, 107, 133, RGB(0,0,0));
+  lcd.fillRoundRect(90, 115, 30, 25, 5, RGB(255,255,255));
+  lcd.drawRoundRect(90, 115, 30, 25, 5, RGB(0,0,0));
+  lcd.drawRoundRect(89, 114, 32, 27, 5, RGB(0,0,0));
+  lcd.drawText(98, 120, eerste2, RGB(0,0,0), RGB(255,255,255), 2);
+  lcd.fillTriangle(97, 110, 112, 110, 104, 102, RGB(0,0,0));
+  lcd.fillTriangle(97, 145, 112, 145, 104, 153, RGB(0,0,0));
   //tekent het eerste vak om je initialen in te vullen
   
   tweede2 = (String)tweede;
-  lcd.fillRoundRect(130, 110, 50, 25, 5, RGB(255,255,255));
-  lcd.drawRoundRect(130, 110, 50, 25, 5, RGB(0,0,0));
-  lcd.drawRoundRect(129, 109, 52, 27, 5, RGB(0,0,0));
-  lcd.drawText(135, 115, tweede2, RGB(0,0,0), RGB(255,255,255), 2);
-  lcd.drawLine(155, 110, 155, 135, RGB(0,0,0));
-  lcd.drawLine(155, 122, 180, 122, RGB(0,0,0));
-  lcd.fillTriangle(160, 120, 175, 120, 167, 112, RGB(0,0,0));
-  lcd.fillTriangle(160, 125, 175, 125, 167, 133, RGB(0,0,0));
+  lcd.fillRoundRect(140, 115, 30, 25, 5, RGB(255,255,255));
+  lcd.drawRoundRect(140, 115, 30, 25, 5, RGB(0,0,0));
+  lcd.drawRoundRect(139, 114, 32, 27, 5, RGB(0,0,0));
+  lcd.drawText(148, 120, tweede2, RGB(0,0,0), RGB(255,255,255), 2);
+  lcd.fillTriangle(147, 110, 162, 110, 154, 102, RGB(0,0,0));
+  lcd.fillTriangle(147, 145, 162, 145, 154, 153, RGB(0,0,0));
   //tekent het tweede vak om je initialen in te vullen
   
   derde2 = (String)derde;
-  lcd.fillRoundRect(190, 110, 50, 25, 5, RGB(255,255,255));
-  lcd.drawRoundRect(190, 110, 50, 25, 5, RGB(0,0,0));
-  lcd.drawRoundRect(189, 109, 52, 27, 5, RGB(0,0,0));
-  lcd.drawText(195, 115, derde2, RGB(0,0,0), RGB(255,255,255), 2);
-  lcd.drawLine(215, 110, 215, 135, RGB(0,0,0));
-  lcd.drawLine(215, 122, 240, 122, RGB(0,0,0));
-  lcd.fillTriangle(220, 120, 235, 120, 227, 112, RGB(0,0,0));
-  lcd.fillTriangle(220, 125, 235, 125, 227, 133, RGB(0,0,0));
+  lcd.fillRoundRect(190, 115, 30, 25, 5, RGB(255,255,255));
+  lcd.drawRoundRect(190, 115, 30, 25, 5, RGB(0,0,0));
+  lcd.drawRoundRect(189, 114, 32, 27, 5, RGB(0,0,0));
+  lcd.drawText(198, 120, derde2, RGB(0,0,0), RGB(255,255,255), 2);
+  lcd.fillTriangle(197, 110, 212, 110, 204, 102, RGB(0,0,0));
+  lcd.fillTriangle(197, 145, 212, 145, 204, 153, RGB(0,0,0));
   
   scoreSubmit = 1;
   while(scoreSubmit){
@@ -376,39 +370,35 @@ void inputScore(){
     if(charverandering == 1){
       gameStart = 0;
       eerste2 = (String)eerste;
-      lcd.fillRoundRect(70, 110, 50, 25, 5, RGB(255,255,255));
-      lcd.drawRoundRect(70, 110, 50, 25, 5, RGB(0,0,0));
-      lcd.drawRoundRect(69, 109, 52, 27, 5, RGB(0,0,0));
-      lcd.drawText(75, 115, eerste2, RGB(0,0,0), RGB(255,255,255), 2);
-      lcd.drawLine(95, 110, 95, 135, RGB(0,0,0));
-      lcd.drawLine(95, 122, 120, 122, RGB(0,0,0));
-      lcd.fillTriangle(100, 120, 115, 120, 107, 112, RGB(0,0,0));
-      lcd.fillTriangle(100, 125, 115, 125, 107, 133, RGB(0,0,0));
-      //tekent het eerste vak om je initialen in te vullen
+      lcd.fillRoundRect(90, 115, 30, 25, 5, RGB(255,255,255));
+      lcd.drawRoundRect(90, 115, 30, 25, 5, RGB(0,0,0));
+      lcd.drawRoundRect(89, 114, 32, 27, 5, RGB(0,0,0));
+      lcd.drawText(100, 120, eerste2, RGB(0,0,0), RGB(255,255,255), 2);
+      lcd.fillTriangle(97, 110, 112, 110, 104, 102, RGB(0,0,0));
+      lcd.fillTriangle(97, 145, 112, 145, 104, 153, RGB(0,0,0));
+      //hertekent het eerste vak om je initialen in te vullen
       
       tweede2 = (String)tweede;
-      lcd.fillRoundRect(130, 110, 50, 25, 5, RGB(255,255,255));
-      lcd.drawRoundRect(130, 110, 50, 25, 5, RGB(0,0,0));
-      lcd.drawRoundRect(129, 109, 52, 27, 5, RGB(0,0,0));
-      lcd.drawText(135, 115, tweede2, RGB(0,0,0), RGB(255,255,255), 2);
-      lcd.drawLine(155, 110, 155, 135, RGB(0,0,0));
-      lcd.drawLine(155, 122, 180, 122, RGB(0,0,0));
-      lcd.fillTriangle(160, 120, 175, 120, 167, 112, RGB(0,0,0));
-      lcd.fillTriangle(160, 125, 175, 125, 167, 133, RGB(0,0,0));
-      //tekent het tweede vak om je initialen in te vullen
+      lcd.fillRoundRect(140, 115, 30, 25, 5, RGB(255,255,255));
+      lcd.drawRoundRect(140, 115, 30, 25, 5, RGB(0,0,0));
+      lcd.drawRoundRect(139, 114, 32, 27, 5, RGB(0,0,0));
+      lcd.drawText(148, 120, tweede2, RGB(0,0,0), RGB(255,255,255), 2);
+      lcd.fillTriangle(147, 110, 162, 110, 154, 102, RGB(0,0,0));
+      lcd.fillTriangle(147, 145, 162, 145, 154, 153, RGB(0,0,0));
+      //hertekent het tweede vak om je initialen in te vullen
       
       derde2 = (String)derde;
-      lcd.fillRoundRect(190, 110, 50, 25, 5, RGB(255,255,255));
-      lcd.drawRoundRect(190, 110, 50, 25, 5, RGB(0,0,0));
-      lcd.drawRoundRect(189, 109, 52, 27, 5, RGB(0,0,0));
-      lcd.drawText(195, 115, derde2, RGB(0,0,0), RGB(255,255,255), 2);
-      lcd.drawLine(215, 110, 215, 135, RGB(0,0,0));
-      lcd.drawLine(215, 122, 240, 122, RGB(0,0,0));
-      lcd.fillTriangle(220, 120, 235, 120, 227, 112, RGB(0,0,0));
-      lcd.fillTriangle(220, 125, 235, 125, 227, 133, RGB(0,0,0));
+      lcd.fillRoundRect(190, 115, 30, 25, 5, RGB(255,255,255));
+      lcd.drawRoundRect(190, 115, 30, 25, 5, RGB(0,0,0));
+      lcd.drawRoundRect(189, 114, 32, 27, 5, RGB(0,0,0));
+      lcd.drawText(198, 120, derde2, RGB(0,0,0), RGB(255,255,255), 2);
+      lcd.fillTriangle(197, 110, 212, 110, 204, 102, RGB(0,0,0));
+      lcd.fillTriangle(197, 145, 212, 145, 204, 153, RGB(0,0,0));
+      //hertekent het derde vak om je initialen in te vullen
+      
       charverandering = 0;
     }
-    
+    _delay_ms(100);
   }
 }
 
