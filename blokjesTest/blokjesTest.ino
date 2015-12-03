@@ -19,6 +19,13 @@ int current = 159;
 int jumpLoopCount = 0;
 int i = 0;
 int toJump = 0;
+int gameStart = 0;
+int buttonPressed = 0;
+int firstTime = 1;
+int gameIsLive = 0;
+int death = 0;
+
+
 
 void pixel(int x, int y, String kleur){
   lcd.drawRect(x,y,16,16,RGB(255,255,255));       //wit randje
@@ -169,24 +176,130 @@ void jump(){
   in_air = 0;
 
   }
+  
+  
+void drawMenu(){
+  lcd.fillScreen(RGB(111,111,111));
+  lcd.fillRect(0, 160,320,32,RGB(0,50,0));
+  //achtergrond van het scherm
+  
+  lcd.drawText(10, 10, "THE NOT SO POSSIBLE", RGB(190,0,0), RGB(111,111,111), 2);
+  lcd.drawText(125, 30, "GAME!", RGB(190,0,0), RGB(111,111,111), 2);
+  //tekent de menu tekst met de game naam
+  
+  lcd.fillRoundRect(110, 60, 100, 25, 5, RGB(0,034,255));
+  lcd.drawRoundRect(110, 60, 100, 25, 5, RGB(0,0,0));
+  lcd.drawRoundRect(109, 59, 102, 27, 5, RGB(0,0,0));
+  lcd.drawText(122, 65, "START", RGB(0,0,0), RGB(0,034,255), 2);
+  //tekent de start knop
+  
+  lcd.fillRoundRect(110, 90, 100, 25, 5, RGB(0,034,255));
+  lcd.drawRoundRect(110, 90, 100, 25, 5, RGB(0,0,0));
+  lcd.drawRoundRect(109, 89, 102, 27, 5, RGB(0,0,0));
+  lcd.drawText(113, 95, "SCORES", RGB(0,0,0), RGB(0,034,255), 2);
+  //tekent de scores knop
+  
+  lcd.fillRoundRect(110, 120, 100, 25, 5, RGB(0,034,255));
+  lcd.fillRoundRect(110, 145, 100, 25, 5, RGB(0,255,255));
+  lcd.fillRect(110, 125, 100, 20, RGB(0,034,255));
+  lcd.fillRect(110, 145, 100, 20, RGB(0,255,255));
+  lcd.drawRoundRect(110, 120, 100, 50, 5, RGB(0,0,0));
+  lcd.drawRoundRect(109, 119, 102, 52, 5, RGB(0,0,0));
+  lcd.drawText(122, 125, "MULTI", RGB(0,0,0), RGB(0,034,255), 2);
+  lcd.drawText(112, 150, "PLAYER", RGB(0,0,0), RGB(0,255,255), 2);
+  //tekent de multiplayer knop
+}
 
-int main(){
-  init();
-  lcd.begin();
+void game(){
   lcd.fillScreen(RGB(255,255,255)); // scherm leeg
   tekenLijn();
   nunchuck_setpowerpins();
   nunchuck_init();
 
-while(1){
-  zbutton = nunchuck_zbutton();
-  nunchuck_get_data();
-  sidescroll();
-  if(toJump == 1){
-    jump();
+  while(gameIsLive == 1){
+    zbutton = nunchuck_zbutton();
+    nunchuck_get_data();
+    sidescroll();
+    if(toJump == 1){
+      jump();
+    }
+    if(death == 1){
+      gameIsLive = 0;
+    }
   }
+}
+
+void checkButtonPress(){
+  while(gameStart == 0){
+    lcd.touchRead();
+    if(lcd.touchZ() > 80){
+      Serial.println(lcd.touchZ());
+      Serial.println(lcd.touchX());
+      Serial.println(lcd.touchY());
+      Serial.println(" ");
+      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85){
+        buttonPressed = 1;
+      }
+      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 90 && lcd.touchY() < 115){
+        buttonPressed = 2;
+      }
+      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170){
+        buttonPressed = 3;
+      }
+    }
+    if(buttonPressed != 0){
+      gameStart = 1;
+    }
+  }
+}
+
+void drawScores(){
+  lcd.fillScreen(RGB(111,111,111));
+  lcd.fillRect(0, 160,320,32,RGB(0,50,0));
+  //achtergrond van het scherm
+  
   
 }
+
+int main(){
+  init();
+  Serial.begin(9600);
+  lcd.begin();
+  lcd.touchRead();
+  lcd.touchStartCal(); //calibrate touchpanel
+  
+  while(1){
+    if(firstTime == 1){
+      drawMenu();
+      firstTime = 0;
+    }
+    
+    checkButtonPress();
+  
+    Serial.println(buttonPressed);
+    
+    if(buttonPressed == 1){
+      gameIsLive = 1;
+      game();
+      firstTime = 1;
+      buttonPressed = 0;
+      gameStart = 0;
+    }
+  
+    if(buttonPressed == 2){
+      drawScores();
+      firstTime = 1;
+      buttonPressed = 0;
+      gameStart = 0;
+    }
+    
+    if(buttonPressed == 3){
+      //multiplayer
+      firstTime = 1;
+      buttonPressed = 0;
+      gameStart = 0;
+    }
+  }
   
  
   
