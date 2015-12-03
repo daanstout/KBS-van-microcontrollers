@@ -9,18 +9,11 @@
 #include <util/delay.h>
 
 MI0283QT9 lcd;
+int zbutton, in_air, obstakelLocatie1, obstakelActief1, jumpLoopCount, i, toJump, last_x, x;
 int up = 45;
-int zbutton = 0;
-int in_air = 0;
-int obstakelLocatie1 = 0;
-int obstakelActief1 = 0;
 int directie = 1;
 int current = 159;
-int jumpLoopCount = 0;
-int i = 0;
-int toJump = 0;
-int last_x;
-int x;
+
 
 void tekenLijn() {
   lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
@@ -29,13 +22,13 @@ void tekenLijn() {
 void obstakel(int x) {
   lcd.fillRect(x, 160 - (32), 1, 32, RGB(255, 0, 0)); //eerste rij genereren
 }
+
 void resetObstakel(int x) {
   lcd.fillRect(x + 32, 160 - (32), 1, 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
 }
 
-void sidescroll() {
-  
 
+void sidescroll() {
   if (obstakelActief1 == 0) {
     obstakelActief1 = 1;
     obstakelLocatie1 = 320;
@@ -116,13 +109,14 @@ void teken(){
     obstakel(obstakelLocatie1);
     resetObstakel(last_x);
   }
+ 
   
 }
 
 void startGame() {
   while (1) {
-    zbutton = nunchuck_zbutton();
     nunchuck_get_data();
+    zbutton = nunchuck_zbutton();
     sidescroll();
     if (toJump == 1) {
       jump();
