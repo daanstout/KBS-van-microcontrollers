@@ -24,7 +24,17 @@ int buttonPressed = 0;
 int firstTime = 1;
 int gameIsLive = 0;
 int death = 0;
-
+int postGame = 0;
+int topscore = 0;
+int top5 = 1;
+int scoreSubmit = 1;
+char eerste = 'A';
+char tweede = 'B';
+char derde = 'C';
+String eerste2;
+String tweede2;
+String derde2;
+int charverandering = 0;
 
 
 void pixel(int x, int y, String kleur){
@@ -233,21 +243,72 @@ void checkButtonPress(){
   while(gameStart == 0){        //loopt zolang er niet op een knop is gedrukt
     lcd.touchRead();
     if(lcd.touchZ() > 80){      //de minimum drukkracht op het scherm nodig om een druk te registreren
-      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85){    //kijkt of er wordt gedrukt op start
-        buttonPressed = 1;
+      if(postGame == 0){
+        if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85){    //kijkt of er wordt gedrukt op start
+          buttonPressed = 1;
+        }
+        if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 90 && lcd.touchY() < 115){   //kijkt of er wordt gedrukt op scores
+          buttonPressed = 2;
+        }
+        if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170){  //kijkt of er wordt gedrukt op multiplayer
+          buttonPressed = 3;
+        }
+        if(lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225){   //kijkt of er wordt gedrukt op back in scores
+          buttonPressed = 4;
+        }
+        if(lcd.touchX() > 280){
+          buttonPressed = 10;
+        }
       }
-      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 90 && lcd.touchY() < 115){   //kijkt of er wordt gedrukt op scores
-        buttonPressed = 2;
-      }
-      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170){  //kijkt of er wordt gedrukt op multiplayer
-        buttonPressed = 3;
-      }
-      if(lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225){   //kijkt of er wordt gedrukt op back in scores
-        buttonPressed = 4;
+      if(postGame == 1){
+        if(lcd.touchX() > 95 && lcd.touchX() < 120 && lcd.touchY() > 110 && lcd.touchY() < 122){
+          if(eerste == 'Z'){
+            eerste = 'A';
+          }else{
+            eerste++;
+          }
+          charverandering = 1;
+        }else if(lcd.touchX() > 95 && lcd.touchX() < 120 && lcd.touchY() > 122 && lcd.touchY() < 135){
+          if(eerste == 'A'){
+            eerste = 'Z';
+          }else{
+            eerste--;
+          }
+          charverandering = 1;
+        }else if(lcd.touchX() > 155 && lcd.touchX() < 180 && lcd.touchY() > 110 && lcd.touchY() < 122){
+          if(tweede == 'Z'){
+            tweede = 'A';
+          }else{
+            tweede++;
+          }
+          charverandering = 1;
+        }else if(lcd.touchX() > 155 && lcd.touchX() < 180 && lcd.touchY() > 122 && lcd.touchY() < 135){
+          if(tweede == 'A'){
+            tweede = 'Z';
+          }else{
+            tweede--;
+          }
+          charverandering = 1;
+        }else if(lcd.touchX() > 215 && lcd.touchX() < 240 && lcd.touchY() > 110 && lcd.touchY() < 122){
+          if(derde == 'Z'){
+            derde = 'A';
+          }else{
+            derde++;
+          }
+          charverandering = 1;
+        }else if(lcd.touchX() > 215 && lcd.touchX() < 240 && lcd.touchY() > 122 && lcd.touchY() < 135){
+          if(derde == 'A'){
+            derde = 'Z';
+          }else{
+            derde--;
+          }
+          charverandering = 1;
+        }
       }
     }
-    if(buttonPressed != 0){    //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt
+    if(buttonPressed != 0 || charverandering == 1){    //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt
       gameStart = 1;
+      charverandering = 0;
     }
   }
 }
@@ -262,6 +323,59 @@ void drawScores(){
   lcd.drawRoundRect(9, 199, 102, 27, 5, RGB(0,0,0));
   lcd.drawText(28, 205, "BACK", RGB(0,0,0), RGB(0,034,255), 2);
   //back knop
+}
+
+void inputScore(){
+  lcd.fillScreen(RGB(111,111,111));
+  lcd.fillRect(0, 160,320,32,RGB(0,50,0));
+  //achtergrond van het scherm
+  
+  lcd.drawText(82, 20, "GAME OVER", RGB(0,0,0), RGB(111,111,111), 2);
+  lcd.drawText(80, 50, "SCORE:", RGB(0,0,0), RGB(111,111,111), 2);
+  lcd.drawInteger(200, 50, 10, DEC, RGB(0,0,0), RGB(111,111,111), 2);
+  
+  if(topscore == 1){
+    lcd.drawText(80, 80, "HIGHSCORE!", RGB(0,0,0), RGB(111,111,111), 2);
+  }else if(top5 == 1){
+    lcd.drawText(110, 80, "TOP 5!", RGB(0,0,0), RGB(111,111,111), 2);
+  }
+  scoreSubmit = 1;
+  while(scoreSubmit){
+    gameStart = 0;
+    eerste2 = (String)eerste;
+    lcd.fillRoundRect(70, 110, 50, 25, 5, RGB(255,255,255));
+    lcd.drawRoundRect(70, 110, 50, 25, 5, RGB(0,0,0));
+    lcd.drawRoundRect(69, 109, 52, 27, 5, RGB(0,0,0));
+    lcd.drawText(75, 115, eerste2, RGB(0,0,0), RGB(255,255,255), 2);
+    lcd.drawLine(95, 110, 95, 135, RGB(0,0,0));
+    lcd.drawLine(95, 122, 120, 122, RGB(0,0,0));
+    lcd.fillTriangle(100, 120, 115, 120, 107, 112, RGB(0,0,0));
+    lcd.fillTriangle(100, 125, 115, 125, 107, 133, RGB(0,0,0));
+    //tekent het eerste vak om je initialen in te vullen
+    
+    tweede2 = (String)tweede;
+    lcd.fillRoundRect(130, 110, 50, 25, 5, RGB(255,255,255));
+    lcd.drawRoundRect(130, 110, 50, 25, 5, RGB(0,0,0));
+    lcd.drawRoundRect(129, 109, 52, 27, 5, RGB(0,0,0));
+    lcd.drawText(135, 115, tweede2, RGB(0,0,0), RGB(255,255,255), 2);
+    lcd.drawLine(155, 110, 155, 135, RGB(0,0,0));
+    lcd.drawLine(155, 122, 180, 122, RGB(0,0,0));
+    lcd.fillTriangle(160, 120, 175, 120, 167, 112, RGB(0,0,0));
+    lcd.fillTriangle(160, 125, 175, 125, 167, 133, RGB(0,0,0));
+    //tekent het tweede vak om je initialen in te vullen
+    
+    derde2 = (String)derde;
+    lcd.fillRoundRect(190, 110, 50, 25, 5, RGB(255,255,255));
+    lcd.drawRoundRect(190, 110, 50, 25, 5, RGB(0,0,0));
+    lcd.drawRoundRect(189, 109, 52, 27, 5, RGB(0,0,0));
+    lcd.drawText(195, 115, derde2, RGB(0,0,0), RGB(255,255,255), 2);
+    lcd.drawLine(215, 110, 215, 135, RGB(0,0,0));
+    lcd.drawLine(215, 122, 240, 122, RGB(0,0,0));
+    lcd.fillTriangle(220, 120, 235, 120, 227, 112, RGB(0,0,0));
+    lcd.fillTriangle(220, 125, 235, 125, 227, 133, RGB(0,0,0));
+    
+    checkButtonPress();
+  }
 }
 
 int main(){
@@ -304,6 +418,15 @@ int main(){
       buttonPressed = 0;
       gameStart = 0;
       //dit gebeurt er als er op back wordt gedrukt in scores
+    }
+    if(buttonPressed == 10){
+      postGame = 1;
+      inputScore();
+      firstTime = 1;
+      buttonPressed = 0;
+      gameStart = 0;
+      postGame = 0;
+      //tijdelijk, input van je naam scherm
     }
     checkButtonPress();        //checked of er wordt gedrukt op een knop en kijkt waar dat is gebeurt
     
