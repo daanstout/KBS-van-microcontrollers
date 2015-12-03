@@ -230,24 +230,23 @@ void game(){
 }
 
 void checkButtonPress(){
-  while(gameStart == 0){
+  while(gameStart == 0){        //loopt zolang er niet op een knop is gedrukt
     lcd.touchRead();
-    if(lcd.touchZ() > 80){
-      Serial.println(lcd.touchZ());
-      Serial.println(lcd.touchX());
-      Serial.println(lcd.touchY());
-      Serial.println(" ");
-      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85){
+    if(lcd.touchZ() > 80){      //de minimum drukkracht op het scherm nodig om een druk te registreren
+      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85){    //kijkt of er wordt gedrukt op start
         buttonPressed = 1;
       }
-      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 90 && lcd.touchY() < 115){
+      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 90 && lcd.touchY() < 115){   //kijkt of er wordt gedrukt op scores
         buttonPressed = 2;
       }
-      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170){
+      if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170){  //kijkt of er wordt gedrukt op multiplayer
         buttonPressed = 3;
       }
+      if(lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225){   //kijkt of er wordt gedrukt op back in scores
+        buttonPressed = 4;
+      }
     }
-    if(buttonPressed != 0){
+    if(buttonPressed != 0){    //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt
       gameStart = 1;
     }
   }
@@ -257,8 +256,12 @@ void drawScores(){
   lcd.fillScreen(RGB(111,111,111));
   lcd.fillRect(0, 160,320,32,RGB(0,50,0));
   //achtergrond van het scherm
-  
-  
+
+  lcd.fillRoundRect(10, 200, 100, 25, 5, RGB(0,034,255));
+  lcd.drawRoundRect(10, 200, 100, 25, 5, RGB(0,0,0));
+  lcd.drawRoundRect(9, 199, 102, 27, 5, RGB(0,0,0));
+  lcd.drawText(28, 205, "BACK", RGB(0,0,0), RGB(0,034,255), 2);
+  //back knop
 }
 
 int main(){
@@ -270,13 +273,9 @@ int main(){
   
   while(1){
     if(firstTime == 1){
-      drawMenu();
+      drawMenu();                //drawed het menu
       firstTime = 0;
     }
-    
-    checkButtonPress();
-  
-    Serial.println(buttonPressed);
     
     if(buttonPressed == 1){
       gameIsLive = 1;
@@ -284,21 +283,30 @@ int main(){
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
+      //dit gebeurt er als er op play wordt gedrukt
     }
-  
     if(buttonPressed == 2){
       drawScores();
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
+      //dit gebeurt er als er op scores wordt gedrukt
     }
-    
     if(buttonPressed == 3){
       //multiplayer
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
+      //dit gebeurt er als er op multiplayer wordt gedrukt
     }
+    if(buttonPressed == 4){
+      firstTime = 1;
+      buttonPressed = 0;
+      gameStart = 0;
+      //dit gebeurt er als er op back wordt gedrukt in scores
+    }
+    checkButtonPress();        //checked of er wordt gedrukt op een knop en kijkt waar dat is gebeurt
+    
   }
   
  
