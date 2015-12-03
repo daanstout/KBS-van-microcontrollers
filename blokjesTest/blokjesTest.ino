@@ -15,6 +15,10 @@ int in_air = 0;
 int obstakelLocatie1 = 0;
 int obstakelActief1 = 0;
 int directie = 1;
+int current = 159;
+int jumpLoopCount = 0;
+int i = 0;
+int toJump = 0;
 
 void pixel(int x, int y, String kleur){
   lcd.drawRect(x,y,16,16,RGB(255,255,255));       //wit randje
@@ -71,8 +75,9 @@ void sidescroll(){
      
      nunchuck_get_data();
      zbutton = nunchuck_zbutton();
-     speler();
-     
+     if(toJump == 0){
+       speler();
+     }
      //_delay_ms(0);
       if(obstakelLocatie1 == -32){
         
@@ -108,7 +113,7 @@ void speler(){
   while(zbutton == 1){
   if (zbutton == 1 && in_air == 0) {
     Serial.print("test speler");
-    jump();
+    toJump = 1;
     zbutton = 0;
   }
   }
@@ -116,26 +121,34 @@ void speler(){
 
 void jump(){
   in_air = 1;
-  int current = 159;
   if(directie == 1){
-    int i = 0;
+    if(jumpLoopCount == 0){
+      i = 0;
+    }
     lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
     lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
     _delay_ms(1);
     current--;  //speler tekent bolletje steeds opnieuw vind oplossing
     i++;
+    jumpLoopCount++;
     if(i == up){
       directie = 0;
+      jumpLoopCount = 0;
     }
   }else if(directie == 0){
-    int i = 0;
+    if(jumpLoopCount == 0){
+      i = 0;
+    }
     lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
     lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omlaag
     _delay_ms(1);
     current++;
     i++;
+    jumpLoopCount++;
     if(i == up){
       directie = 1;
+      jumpLoopCount = 0;
+      toJump = 0;
     }
   }
 //  for(int i = 0; i <= up; i++){
@@ -169,6 +182,9 @@ while(1){
   zbutton = nunchuck_zbutton();
   nunchuck_get_data();
   sidescroll();
+  if(toJump == 1){
+    jump();
+  }
   
 }
   
