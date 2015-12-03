@@ -10,7 +10,7 @@
 
 MI0283QT9 lcd;
 int zbutton, in_air, obstakelLocatie1, obstakelActief1, jumpLoopCount, i, toJump, last_x, x, gameStart, buttonPressed, gameIsLive, death;
-int up = 45;
+int up = 50;
 int directie = 1;
 int current = 159;
 int firstTime = 1;
@@ -42,7 +42,7 @@ void sidescroll() {
     if (toJump == 0) {
       checkJump();
     }
-    //_delay_ms(0);
+    //_delay_ms(3);
     if (obstakelLocatie1 == -32) {
 
       obstakelLocatie1 = 320;
@@ -109,7 +109,11 @@ void drawScores(){
   lcd.fillRect(0, 160,320,32,RGB(0,50,0));
   //achtergrond van het scherm
   
-  
+  lcd.fillRoundRect(10, 200, 100, 25, 5, RGB(0,034,255));
+  lcd.drawRoundRect(10, 200, 100, 25, 5, RGB(0,0,0));
+  lcd.drawRoundRect(9, 199, 102, 27, 5, RGB(0,0,0));
+  lcd.drawText(28, 205, "BACK", RGB(0,0,0), RGB(0,034,255), 2);
+  //back knop
 }
 
 void checkButtonPress(){
@@ -128,6 +132,9 @@ void checkButtonPress(){
       }
       if(lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170){
         buttonPressed = 3;
+      }
+      if(lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225){   //kijkt of er wordt gedrukt op back in scores
+        buttonPressed = 4;
       }
     }
     if(buttonPressed != 0){
@@ -211,14 +218,10 @@ int main() {
 
   
  while(1){
-    if(firstTime == 1){
+    if(firstTime == 1){           //menu tekenen
       drawMenu();
       firstTime = 0;
     }
-    
-    
-  
-   // Serial.println(buttonPressed);
     
     if(buttonPressed == 1){
       gameIsLive = 1;
@@ -226,6 +229,7 @@ int main() {
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
+      //dit gebeurt er als er op play wordt gedrukt
     }
   
     if(buttonPressed == 2){
@@ -233,6 +237,7 @@ int main() {
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
+      //dit gebeurt er als er op scores wordt gedrukt
     }
     
     if(buttonPressed == 3){
@@ -240,6 +245,13 @@ int main() {
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
+      //dit gebeurt er als er op multiplayer wordt gedrukt
+    }
+    if(buttonPressed == 4){
+      firstTime = 1;
+      buttonPressed = 0;
+      gameStart = 0;
+      //dit gebeurt er als er op back wordt gedrukt in scores
     }
     checkButtonPress();
   }
