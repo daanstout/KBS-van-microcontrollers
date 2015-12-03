@@ -84,5 +84,6 @@ extern "C" void __cxa_pure_virtual() {;}
 #define portInputRegister(P)
 #define portModeRegister(P)
 #include <GravityJump.ino>
+#include <GravityJump.h>
 #include <nunchuck_funcs.h>
 #endif

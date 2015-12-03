@@ -74,6 +74,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;C:\Users\donovan\Documents\GitHub\KBS-van-microcontrollers\GravityJump;C:\Users\donovan\Documents\Arduino\libraries\digitalWriteFast;C:\Users\donovan\Documents\Arduino\libraries\digitalWriteFast\utility;C:\Users\donovan\Documents\Arduino\libraries\GraphicsLib;C:\Users\donovan\Documents\Arduino\libraries\GraphicsLib\utility;C:\Users\donovan\Documents\Arduino\libraries\MI0283QT9;C:\Users\donovan\Documents\Arduino\libraries\MI0283QT9\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\n1bfiy12.iv3\Micro Platforms\default\debuggers;C:\Users\donovan\Documents\Arduino\libraries;C:\Users\donovan\Documents\GitHub\KBS-van-microcontrollers\GravityJump;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;C:\Users\donovan\Documents\Arduino\libraries\digitalWriteFast;C:\Users\donovan\Documents\Arduino\libraries\GraphicsLib;C:\Users\donovan\Documents\Arduino\libraries\MI0283QT9;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\n1bfiy12.iv3\Micro Platforms\default\debuggers;C:\Users\donovan\Documents\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\utility;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>C:\Users\donovan\Documents\GitHub\KBS-van-microcontrollers\GravityJump\__vm\.GravityJump.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=161;ARDUINO_AVR_UNO;ARDUINO_ARCH_AVR;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,6 +122,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="GravityJump.ino">
+      <FileType>CppCode</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GravityJump.h" />
+    <ClInclude Include="nunchuck_funcs.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="__vm\.GravityJump.vsarduino.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
