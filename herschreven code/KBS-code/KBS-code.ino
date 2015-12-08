@@ -10,9 +10,9 @@
 
 MI0283QT9 lcd;
 //getallen:
-uint16_t obstakelLocatie1, jumpLoopCount, i, last_x, x, topscore;
+uint16_t obstakelLocatie1, jumpLoopCount, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 52, current = 140;
 uint8_t up = 50;
-uint16_t current = 159;
+
 
 //namen:
 char eerste = 'A', tweede = 'B', derde = 'C';
@@ -74,7 +74,7 @@ void checkJump(){
 }
 
 void speler() {
-  lcd.fillCircle(32, 160 - 16, 16, RGB(0, 0, 255)); //bolletje
+  lcd.fillRect(32, 140, 20, 20, RGB(0, 0, 255)); //vierkant
 }
 
 
@@ -84,8 +84,8 @@ void jump(){
     if(jumpLoopCount == 0){
       i = 0;
     }
-    lcd.fillCircle(32, (current + 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
-    lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omhoog
+    lcd.fillRect(32, (current + 1), 20, 20, RGB(255,255,255)); //verwijder vorige ball
+    lcd.fillRect(32, current, 20, 20, RGB(0,0,255));  //ball omhoog
     _delay_ms(1);
     current--;  //speler tekent bolletje steeds opnieuw vind oplossing
     i++;
@@ -98,8 +98,8 @@ void jump(){
     if(jumpLoopCount == 0){
       i = 0;
     }
-    lcd.fillCircle(32, (current - 1)-16, 16, RGB(255,255,255)); //verwijder vorige ball
-    lcd.fillCircle(32, current-16, 16, RGB(0,0,255));  //ball omlaag
+    lcd.fillRect(32, (current - 1),20,20 , RGB(255,255,255)); //verwijder vorige ball
+    lcd.fillRect(32, current, 20, 20, RGB(0,0,255));  //ball omlaag
     _delay_ms(1);
     current++;
     i++;
@@ -350,12 +350,21 @@ void game() {
     if(toJump == 1){
       jump();
     }
+    hitbox();
     if(death == 1){
       gameIsLive = 0;
     }
     
   }
-
+  current = 140;
+  obstakelLocatie1 = 0;
+  obstakelActief1 = 0;
+  //alles resetten
+}
+void hitbox(){
+  if(spelerRechterZijde > obstakelLocatie1 && current+20 > obstakelBovenkant){
+    death++;
+  }
 }
 
 int main() {
@@ -373,6 +382,7 @@ int main() {
     
     if(buttonPressed == 1){
       gameIsLive = 1;
+      death--;
       game();
       firstTime = 1;
       buttonPressed = 10;
