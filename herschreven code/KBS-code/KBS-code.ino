@@ -10,8 +10,8 @@
 
 MI0283QT9 lcd;
 //getallen:
-uint16_t obstakelLocatie1, jumpLoopCount, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 52, current = 140;
-uint8_t up = 50;
+uint16_t obstakelLocatie1, jumpLoopCount, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 52, current = 139;
+uint8_t up = 70, score;
 
 
 //namen:
@@ -53,7 +53,7 @@ void sidescroll() {
     }
     //_delay_ms(3);
     if (obstakelLocatie1 == -32) {
-
+      score++;
       obstakelLocatie1 = 320;
       obstakelActief1 = 0;
     }
@@ -81,11 +81,11 @@ void speler() {
 void jump(){
   in_air = 1;
   if(directie == 1){
+    lcd.fillRect(32, (current + 1), 20, 20, RGB(255,255,255)); //verwijder vorige ball
+    lcd.fillRect(32, current, 20, 20, RGB(0,0,255));  //ball omhoog
     if(jumpLoopCount == 0){
       i = 0;
     }
-    lcd.fillRect(32, (current + 1), 20, 20, RGB(255,255,255)); //verwijder vorige ball
-    lcd.fillRect(32, current, 20, 20, RGB(0,0,255));  //ball omhoog
     _delay_ms(1);
     current--;  //speler tekent bolletje steeds opnieuw vind oplossing
     i++;
@@ -169,7 +169,7 @@ void inputScore(){
   
   lcd.drawText(82, 20, "GAME OVER", RGB(0,0,0), RGB(111,111,111), 2);
   lcd.drawText(80, 50, "SCORE:", RGB(0,0,0), RGB(111,111,111), 2);
-  lcd.drawInteger(200, 50, 10, DEC, RGB(0,0,0), RGB(111,111,111), 2);
+  lcd.drawInteger(200, 50, score, DEC, RGB(0,0,0), RGB(111,111,111), 2);
   //schrijft de tekst op het game over scherm als je dood gaat
   
   if(topscore == 1){
@@ -356,7 +356,7 @@ void game() {
     }
     
   }
-  current = 140;
+  current = 139;
   obstakelLocatie1 = 0;
   obstakelActief1 = 0;
   toJump = 0;
@@ -366,7 +366,7 @@ void game() {
   //alles resetten
 }
 void hitbox(){
-  if(spelerRechterZijde > obstakelLocatie1 && current+20 > obstakelBovenkant){
+  if(spelerRechterZijde > obstakelLocatie1 && current+20 > obstakelBovenkant && 32 < (obstakelLocatie1 + 32)){
     death++;
   }
 }
@@ -387,6 +387,7 @@ int main() {
     if(buttonPressed == 1){
       gameIsLive = 1;
       death--;
+      score = 0;
       game();
       firstTime = 1;
       buttonPressed = 10;
