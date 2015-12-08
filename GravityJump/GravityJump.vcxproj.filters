@@ -24,8 +24,5 @@
     <ClInclude Include="nunchuck_funcs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GravityJump.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
