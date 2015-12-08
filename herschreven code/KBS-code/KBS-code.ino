@@ -359,6 +359,10 @@ void game() {
   current = 140;
   obstakelLocatie1 = 0;
   obstakelActief1 = 0;
+  toJump = 0;
+  in_air = 0;
+  directie = 1;
+  jumpLoopCount = 0;
   //alles resetten
 }
 void hitbox(){
