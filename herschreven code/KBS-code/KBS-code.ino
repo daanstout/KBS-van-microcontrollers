@@ -365,6 +365,7 @@ void game() {
   in_air = 0;
   directie = 1;
   jumpLoopCount = 0;
+  eerste = 'A', tweede = 'B', derde = 'C';
   //alles resetten
 }
 void hitbox(){
