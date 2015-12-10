@@ -31,23 +31,34 @@ void tekenLijn() {
 }
 
 void obstakel(int x) {
-  lcd.fillRect(x, 160 - (32), 1, 32, RGB(255, 0, 0)); //eerste rij genereren
+  lcd.drawLine(x, 160 - (32), 1, 32, RGB(255, 0, 0)); //eerste rij genereren
 }
 
 void resetObstakel(int x) {
-  lcd.fillRect(x + 32, 160 - (32), 1, 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
+  lcd.drawLine(x + 32, 160 - (32), 1, 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
 }
 
 void spijker(int x) {
-  for (x; x < x + 20; x++) {
-    for (int y = 0; y < x; y++) {
-      lcd.drawPixel(x, y, RGB(100, 0, 0));
-    }
-    for (int y = x; y > 0; y++) {
-      lcd.drawPixel(x, y, RGB(100, 0, 0));
-    }
-  }
+  uint8_t y = 160;
 
+  lcd.drawLine(x, y, x + 16, y - 32, RGB(200, 0, 0));
+//  for (int i = 0; i < 16; i++) {
+//    lcd.drawPixel(x + i, y, RGB(200, 0, 0));
+//    y--;
+//    lcd.drawPixel(x + i, y, RGB(200, 0, 0));
+//    y--;
+//  }
+}
+
+void resetSpijker(int x){
+  uint8_t y = 160-32;
+  lcd.drawLine(x +16, y, x + 32, y + 32, RGB(255,255,255));
+//  for (int i = 16; i < 32; i++) {
+//    lcd.drawPixel(x + i, y, RGB(255, 255, 255));
+//    y++;
+//    lcd.drawPixel(x + i, y, RGB(255, 255, 255));
+//    y++;
+//  }
 }
 
 void randomLevel() {
@@ -354,8 +365,8 @@ void drawMenu() {
 
 void teken() {
   if (obstakelLocatie1 != last_x) {
-    obstakel(obstakelLocatie1);
-    resetObstakel(last_x);
+    spijker(obstakelLocatie1);
+    resetSpijker(last_x);
   }
 
 
