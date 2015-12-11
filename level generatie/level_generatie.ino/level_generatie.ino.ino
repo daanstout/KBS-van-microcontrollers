@@ -12,8 +12,8 @@
 
 MI0283QT9 lcd;
 //getallen:
-uint16_t obstakelLocatie1, jumpLoopCount, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 52, current = 140, randomObstakel, randomAfstand;
-uint8_t up = 50, moeilijkheid = 10, grooteSpeler = 15, positionX = 32;
+uint16_t obstakelLocatie1, obstakelLocatie2, jumpLoopCount, i, last_x, last_x2, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 52, current = 140, randomObstakel, randomAfstand;
+uint8_t up = 50, moeilijkheid = 5, grooteSpeler = 15, positionX = 32, actieveObstakels = 0;
 double positionY = 160, last_y, velocityY = 0.0, gravity = 0.2;
 
 //namen:
@@ -21,8 +21,8 @@ char eerste = 'A', tweede = 'B', derde = 'C';
 String eerste2, tweede2, derde2;
 
 //booleans:
-uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
-uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek;
+uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1, voorsteObstakel = 1;
+uint8_t zbutton, obstakelActief1, obstakelActief2, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek;
 bool in_air = false;
 
 
@@ -31,62 +31,95 @@ void tekenLijn() {
 }
 
 void obstakel(int x) {
-  lcd.drawLine(x, 160, x,  160- 32, RGB(255, 0, 0)); //eerste rij genereren
+  lcd.drawLine(x, 160, x,  160 - 32, RGB(255, 0, 0)); //eerste rij genereren
 }
 
 void resetObstakel(int x) {
-  lcd.drawLine(x + 32, 160, x + 32, 160- 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
+  lcd.drawLine(x + 32, 160, x + 32, 160 - 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
 }
 
 void spijker(int x) {
-  uint8_t y = 160;
-  lcd.drawLine(x, y, x + 16, y - 32, RGB(200, 0, 0));
+  lcd.drawLine(x, 160, x + 16, 160 - 32, RGB(200, 0, 0));
 }
 
 void resetSpijker(int x) {
-  uint8_t y = 160 - 32;
-  lcd.drawLine(x + 16, y, x + 32, y + 32, RGB(255, 255, 255));
+  lcd.drawLine(x + 16, 160 - 32, x + 32, 160, RGB(255, 255, 255));
 }
 
 void randomLevel() {
+  Serial.println("actieve en voorste: " + actieveObstakels + voorsteObstakel);
   srand(time_t(NULL));
   randomObstakel = rand() % moeilijkheid;
-  randomAfstand = rand() % 255;
+  randomAfstand = 100;
 
-  if (randomObstakel == 1) vierkant = 1;
-  else driehoek = 1;
+  if (randomObstakel == 1) driehoek = 1;
+  else vierkant = 1;
 
-  if (obstakelLocatie1 == randomAfstand) sidescroll();
+  if (voorsteObstakel == 1) {
+    
+    if (obstakelLocatie1 != -32) {
+      Serial.println("voorste obstakel is 1");
+      sidescroll();
+      actieveObstakels = 1;
+    }
+    
+    
+  }
+  else {
+    if (obstakelLocatie2 != -32 ) {
+      sidescroll();
+      actieveObstakels = 2;
+    }
+    
+  }
+
 
 
 }
 
 void sidescroll() {
 
-
-  if (obstakelActief1 == 0) {
-    obstakelActief1 = 1;
-    obstakelLocatie1 = 320;
-  }
-  if (obstakelActief1 == 1) {
-
-    //obstakel(obstakelLocatie1);
-
-    last_x = obstakelLocatie1;
-
-
-      checkJump();
-      
-    //_delay_ms(3);
-    if (obstakelLocatie1 == -32) {
-
+  if (actieveObstakels == 1 || voorsteObstakel == 1) {
+    voorsteObstakel = 1;
+    if (obstakelActief1 == 0) {
+      obstakelActief1 = 1;
       obstakelLocatie1 = 320;
-      obstakelActief1 = 0;
+    }
+    if (obstakelActief1 == 1) {
+      last_x = obstakelLocatie1;
+      checkJump();
+
+      if (obstakelLocatie1 == -32) {
+        obstakelLocatie1 = 320;
+        obstakelActief1 = 0;
+        actieveObstakels--;
+        voorsteObstakel = 2;
+      }
+      obstakelLocatie1--;
     }
 
-    obstakelLocatie1--;
   }
-  //resetObstakel(last_x);
+  else if (actieveObstakels == 2 || voorsteObstakel == 2) {
+
+    if (obstakelActief2 == 0) {
+      obstakelActief2 = 1;
+      obstakelLocatie2 = 320;
+    }
+    if (obstakelActief2 == 1) {
+      last_x2 = obstakelLocatie2;
+      checkJump();
+
+      if (obstakelLocatie2 == -32) {
+        obstakelLocatie2 = 320;
+        obstakelActief2 = 0;
+        actieveObstakels--;
+        voorsteObstakel = 1;
+      }
+      obstakelLocatie2--;
+    }
+  }
+
+
 }
 
 void checkJump() {
@@ -110,7 +143,7 @@ void StartJump() {
   }
 }
 
-void EndJump(){
+void EndJump() {
   if (velocityY < -3.0) {
     velocityY = -3.0;
 
@@ -127,7 +160,7 @@ void Update() {
     velocityY = 0.0;
     in_air = false;
   }
-  
+
 }
 
 void drawScores() {
@@ -344,25 +377,25 @@ void drawMenu() {
 void teken() {
   uint8_t keren;
   if (obstakelLocatie1 != last_x) {
-    if(vierkant == 1){
+    if (vierkant == 1) {
       obstakel(obstakelLocatie1);
       resetObstakel(last_x);
     }
-    if(driehoek == 1){
+    if (driehoek == 1) {
       spijker(obstakelLocatie1);
       resetSpijker(last_x);
     }
-    
+
   }
-  if(in_air){
+  if (in_air) {
     lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-    lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler ,grooteSpeler , RGB(255, 255, 255));
+    lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler , grooteSpeler , RGB(255, 255, 255));
     keren = 0;
-  } else if(keren != 1){
+  } else if (keren != 1) {
     speler();
     keren = 1;
   }
-  _delay_ms(2);
+  //_delay_ms(2);
 }
 
 
@@ -376,12 +409,13 @@ void game() {
   while (gameIsLive == 1) {
     nunchuck_get_data();
     zbutton = nunchuck_zbutton();
-
-    sidescroll();
     randomLevel();
+
+
+
     teken();
-    
-    hitbox();
+
+    //hitbox();
     if (death == 1) {
       gameIsLive = 0;
     }
@@ -391,7 +425,7 @@ void game() {
   obstakelLocatie1 = 0;
   obstakelActief1 = 0;
   toJump = 0;
-  in_air = 0;
+  //in_air = 0;
   directie = 1;
   jumpLoopCount = 0;
   //alles resetten
@@ -404,6 +438,7 @@ void hitbox() {
 
 int main() {
   init();
+  Serial.begin(9600);
   lcd.begin();
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
