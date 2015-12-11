@@ -22,7 +22,7 @@ String eerste2, tweede2, derde2;
 
 //booleans:
 uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
-uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek, jumpPause;
+uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant = 1, driehoek, jumpPause;
 bool in_air = false;
 
 
@@ -53,8 +53,8 @@ void randomLevel() {
   randomObstakel = rand() % moeilijkheid;
   randomAfstand = rand() % 255;
 
-  if (randomObstakel == 1) vierkant = 1;
-  else driehoek = 1;
+//  if (randomObstakel == 1) vierkant = 1;
+//  else driehoek = 1;
 
   if (obstakelLocatie1 == randomAfstand) sidescroll();
 
@@ -367,7 +367,6 @@ void teken() {
   _delay_ms(2);
 }
 
-
 void game() {
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0,0,0), RGB(255, 255, 255), 2);
@@ -404,20 +403,22 @@ void game() {
 void hitbox() {
   if(vierkant == 1){
     if(spelerRechterZijde > obstakelLocatie1){
-      if(positionY+14 == obstakelBovenkant){
-        jumpPause++;
+      if(positionY > 135){
+        velocityY = 0.0;
+        in_air = false;
+        positionY = 128;
       }
-      if(positionY+14 > obstakelBovenkant){
+      if(positionY > obstakelBovenkant){
         death++;
       }
     }
-    if(32 < obstakelLocatie1){
-      jumpPause = 0;
-    }
+//    if(32 < obstakelLocatie1){
+//      in_air = true;
+//    }
   }
   if(driehoek == 1){
     if(spelerRechterZijde > obstakelLocatie1){
-      if(positionY+14 > currentY){
+      if(positionY > currentY){
         death++;
       }
       currentY -= 4;
