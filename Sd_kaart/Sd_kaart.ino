@@ -16,6 +16,7 @@ int main(){
   
   while (myFile.available()) {
     Serial.write(myFile.read());
+
   }
   
   myFile.close();
