@@ -13,8 +13,8 @@
 MI0283QT9 lcd;
 //getallen:
 uint16_t obstakelLocatie1, jumpLoopCount, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 52, current = 140, randomObstakel, randomAfstand;
-uint8_t up = 50, moeilijkheid = 10;
-
+uint8_t up = 50, moeilijkheid = 10, grooteSpeler = 15, positionX = 32;
+double positionY = 160, last_y, velocityY = 0.0, gravity = 0.2;
 
 //namen:
 char eerste = 'A', tweede = 'B', derde = 'C';
@@ -22,8 +22,8 @@ String eerste2, tweede2, derde2;
 
 //booleans:
 uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
-uint8_t zbutton, in_air, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek;
-
+uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek;
+bool in_air = false;
 
 
 void tekenLijn() {
@@ -31,34 +31,21 @@ void tekenLijn() {
 }
 
 void obstakel(int x) {
-  lcd.drawLine(x, 160 - (32), 1, 32, RGB(255, 0, 0)); //eerste rij genereren
+  lcd.drawLine(x, 160, x,  160- 32, RGB(255, 0, 0)); //eerste rij genereren
 }
 
 void resetObstakel(int x) {
-  lcd.drawLine(x + 32, 160 - (32), 1, 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
+  lcd.drawLine(x + 32, 160, x + 32, 160- 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
 }
 
 void spijker(int x) {
   uint8_t y = 160;
-
   lcd.drawLine(x, y, x + 16, y - 32, RGB(200, 0, 0));
-//  for (int i = 0; i < 16; i++) {
-//    lcd.drawPixel(x + i, y, RGB(200, 0, 0));
-//    y--;
-//    lcd.drawPixel(x + i, y, RGB(200, 0, 0));
-//    y--;
-//  }
 }
 
-void resetSpijker(int x){
-  uint8_t y = 160-32;
-  lcd.drawLine(x +16, y, x + 32, y + 32, RGB(255,255,255));
-//  for (int i = 16; i < 32; i++) {
-//    lcd.drawPixel(x + i, y, RGB(255, 255, 255));
-//    y++;
-//    lcd.drawPixel(x + i, y, RGB(255, 255, 255));
-//    y++;
-//  }
+void resetSpijker(int x) {
+  uint8_t y = 160 - 32;
+  lcd.drawLine(x + 16, y, x + 32, y + 32, RGB(255, 255, 255));
 }
 
 void randomLevel() {
@@ -87,9 +74,9 @@ void sidescroll() {
 
     last_x = obstakelLocatie1;
 
-    if (toJump == 0) {
+
       checkJump();
-    }
+      
     //_delay_ms(3);
     if (obstakelLocatie1 == -32) {
 
@@ -103,53 +90,44 @@ void sidescroll() {
 }
 
 void checkJump() {
-  while (zbutton == 1) {
-    if (zbutton == 1 && in_air == 0) {
-      Serial.print("test speler");
-      toJump = 1;
-      zbutton = 0;
-    }
-  }
+
+  if (zbutton == 1) StartJump();
+  if (zbutton == 0) EndJump();
+
+  Update();
+
 }
 
 void speler() {
-  lcd.fillRect(32, 140, 20, 20, RGB(0, 0, 255)); //vierkant
+  lcd.fillRect(positionX, 160 - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
 }
 
+void StartJump() {
 
-void jump() {
-  in_air = 1;
-  if (directie == 1) {
-    if (jumpLoopCount == 0) {
-      i = 0;
-    }
-    lcd.fillRect(32, (current + 1), 20, 20, RGB(255, 255, 255)); //verwijder vorige ball
-    lcd.fillRect(32, current, 20, 20, RGB(0, 0, 255)); //ball omhoog
-    _delay_ms(1);
-    current--;  //speler tekent bolletje steeds opnieuw vind oplossing
-    i++;
-    jumpLoopCount++;
-    if (i == up) {
-      directie = 0;
-      jumpLoopCount = 0;
-    }
-  } else if (directie == 0) {
-    if (jumpLoopCount == 0) {
-      i = 0;
-    }
-    lcd.fillRect(32, (current - 1), 20, 20 , RGB(255, 255, 255)); //verwijder vorige ball
-    lcd.fillRect(32, current, 20, 20, RGB(0, 0, 255)); //ball omlaag
-    _delay_ms(1);
-    current++;
-    i++;
-    jumpLoopCount++;
-    if (i == up) {
-      directie = 1;
-      jumpLoopCount = 0;
-      toJump = 0;
-    }
+  if (!in_air) {
+    velocityY = -6.0;
+    in_air = true;
   }
-  in_air = 0;
+}
+
+void EndJump(){
+  if (velocityY < -3.0) {
+    velocityY = -3.0;
+
+  }
+}
+
+void Update() {
+  last_y = positionY;
+  velocityY += gravity;
+  positionY += velocityY;
+
+  if (positionY > 160.0) {
+    positionY = 160.0;
+    velocityY = 0.0;
+    in_air = false;
+  }
+  
 }
 
 void drawScores() {
@@ -364,12 +342,27 @@ void drawMenu() {
 }
 
 void teken() {
+  uint8_t keren;
   if (obstakelLocatie1 != last_x) {
-    spijker(obstakelLocatie1);
-    resetSpijker(last_x);
+    if(vierkant == 1){
+      obstakel(obstakelLocatie1);
+      resetObstakel(last_x);
+    }
+    if(driehoek == 1){
+      spijker(obstakelLocatie1);
+      resetSpijker(last_x);
+    }
+    
   }
-
-
+  if(in_air){
+    lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
+    lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler ,grooteSpeler , RGB(255, 255, 255));
+    keren = 0;
+  } else if(keren != 1){
+    speler();
+    keren = 1;
+  }
+  _delay_ms(2);
 }
 
 
@@ -385,10 +378,9 @@ void game() {
     zbutton = nunchuck_zbutton();
 
     sidescroll();
+    randomLevel();
     teken();
-    if (toJump == 1) {
-      jump();
-    }
+    
     hitbox();
     if (death == 1) {
       gameIsLive = 0;
@@ -405,7 +397,7 @@ void game() {
   //alles resetten
 }
 void hitbox() {
-  if (spelerRechterZijde > obstakelLocatie1 && current + 20 > obstakelBovenkant) {
+  if (spelerRechterZijde > obstakelLocatie1 && current + 15 > obstakelBovenkant) {
     death++;
   }
 }
