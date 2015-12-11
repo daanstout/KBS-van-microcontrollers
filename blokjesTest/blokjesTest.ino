@@ -12,7 +12,7 @@
 
 MI0283QT9 lcd;
 //getallen:
-uint16_t obstakelLocatie1, jumpLoopCount, score, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 52, current = 140, randomObstakel, randomAfstand;
+uint16_t obstakelLocatie1, jumpLoopCount, score, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
 uint8_t up = 50, moeilijkheid = 10, grooteSpeler = 15, positionX = 32;
 double positionY = 160, last_y, velocityY = 0.0, gravity = 0.05;
 
@@ -22,7 +22,7 @@ String eerste2, tweede2, derde2;
 
 //booleans:
 uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
-uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek;
+uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek, jumpPause;
 bool in_air = false;
 
 
@@ -402,9 +402,42 @@ void game() {
 }
 
 void hitbox() {
-  if (spelerRechterZijde > obstakelLocatie1 && positionY + grooteSpeler > obstakelBovenkant) {
-    death++;
+  if(vierkant == 1){
+    if(spelerRechterZijde > obstakelLocatie1){
+      if(positionY+14 == obstakelBovenkant){
+        jumpPause++;
+      }
+      if(positionY+14 > obstakelBovenkant){
+        death++;
+      }
+    }
+    if(32 < obstakelLocatie1){
+      jumpPause = 0;
+    }
   }
+  if(driehoek == 1){
+    if(spelerRechterZijde > obstakelLocatie1){
+      if(positionY+14 > currentY){
+        death++;
+      }
+      currentY -= 4;
+    }
+  }
+  if(currentY == 128){
+    currentY = 160;
+  }
+
+//  if(spelerRechterZijde > obstakelLocatie1){
+//    if(current+19 == obstakelBovenkant){
+//      jumpPause++;
+//    }
+//    if(current+19 > obstakelBovenkant){
+//      death++;
+//    }
+//  }
+//  if(32 < obstakelLocatie1){
+//    jumpPause = 0;
+//  }
 }
 
 int main() {
