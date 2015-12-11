@@ -22,7 +22,7 @@ String eerste2, tweede2, derde2;
 
 //booleans:
 uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
-uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant = 1, driehoek, jumpPause;
+uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant = 1, driehoek, jumpPause, geland;
 bool in_air = false;
 
 
@@ -79,9 +79,10 @@ void sidescroll() {
       
     //_delay_ms(3);
     if (obstakelLocatie1 == -32) {
+      score++;
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
       lcd.drawInteger(105, 210, score, DEC, RGB(0,0,0), RGB(255, 255, 255), 2);
-      score++;
+      geland = 0;
       obstakelLocatie1 = 320;
       obstakelActief1 = 0;
     }
@@ -101,7 +102,7 @@ void checkJump() {
 }
 
 void speler() {
-  lcd.fillRect(positionX, 160 - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
+  lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
 }
 
 void StartJump() {
@@ -403,18 +404,19 @@ void game() {
 void hitbox() {
   if(vierkant == 1){
     if(spelerRechterZijde > obstakelLocatie1){
-      if(positionY > 135){
+      if(positionY > 121 && positionY < 129){
         velocityY = 0.0;
         in_air = false;
         positionY = 128;
+        geland = 1;
       }
       if(positionY > obstakelBovenkant){
         death++;
       }
     }
-//    if(32 < obstakelLocatie1){
-//      in_air = true;
-//    }
+    if(32 < obstakelLocatie1 && geland == 1){
+      in_air = true;
+    }
   }
   if(driehoek == 1){
     if(spelerRechterZijde > obstakelLocatie1){
@@ -427,18 +429,6 @@ void hitbox() {
   if(currentY == 128){
     currentY = 160;
   }
-
-//  if(spelerRechterZijde > obstakelLocatie1){
-//    if(current+19 == obstakelBovenkant){
-//      jumpPause++;
-//    }
-//    if(current+19 > obstakelBovenkant){
-//      death++;
-//    }
-//  }
-//  if(32 < obstakelLocatie1){
-//    jumpPause = 0;
-//  }
 }
 
 int main() {
