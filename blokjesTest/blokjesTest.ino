@@ -12,8 +12,8 @@
 
 MI0283QT9 lcd;
 //getallen:
-uint16_t obstakelLocatie1, jumpLoopCount, score, i, last_x, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
-uint8_t up = 50, moeilijkheid = 10, grooteSpeler = 15, positionX = 32;
+uint16_t obstakelLocatie1, obstakelLocatie2, score, i, last_x, last_x2, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
+uint8_t up = 50, moeilijkheid = 5, grooteSpeler = 15, positionX = 32, aantalObstakels, aantalDriehoek = 0, aantalVierkant = 0;
 double positionY = 160, last_y, velocityY = 0.0, gravity = 0.05;
 
 //namen:
@@ -22,7 +22,7 @@ String eerste2, tweede2, derde2;
 
 //booleans:
 uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
-uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant = 1, driehoek, jumpPause, geland;
+uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek, jumpPause, geland;
 bool in_air = false;
 
 
@@ -49,42 +49,77 @@ void resetSpijker(int x) {
 }
 
 void randomLevel() {
-  srand(time_t(NULL));
-  randomObstakel = rand() % moeilijkheid;
-  randomAfstand = rand() % 255;
-
-//  if (randomObstakel == 1) vierkant = 1;
-//  else driehoek = 1;
-
-  if (obstakelLocatie1 == randomAfstand) sidescroll();
-
-
+//  srand(time_t(NULL));
+  if(aantalObstakels == 0){
+    randomObstakel = random(0, moeilijkheid);
+    aantalObstakels++;
+    if(randomObstakel == 1){
+      aantalDriehoek++;
+      driehoek = 1;
+    }else{
+      aantalVierkant++;
+      vierkant = 1;
+    }
+    obstakelLocatie1 = 320;
+  }
+  if(obstakelLocatie1 < 255 && aantalObstakels < 2){
+    uint8_t temprand = random(0, 5);
+    if(temprand == 1){
+      randomObstakel = random(0, moeilijkheid);
+      aantalObstakels++;
+      if(randomObstakel == 1){
+        aantalDriehoek++;
+      }else{
+        aantalVierkant++;
+      }
+      if(aantalObstakels == 1){
+        obstakelLocatie2 = 320;
+      }
+    }
+  }
 }
 
 void sidescroll() {
-
-
-  if (obstakelActief1 == 0) {
-    obstakelActief1 = 1;
-    obstakelLocatie1 = 320;
-  }
-  if (obstakelActief1 == 1) {
+  if (aantalObstakels > 0) {
 
     //obstakel(obstakelLocatie1);
 
     last_x = obstakelLocatie1;
 
-
-      checkJump();
+    checkJump();
       
     //_delay_ms(3);
     if (obstakelLocatie1 == -32) {
-      score++;
+      if(geland == 1){
+        score++;
+      }
+      if(geland == 0){
+        score += 2;
+      }
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
       lcd.drawInteger(105, 210, score, DEC, RGB(0,0,0), RGB(255, 255, 255), 2);
       geland = 0;
-      obstakelLocatie1 = 320;
-      obstakelActief1 = 0;
+      if(aantalObstakels == 2){
+        aantalObstakels--;
+        obstakelLocatie1 = obstakelLocatie2;
+        if(vierkant == 1){
+          aantalVierkant--;
+        }else if(driehoek == 1){
+          aantalDriehoek--;
+        }
+        if(aantalVierkant == 1){
+          vierkant = 1;
+        }else if(aantalDriehoek == 1){
+          driehoek = 1;
+        }
+      }else if(aantalObstakels == 1){
+        aantalObstakels--;
+        if(vierkant == 1){
+          aantalVierkant--;
+        }else if(driehoek == 1){
+          aantalDriehoek--;
+        }
+      }
     }
 
     obstakelLocatie1--;
@@ -108,7 +143,7 @@ void speler() {
 void StartJump() {
 
   if (!in_air) {
-    velocityY = -3.0;
+    velocityY = -2.5;
     in_air = true;
   }
 }
@@ -355,7 +390,25 @@ void teken() {
       spijker(obstakelLocatie1);
       resetSpijker(last_x);
     }
-    
+  }
+  if(aantalObstakels == 2 && obstakelLocatie2 != last_x2){
+    if(vierkant == 1){
+      if(aantalVierkant == 2){
+        obstakel(obstakelLocatie2);
+        resetObstakel(last_x2);
+      }else if(aantalDriehoek == 1){
+        spijker(obstakelLocatie2);
+        resetSpijker(last_x2);
+      }
+    }else if(driehoek == 1){
+      if(aantalVierkant == 1){
+        obstakel(obstakelLocatie2);
+        resetObstakel(last_x2);
+      }else if(aantalDriehoek == 2){
+        spijker(obstakelLocatie2);
+        resetSpijker(last_x2);
+      }
+    }
   }
   if(in_air){
     lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
@@ -397,7 +450,6 @@ void game() {
   toJump = 0;
   in_air = 0;
   directie = 1;
-  jumpLoopCount = 0;
   //alles resetten
 }
 
@@ -436,7 +488,7 @@ int main() {
   lcd.begin();
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
-
+  Serial.begin(9600);
 
   while (1) {
     if (firstTime == 1) {
