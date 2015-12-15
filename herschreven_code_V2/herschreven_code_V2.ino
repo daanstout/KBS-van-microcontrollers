@@ -10,169 +10,155 @@
 #include <stdlib.h>
 
 MI0283QT9 lcd;
+
+//variabelen:
+
 //getallen:
-uint16_t obstakelLocatie1, obstakelLocatie2, score, i, last_x, last_x2, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
-uint8_t up = 50, moeilijkheid = 5, grooteSpeler = 15, positionX = 32, aantalObstakels, aantalDriehoek = 0, aantalVierkant = 0;
-double positionY = 160, last_y, velocityY = 0.0, gravity = 0.05;
+
+uint8_t randomObstakels = 0, randomObstakelVorm, aantalObstakels = 0, nieuwObstakel, obstakelVorm1 = 0, obstakelVorm2 = 0;
+uint8_t moeilijkheid = 5, rank = 0;
+uint8_t buttonPressed = 0;
+uint8_t currentY = 160;
+uint16_t obstakelLocatie1, obstakelLocatie2, vorigeObstakel1, vorigeObstakel2;
+uint16_t score;
+double velocityY = 0.0, positionY = 160, last_y, gravity = 0.05;
 
 //namen:
+
 char eerste = 'A', tweede = 'B', derde = 'C';
 String eerste2, tweede2, derde2;
 
 //booleans:
-uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
-uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek, jumpPause, geland;
-bool in_air = false;
 
+uint8_t zbutton, in_air = 0, keren;
+uint8_t scoresBack = 0, scoreSubmit = 0, charVerandering = 0, gameStart = 0, postGame = 0;
+uint8_t gameIsLive = 0, death = 0, geland = 0;
+uint8_t firstTime = 1, toCheckButton = 1;
 
-void tekenLijn() {
+//tekenen van de grond waar de speler op loopt
+void tekenLijn(){
   lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
 }
 
-void obstakel(int x) {
-  lcd.drawLine(x, 160, x,  160 - 32, RGB(255, 0, 0)); //eerste rij genereren
+//obstakels:
+
+//vierkant:
+void drawVierkant(int x){
+  lcd.drawLine(x, 160, x, 128, RGB(255, 0, 0)); //eerste rij genereren
 }
 
-void resetObstakel(int x) {
-  lcd.drawLine(x + 32, 160, x + 32, 160 - 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
+void resetVierkant(int x) {
+  lcd.drawLine(x + 32, 160, x + 32, 128, RGB(255, 255, 255)); //laatste rij van obstakel resetten
 }
 
-void spijker(int x) {
-  uint8_t y = 160;
-  lcd.drawLine(x, y, x + 16, y - 32, RGB(200, 0, 0));
+//driehoek:
+void drawDriehoek(int x) {
+  lcd.drawLine(x, 160, x + 16, 128, RGB(200, 0, 0));
 }
 
-void resetSpijker(int x) {
-  uint8_t y = 160 - 32;
-  lcd.drawLine(x + 16, y, x + 32, y + 32, RGB(255, 255, 255));
+void resetDriehoek(int x) {
+  lcd.drawLine(x + 16, 128, x + 32, 160, RGB(255, 255, 255));
 }
 
-void randomLevel() {
-  //  srand(time_t(NULL));
-  if (aantalObstakels == 0) {
-    randomObstakel = (random(0, moeilijkheid)) + 1;
+//randomlevel generatie:
+void randomLevel(){
+  if(aantalObstakels == 0){
+    randomObstakelVorm = (random(0, moeilijkheid)) + 1;
     aantalObstakels++;
-    if (randomObstakel == 1) {
-      aantalDriehoek++;
-      driehoek = 1;
-    } else {
-      aantalVierkant++;
-      vierkant = 1;
+    if(randomObstakelVorm == 1){
+      obstakelVorm1 = 1;
+    }else{
+      obstakelVorm1 = 2;
     }
     obstakelLocatie1 = 320;
   }
-//  if (obstakelLocatie1 < 255 && aantalObstakels < 2) {
-//    uint8_t temprand = (random(0, 3)) + 1;
-//    if (temprand == 1) {
-//      randomObstakel = (random(0, moeilijkheid)) + 1;
-//      aantalObstakels++;
-//      if (randomObstakel == 1) {
-//        aantalDriehoek++;
-//      } else {
-//        aantalVierkant++;
-//      }
-//      if (aantalObstakels == 1) {
-//        obstakelLocatie2 = 320;
-//      }
-//    }
-//  }
+  if(obstakelLocatie1 < 255 && aantalObstakels < 2){
+    nieuwObstakel = (random(0, 3)) + 1;
+    if(nieuwObstakel == 1){
+      randomObstakelVorm = (random(0, moeilijkheid)) + 1;
+      aantalObstakels++;
+      if(randomObstakelVorm == 1){
+        obstakelVorm2 = 1;
+      }else{
+        obstakelVorm2 = 2;
+      }
+      obstakelLocatie2 = 320;
+    }
+  }
 }
 
-void sidescroll() {
-  if (aantalObstakels > 0) {
+//scrollen van het scherm:
+void sidescroll(){
+  if(aantalObstakels > 0){
+    vorigeObstakel1 = obstakelLocatie1;
 
-    //obstakel(obstakelLocatie1);
-
-    last_x = obstakelLocatie1;
-
-    checkJump();
-
-    //_delay_ms(3);
-    if (obstakelLocatie1 == -32) {
-      if (geland == 1) {
+    if(obstakelLocatie1 == -32){
+      if(geland == 1){
         score++;
-      }
-      if (geland == 0) {
+      }else if(geland == 0){
         score += 2;
       }
+      
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
       lcd.drawInteger(105, 210, score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
-      geland = 0;
-//      if (aantalObstakels == 2) {
-//        aantalObstakels--;
-//        obstakelLocatie1 = obstakelLocatie2;
-//        if (vierkant == 1) {
-//          aantalVierkant--;
-//        } else if (driehoek == 1) {
-//          aantalDriehoek--;
-//        }
-//        if (aantalVierkant == 1) {
-//          vierkant = 1;
-//          driehoek = 0;
-//        } else if (aantalDriehoek == 1) {
-//          vierkant = 1;
-//          driehoek = 1;
-//        }
-//      } else
-        if (aantalObstakels == 1) {
-          aantalObstakels--;
-        if (vierkant == 1) {
-          aantalVierkant--;
-          vierkant = 0;
-        } else if (driehoek == 1) {
-          aantalDriehoek--;
-          driehoek = 0;
-        }
+
+      aantalObstakels--;
+      
+      if(aantalObstakels == 1){
+        obstakelLocatie1 = obstakelLocatie2;
+        obstakelVorm1 = obstakelVorm2;
+        obstakelVorm2 = 0;
+      }else if(aantalObstakels == 0){
+        obstakelVorm1 = 0;
       }
     }
-
     obstakelLocatie1--;
+    obstakelLocatie2--;
   }
-  //resetObstakel(last_x);
 }
 
-void checkJump() {
-
-  if (zbutton == 1) StartJump();
-  if (zbutton == 0) EndJump();
+//gravity en jump:
+void checkJump(){
+  if(zbutton == 1) StartJump();
+  if(zbutton == 0) EndJump();
 
   Update();
-
 }
 
-void speler() {
-  lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-}
-
-void StartJump() {
-
-  if (!in_air) {
+void StartJump(){
+  if(in_air = 0){
     velocityY = -2.5;
-    in_air = true;
+    in_air = 1;
   }
 }
 
-void EndJump() {
-  if (velocityY < -1.5) {
+void EndJump(){
+  if(velocityY < -1.5){
     velocityY = -1.5;
-
   }
 }
 
-void Update() {
+void Update(){
   last_y = positionY;
   velocityY += gravity;
   positionY += velocityY;
 
-  if (positionY > 160.0) {
-    positionY = 160.0;
-    velocityY = 0.0;
-    in_air = false;
+  if(positionY > 160){
+    positionY = 160;
+    velocityY = 0;
+    in_air = 0;
   }
-
 }
 
-void drawScores() {
+void speler(){
+  lcd.fillRect(32, positionY - 15, 15, 15, RGB(0, 0, 0));
+}
+
+//menu:
+
+//scoreboard:
+
+void drawScores(){
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm
@@ -188,7 +174,9 @@ void drawScores() {
   scoresBack = 0;
 }
 
-void tekenVak1() {
+//de char inputs in het game over menu:
+
+void tekenVak1(){
   eerste2 = (String)eerste;
   lcd.fillRoundRect(90, 115, 30, 25, 5, RGB(255, 255, 255));
   lcd.drawRoundRect(90, 115, 30, 25, 5, RGB(0, 0, 0));
@@ -221,7 +209,8 @@ void tekenVak3() {
   //tekent het derde vak om je initialen in te vullen
 }
 
-void inputScore() {
+//het game over scherm:
+void inputScore(){
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm
@@ -231,9 +220,9 @@ void inputScore() {
   lcd.drawInteger(200, 50, score, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   //schrijft de tekst op het game over scherm als je dood gaat
 
-  if (topscore == 1) {
+  if(rank == 1) {
     lcd.drawText(80, 80, "HIGHSCORE!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  } else if (top5 == 1) {
+  } else if(rank < 6) {
     lcd.drawText(110, 80, "TOP 5!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   }
   //meldt of je de highscore hebt of dat je in de top 5 bent gekomen
@@ -254,104 +243,23 @@ void inputScore() {
   tekenVak2();
   tekenVak3();
 
-  scoreSubmit = 1;
-  while (scoreSubmit) {
+  while (scoreSubmit == 0) {
     checkButtonPress();
-    if (charverandering == 1) {
+    if (charVerandering == 1) {
       gameStart = 0;
-
+  
       tekenVak1();
       tekenVak2();
       tekenVak3();
-
-      charverandering = 0;
+  
+      charVerandering = 0;
     }
     _delay_ms(100);
   }
-  Serial.println("check1");
 }
 
-void checkButtonPress() {
-  while (gameStart == 0) {      //loopt zolang er niet op een knop is gedrukt
-    lcd.touchRead();
-    if (lcd.touchZ() > 80) {    //de minimum drukkracht op het scherm nodig om een druk te registreren
-      if (postGame == 0) {
-        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85) {  //kijkt of er wordt gedrukt op start
-          buttonPressed = 1;
-        }
-        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 90 && lcd.touchY() < 115) { //kijkt of er wordt gedrukt op scores
-          buttonPressed = 2;
-        }
-        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170) { //kijkt of er wordt gedrukt op multiplayer
-          buttonPressed = 3;
-        }
-        if (lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225) { //kijkt of er wordt gedrukt op back in scores
-          buttonPressed = 4;
-          scoresBack = 1;
-        }
-        if (lcd.touchX() > 280) {
-          buttonPressed = 10;
-        }
-      }
-      if (postGame == 1) {
-        if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
-          if (eerste == 'Z') {
-            eerste = 'A';
-          } else {
-            eerste++;
-          }
-          charverandering = 1;
-        } else if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 122 && lcd.touchY() < 175) {
-          if (eerste == 'A') {
-            eerste = 'Z';
-          } else {
-            eerste--;
-          }
-          charverandering = 1;
-        } else if (lcd.touchX() > 130 && lcd.touchX() < 180 && lcd.touchY() > 70 && lcd.touchY() < 122) {
-          if (tweede == 'Z') {
-            tweede = 'A';
-          } else {
-            tweede++;
-          }
-          charverandering = 1;
-        } else if (lcd.touchX() > 130 && lcd.touchX() < 180 && lcd.touchY() > 122 && lcd.touchY() < 175) {
-          if (tweede == 'A') {
-            tweede = 'Z';
-          } else {
-            tweede--;
-          }
-          charverandering = 1;
-        } else if (lcd.touchX() > 190 && lcd.touchX() < 240 && lcd.touchY() > 70 && lcd.touchY() < 122) {
-          if (derde == 'Z') {
-            derde = 'A';
-          } else {
-            derde++;
-          }
-          charverandering = 1;
-        } else if (lcd.touchX() > 190 && lcd.touchX() < 240 && lcd.touchY() > 122 && lcd.touchY() < 175) {
-          if (derde == 'A') {
-            derde = 'Z';
-          } else {
-            derde--;
-          }
-          charverandering = 1;
-        } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {
-          scoreSubmit = 0;
-          charverandering = 1;
-        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
-          scoreSubmit = 0;
-          charverandering = 1;
-        }
-      }
-    }
-    if (buttonPressed != 0 || charverandering == 1) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
-      gameStart = 1;
-    }
-  }
-}
-
-void drawMenu() {
+//tekent het main menu:
+void drawMenu(){
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm
@@ -383,44 +291,116 @@ void drawMenu() {
   //tekent de multiplayer knop
 }
 
-void teken() {
-  uint8_t keren;
-  if (obstakelLocatie1 != last_x) {
-    if (vierkant == 1) {
-      obstakel(obstakelLocatie1);
-      resetObstakel(last_x);
+//kijkt of er op een knop wordt gedrukt:
+void checkButtonPress(){
+  while (gameStart == 0) {      //loopt zolang er niet op een knop is gedrukt
+    lcd.touchRead();
+    if (lcd.touchZ() > 80) {    //de minimum drukkracht op het scherm nodig om een druk te registreren
+      if (postGame == 0) {
+        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85) {  //kijkt of er wordt gedrukt op start
+          buttonPressed = 1;
+        }
+        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 90 && lcd.touchY() < 115) { //kijkt of er wordt gedrukt op scores
+          buttonPressed = 2;
+        }
+        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170) { //kijkt of er wordt gedrukt op multiplayer
+          buttonPressed = 3;
+        }
+        if (lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225) { //kijkt of er wordt gedrukt op back in scores
+          buttonPressed = 4;
+          scoresBack = 1;
+        }
+        if (lcd.touchX() > 280) {
+          buttonPressed = 10;
+        }
+      }
+      if (postGame == 1) {
+        if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
+          if (eerste == 'Z') {
+            eerste = 'A';
+          } else {
+            eerste++;
+          }
+          charVerandering = 1;
+        } else if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 122 && lcd.touchY() < 175) {
+          if (eerste == 'A') {
+            eerste = 'Z';
+          } else {
+            eerste--;
+          }
+          charVerandering = 1;
+        } else if (lcd.touchX() > 130 && lcd.touchX() < 180 && lcd.touchY() > 70 && lcd.touchY() < 122) {
+          if (tweede == 'Z') {
+            tweede = 'A';
+          } else {
+            tweede++;
+          }
+          charVerandering = 1;
+        } else if (lcd.touchX() > 130 && lcd.touchX() < 180 && lcd.touchY() > 122 && lcd.touchY() < 175) {
+          if (tweede == 'A') {
+            tweede = 'Z';
+          } else {
+            tweede--;
+          }
+          charVerandering = 1;
+        } else if (lcd.touchX() > 190 && lcd.touchX() < 240 && lcd.touchY() > 70 && lcd.touchY() < 122) {
+          if (derde == 'Z') {
+            derde = 'A';
+          } else {
+            derde++;
+          }
+          charVerandering = 1;
+        } else if (lcd.touchX() > 190 && lcd.touchX() < 240 && lcd.touchY() > 122 && lcd.touchY() < 175) {
+          if (derde == 'A') {
+            derde = 'Z';
+          } else {
+            derde--;
+          }
+          charVerandering = 1;
+        } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {
+          scoreSubmit = 0;
+          charVerandering = 1;
+        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
+          scoreSubmit = 0;
+          charVerandering = 1;
+        }
+      }
     }
-    if (driehoek == 1) {
-      spijker(obstakelLocatie1);
-      resetSpijker(last_x);
+    if (buttonPressed != 0 || charVerandering == 1) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
+      gameStart = 1;
     }
   }
-//  if (aantalObstakels == 2 && obstakelLocatie2 != last_x2) {
-//    if (vierkant == 1) {
-//      if (aantalVierkant == 2) {
-//        obstakel(obstakelLocatie2);
-//        resetObstakel(last_x2);
-//      } else if (aantalDriehoek == 1) {
-//        spijker(obstakelLocatie2);
-//        resetSpijker(last_x2);
-//      }
-//    } else if (driehoek == 1) {
-//      if (aantalVierkant == 1) {
-//        obstakel(obstakelLocatie2);
-//        resetObstakel(last_x2);
-//      } else if (aantalDriehoek == 2) {
-//        spijker(obstakelLocatie2);
-//        resetSpijker(last_x2);
-//      }
-//    }
-//  }
+}
+
+//het hertekenen van verschillende dingen:
+void teken(){
+  if(obstakelLocatie1 != vorigeObstakel1){
+    if(obstakelVorm1 == 2){
+      drawVierkant(obstakelLocatie1);
+      resetVierkant(vorigeObstakel1);
+    }
+    if(obstakelVorm1 == 1){
+      drawDriehoek(obstakelLocatie1);
+      resetDriehoek(vorigeObstakel1);
+    }
+  }
+  if(aantalObstakels == 2 && obstakelLocatie2 != vorigeObstakel2){
+    if(obstakelVorm2 == 2){
+      drawVierkant(obstakelLocatie2);
+      resetVierkant(vorigeObstakel2);
+    }
+    if(obstakelVorm2 == 1){
+      drawDriehoek(obstakelLocatie2);
+      resetDriehoek(vorigeObstakel2);
+    }
+  }
   if (in_air) {
     if (velocityY <= 0) {
-      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-      lcd.fillRect(positionX, positionY, grooteSpeler , last_y - positionY + 1, RGB(255, 255, 255));
+      lcd.fillRect(32, positionY - 15, 15, 15 , RGB(0, 0, 0));
+      lcd.fillRect(32, positionY, 15, last_y - positionY + 1, RGB(255, 255, 255));
     } else if (velocityY > 0 || positionY == 160) {
-      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-      lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler , (positionY - grooteSpeler) - (last_y - grooteSpeler) , RGB(255, 255, 255));
+      lcd.fillRect(32, positionY - 15, 15, 15, RGB(0, 0, 0));
+      lcd.fillRect(32, last_y - 15, 15, (positionY - 15) - (last_y - 15) , RGB(255, 255, 255));
     }
     keren = 0;
   } else if (keren != 1) {
@@ -430,7 +410,7 @@ void teken() {
   _delay_ms(2);
 }
 
-void game() {
+void game(){
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
   lcd.drawInteger(105, 210, score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
@@ -439,73 +419,71 @@ void game() {
   nunchuck_init();
   speler();
 
-  while (gameIsLive == 1) {
+  while(gameIsLive == 1){
     nunchuck_get_data();
     zbutton = nunchuck_zbutton();
-
+    
     sidescroll();
     randomLevel();
     teken();
-
     hitbox();
-    if (death == 1) {
+
+    if(death == 1){
       gameIsLive = 0;
     }
-
   }
-  current = 140;
+
+  positionY = 160;
   obstakelLocatie1 = 0;
-  obstakelActief1 = 0;
-  toJump = 0;
+  obstakelLocatie2 = 0;
+  aantalObstakels = 0;
   in_air = 0;
-  directie = 1;
-  //alles resetten
 }
 
-void hitbox() {
-  if (vierkant == 1) {
-    if (spelerRechterZijde > obstakelLocatie1) {
-      if (positionY > 121 && positionY < 129) {
-        velocityY = 0.0;
-        in_air = false;
+void hitbox(){
+  if(obstakelVorm1 == 2){
+    if(47 > obstakelLocatie1){
+      if(positionY > 121 && positionY < 129){
+        velocityY = 0;
+        in_air = 0;
         positionY = 128;
         geland = 1;
       }
-      if (positionY > obstakelBovenkant) {
+      if(positionY > 128){
         death++;
       }
     }
-    if (32 < obstakelLocatie1 && geland == 1) {
-      in_air = true;
+    if(32 < obstakelLocatie1 && geland == 1){
+      in_air = 1;
     }
   }
-  if (driehoek == 1) {
-    if (spelerRechterZijde > obstakelLocatie1) {
-      if (positionY > currentY) {
+  if(obstakelVorm1 == 1){
+    if(47 > obstakelLocatie1){
+      if(positionY > currentY){
         death++;
       }
-      currentY -= 4;
+      currentY -= 2;
     }
   }
-  if (currentY == 128) {
+  if(currentY == 128){
     currentY = 160;
   }
 }
 
-int main() {
+int main(){
   init();
   lcd.begin();
   lcd.touchRead();
-  lcd.touchStartCal(); //calibrate touchpanel
+  lcd.touchStartCal();
   Serial.begin(9600);
 
-  while (1) {
-    if (firstTime == 1) {
-      drawMenu();                //drawed het menu
+  while(1){
+    if(firstTime == 1){
+      drawMenu();
       firstTime = 0;
     }
 
-    if (buttonPressed == 1) {
+    if(buttonPressed == 1){
       gameIsLive = 1;
       death = 0;
       score = 0;
@@ -514,31 +492,27 @@ int main() {
       buttonPressed = 10;
       gameStart = 0;
       toCheckButton = 0;
-      //dit gebeurt er als er op play wordt gedrukt
     }
-    if (buttonPressed == 2) {
+    if(buttonPressed == 2){
       buttonPressed = 0;
       gameStart = 0;
       drawScores();
       firstTime = 1;
       toCheckButton = 0;
-      //dit gebeurt er als er op scores wordt gedrukt
     }
-    if (buttonPressed == 3) {
+    if(buttonPressed == 3){
       //multiplayer
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
-      //dit gebeurt er als er op multiplayer wordt gedrukt
     }
-    if (buttonPressed == 4) {
+    if(buttonPressed == 4){
       firstTime = 1;
       buttonPressed = 0;
       gameStart = 0;
       toCheckButton = 0;
-      //dit gebeurt er als er op back wordt gedrukt in scores
     }
-    if (buttonPressed == 10) {
+    if(buttonPressed == 10){
       postGame = 1;
       buttonPressed = 0;
       gameStart = 0;
@@ -548,16 +522,16 @@ int main() {
       gameStart = 0;
       postGame = 0;
       toCheckButton = 0;
-      //tijdelijk, input van je naam scherm
     }
 
-    if (toCheckButton == 1) {
-      checkButtonPress();        //checked of er wordt gedrukt op een knop en kijkt waar dat is gebeurt
+    if(toCheckButton == 1){
+      checkButtonPress();
     }
-
     toCheckButton = 1;
   }
 
   return 0;
 }
+
+
 
