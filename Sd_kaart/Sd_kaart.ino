@@ -1,25 +1,27 @@
-#include <SPI.h>
-#include <SD.h>
+#include <EEPROM.h>
 
-File myFile;
+struct Score{
+  uint16_t score;
+  char naam[10];
+  };
+
+
+void saveScore(){
+  Score nummer1 = {30, "Piet"};
+  EEPROM.put(0, nummer1);
+  Serial.println("STruct is succesvol geschreven");
+}
+void printScore(){
+  Score nummer2 = {20, "DONO"};
+  EEPROM.get(0, nummer2);
+  Serial.println(nummer2.score);
+  Serial.println(nummer2.naam);
+}
 
 int main(){
   init();
-  SD.begin(4);
   Serial.begin(9600);
-  
-  myFile = SD.open("test.txt", FILE_WRITE);
-  myFile.println("testing 1, 2, 3.");
-  myFile.close();
-  
-  myFile = SD.open("test.txt");
-  
-  while (myFile.available()) {
-    Serial.write(myFile.read());
-
-  }
-  
-  myFile.close();
+  saveScore();
+  printScore();
   return 0;
 }
-
