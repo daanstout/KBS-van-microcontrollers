@@ -310,9 +310,6 @@ void checkButtonPress(){
           buttonPressed = 4;
           scoresBack = 1;
         }
-        if (lcd.touchX() > 280) {
-          buttonPressed = 10;
-        }
       }
       if (postGame == 1) {
         if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
