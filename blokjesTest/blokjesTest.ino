@@ -13,7 +13,7 @@
 MI0283QT9 lcd;
 //getallen:
 uint16_t obstakelLocatie1, obstakelLocatie2, score, i, last_x, last_x2, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
-uint8_t up = 50, moeilijkheid = 5, grooteSpeler = 15, positionX = 32, aantalObstakels, aantalDriehoek = 0, aantalVierkant = 0;
+uint8_t up = 50, moeilijkheid = 5, grootteSpeler = 15, positionX = 32, aantalObstakels, aantalDriehoek = 0, aantalVierkant = 0;
 double positionY = 160, last_y, velocityY = 0.0, gravity = 0.05;
 
 //namen:
@@ -142,7 +142,7 @@ void checkJump() {
 }
 
 void speler() {
-  lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
+  lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
 }
 
 void StartJump() {
@@ -417,18 +417,19 @@ void teken() {
 //  }
   if (in_air) {
     if (velocityY <= 0) {
-      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-      lcd.fillRect(positionX, positionY, grooteSpeler , last_y - positionY + 1, RGB(255, 255, 255));
-    } else if (velocityY > 0 || positionY == 160) {
-      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-      lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler , (positionY - grooteSpeler) - (last_y - grooteSpeler) , RGB(255, 255, 255));
+      lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
+      lcd.fillRect(positionX, positionY, grootteSpeler , last_y - positionY + 1, RGB(255, 255, 255));
+    } else if (velocityY > 0) {
+      lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
+      lcd.fillRect(positionX, (last_y - grootteSpeler) - 1, grootteSpeler , ((positionY - grootteSpeler) - (last_y - grootteSpeler)) +1 , RGB(255, 255, 255));
     }
-    keren = 0;
-  } else if (keren != 1) {
-    speler();
-    keren = 1;
+    //_delay_ms(4);
+
   }
-  _delay_ms(2);
+  if (!in_air) {
+    speler();
+    lcd.fillRect(positionX, positionY -grootteSpeler - 7, grootteSpeler ,7 , RGB(255, 255, 255));
+  }
 }
 
 void game() {
