@@ -31,11 +31,11 @@ void tekenLijn() {
 }
 
 void obstakel(int x) {
-  lcd.drawLine(x, 160, x,  160- 32, RGB(255, 0, 0)); //eerste rij genereren
+  lcd.drawLine(x, 160, x,  160 - 32, RGB(255, 0, 0)); //eerste rij genereren
 }
 
 void resetObstakel(int x) {
-  lcd.drawLine(x + 32, 160, x + 32, 160- 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
+  lcd.drawLine(x + 32, 160, x + 32, 160 - 32, RGB(255, 255, 255)); //laatste rij van obstakel resetten
 }
 
 void spijker(int x) {
@@ -49,30 +49,30 @@ void resetSpijker(int x) {
 }
 
 void randomLevel() {
-//  srand(time_t(NULL));
-  if(aantalObstakels == 0){
+  //  srand(time_t(NULL));
+  if (aantalObstakels == 0) {
     randomObstakel = random(0, moeilijkheid);
     aantalObstakels++;
-    if(randomObstakel == 1){
+    if (randomObstakel == 1) {
       aantalDriehoek++;
       driehoek = 1;
-    }else{
+    } else {
       aantalVierkant++;
       vierkant = 1;
     }
     obstakelLocatie1 = 320;
   }
-  if(obstakelLocatie1 < 255 && aantalObstakels < 2){
+  if (obstakelLocatie1 < 255 && aantalObstakels < 2) {
     uint8_t temprand = random(0, 5);
-    if(temprand == 1){
+    if (temprand == 1) {
       randomObstakel = random(0, moeilijkheid);
       aantalObstakels++;
-      if(randomObstakel == 1){
+      if (randomObstakel == 1) {
         aantalDriehoek++;
-      }else{
+      } else {
         aantalVierkant++;
       }
-      if(aantalObstakels == 1){
+      if (aantalObstakels == 1) {
         obstakelLocatie2 = 320;
       }
     }
@@ -87,36 +87,36 @@ void sidescroll() {
     last_x = obstakelLocatie1;
 
     checkJump();
-      
+
     //_delay_ms(3);
     if (obstakelLocatie1 == -32) {
-      if(geland == 1){
+      if (geland == 1) {
         score++;
       }
-      if(geland == 0){
+      if (geland == 0) {
         score += 2;
       }
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
-      lcd.drawInteger(105, 210, score, DEC, RGB(0,0,0), RGB(255, 255, 255), 2);
+      lcd.drawInteger(105, 210, score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
       geland = 0;
-      if(aantalObstakels == 2){
+      if (aantalObstakels == 2) {
         aantalObstakels--;
         obstakelLocatie1 = obstakelLocatie2;
-        if(vierkant == 1){
+        if (vierkant == 1) {
           aantalVierkant--;
-        }else if(driehoek == 1){
+        } else if (driehoek == 1) {
           aantalDriehoek--;
         }
-        if(aantalVierkant == 1){
+        if (aantalVierkant == 1) {
           vierkant = 1;
-        }else if(aantalDriehoek == 1){
+        } else if (aantalDriehoek == 1) {
           driehoek = 1;
         }
-      }else if(aantalObstakels == 1){
+      } else if (aantalObstakels == 1) {
         aantalObstakels--;
-        if(vierkant == 1){
+        if (vierkant == 1) {
           aantalVierkant--;
-        }else if(driehoek == 1){
+        } else if (driehoek == 1) {
           aantalDriehoek--;
         }
       }
@@ -148,7 +148,7 @@ void StartJump() {
   }
 }
 
-void EndJump(){
+void EndJump() {
   if (velocityY < -1.5) {
     velocityY = -1.5;
 
@@ -165,7 +165,7 @@ void Update() {
     velocityY = 0.0;
     in_air = false;
   }
-  
+
 }
 
 void drawScores() {
@@ -382,39 +382,44 @@ void drawMenu() {
 void teken() {
   uint8_t keren;
   if (obstakelLocatie1 != last_x) {
-    if(vierkant == 1){
+    if (vierkant == 1) {
       obstakel(obstakelLocatie1);
       resetObstakel(last_x);
     }
-    if(driehoek == 1){
+    if (driehoek == 1) {
       spijker(obstakelLocatie1);
       resetSpijker(last_x);
     }
   }
-  if(aantalObstakels == 2 && obstakelLocatie2 != last_x2){
-    if(vierkant == 1){
-      if(aantalVierkant == 2){
+  if (aantalObstakels == 2 && obstakelLocatie2 != last_x2) {
+    if (vierkant == 1) {
+      if (aantalVierkant == 2) {
         obstakel(obstakelLocatie2);
         resetObstakel(last_x2);
-      }else if(aantalDriehoek == 1){
+      } else if (aantalDriehoek == 1) {
         spijker(obstakelLocatie2);
         resetSpijker(last_x2);
       }
-    }else if(driehoek == 1){
-      if(aantalVierkant == 1){
+    } else if (driehoek == 1) {
+      if (aantalVierkant == 1) {
         obstakel(obstakelLocatie2);
         resetObstakel(last_x2);
-      }else if(aantalDriehoek == 2){
+      } else if (aantalDriehoek == 2) {
         spijker(obstakelLocatie2);
         resetSpijker(last_x2);
       }
     }
   }
-  if(in_air){
-    lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-    lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler ,grooteSpeler , RGB(255, 255, 255));
+  if (in_air) {
+    if (velocityY <= 0) {
+      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
+      lcd.fillRect(positionX, positionY, grooteSpeler , last_y - positionY + 1, RGB(255, 255, 255));
+    } else if (velocityY > 0 || positionY == 160) {
+      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
+      lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler , (positionY - grooteSpeler) - (last_y - grooteSpeler) , RGB(255, 255, 255));
+    }
     keren = 0;
-  } else if(keren != 1){
+  } else if (keren != 1) {
     speler();
     keren = 1;
   }
@@ -423,8 +428,8 @@ void teken() {
 
 void game() {
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
-  lcd.drawText(10, 210, "Score:", RGB(0,0,0), RGB(255, 255, 255), 2);
-  lcd.drawInteger(105, 210, score, DEC, RGB(0,0,0), RGB(255, 255, 255), 2);
+  lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  lcd.drawInteger(105, 210, score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
   tekenLijn();
   nunchuck_setpowerpins();
   nunchuck_init();
@@ -437,7 +442,7 @@ void game() {
     sidescroll();
     randomLevel();
     teken();
-    
+
     hitbox();
     if (death == 1) {
       gameIsLive = 0;
@@ -454,31 +459,31 @@ void game() {
 }
 
 void hitbox() {
-  if(vierkant == 1){
-    if(spelerRechterZijde > obstakelLocatie1){
-      if(positionY > 121 && positionY < 129){
+  if (vierkant == 1) {
+    if (spelerRechterZijde > obstakelLocatie1) {
+      if (positionY > 121 && positionY < 129) {
         velocityY = 0.0;
         in_air = false;
         positionY = 128;
         geland = 1;
       }
-      if(positionY > obstakelBovenkant){
+      if (positionY > obstakelBovenkant) {
         death++;
       }
     }
-    if(32 < obstakelLocatie1 && geland == 1){
+    if (32 < obstakelLocatie1 && geland == 1) {
       in_air = true;
     }
   }
-  if(driehoek == 1){
-    if(spelerRechterZijde > obstakelLocatie1){
-      if(positionY > currentY){
+  if (driehoek == 1) {
+    if (spelerRechterZijde > obstakelLocatie1) {
+      if (positionY > currentY) {
         death++;
       }
       currentY -= 4;
     }
   }
-  if(currentY == 128){
+  if (currentY == 128) {
     currentY = 160;
   }
 }
