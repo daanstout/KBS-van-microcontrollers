@@ -30,10 +30,11 @@ String eerste2, tweede2, derde2;
 
 //booleans:
 
-uint8_t zbutton, in_air = 0, keren;         //jump variabelen
+uint8_t zbutton, keren;         //jump variabelen
 uint8_t scoresBack = 0, scoreSubmit = 0, charVerandering = 0, gameStart = 0, postGame = 0;      //menu variabelen
 uint8_t gameIsLive = 0, death = 0, geland = 0;      //game variabelen
 uint8_t firstTime = 1, toCheckButton = 1;       //menu variabelen
+bool in_air;
 
 //tekenen van de grond waar de speler op loopt
 void tekenLijn(){
@@ -129,9 +130,9 @@ void checkJump(){
 }
 
 void StartJump(){
-  if(in_air == 0){
+  if(!in_air){
     velocityY = -2.5;
-    in_air = 1;
+    in_air = true;
   }
 }
 
@@ -149,7 +150,7 @@ void Update(){
   if(positionY > 160){
     positionY = 160;
     velocityY = 0;
-    in_air = 0;
+    in_air = false;
   }
 }
 
@@ -396,7 +397,7 @@ void teken(){
       resetDriehoek(vorigeObstakel2);
     }
   }
-  if (in_air == 1) {
+  if (in_air) {
     if (velocityY <= 0) {
       Serial.println("test1");
       lcd.fillRect(32, positionY - 15, 15, 15 , RGB(0, 0, 0));
@@ -442,7 +443,7 @@ void game(){
   obstakelLocatie1 = 0;
   obstakelLocatie2 = 0;
   aantalObstakels = 0;
-  in_air = 0;
+  in_air = false;
 }
 
 void hitbox(){
@@ -450,7 +451,7 @@ void hitbox(){
     if(47 > obstakelLocatie1){
       if(positionY > 121 && positionY < 129){
         velocityY = 0;
-        in_air = 0;
+        in_air = false;
         positionY = 128;
         geland = 1;
       }
@@ -459,7 +460,7 @@ void hitbox(){
       }
     }
     if(32 < obstakelLocatie1 && geland == 1){
-      in_air = 1;
+      in_air = true;
     }
   }
   if(obstakelVorm1 == 1){
@@ -492,7 +493,6 @@ int main(){
       gameIsLive = 1;
       death = 0;
       score = 0;
-      in_air = 0;
       game();
       firstTime = 1;
       buttonPressed = 10;
