@@ -147,7 +147,7 @@ void Update(){
   velocityY += gravity;
   positionY += velocityY;
 
-  if(positionY > 162){
+  if(positionY > 159){
     positionY = 160;
     velocityY = 0;
     in_air = false;
@@ -364,7 +364,6 @@ void checkButtonPress(){
         } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
           scoreSubmit = true;
           charVerandering = true;
-          Serial.println("test");
         }
       }
     }
@@ -398,11 +397,9 @@ void teken(){
   }
   if (in_air) {
     if (velocityY <= 0) {
-      Serial.println("test1");
       lcd.fillRect(32, positionY - 15, 15, 15 , RGB(0, 0, 0));
       lcd.fillRect(32, positionY, 15, last_y - positionY + 1, RGB(255, 255, 255));
     } else if (velocityY > 0 || positionY == 160) {
-      Serial.println("test2");
       lcd.fillRect(32, positionY - 15, 15, 15, RGB(0, 0, 0));
       lcd.fillRect(32, last_y - 15, 15, (positionY - 15) - (last_y - 15) , RGB(255, 255, 255));
     }
