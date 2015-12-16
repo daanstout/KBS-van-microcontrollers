@@ -30,11 +30,11 @@ String eerste2, tweede2, derde2;
 
 //booleans:
 
-uint8_t zbutton, keren;         //jump variabelen
-uint8_t scoresBack = 0, scoreSubmit = 0, charVerandering = 0, gameStart = 0, postGame = 0;      //menu variabelen
-uint8_t gameIsLive = 0, death = 0, geland = 0;      //game variabelen
-uint8_t firstTime = 1, toCheckButton = 1;       //menu variabelen
-bool in_air;
+uint8_t zbutton;         //jump variabelen      moet een int zijn omdat de nunchuk functie 1 of 0 returned
+bool in_air, keren;      //jump booleans
+bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false, postGame = false;     //menu booleans
+bool gameIsLive = false, death = false, geland = false;     //game booleans
+bool firstTime = true, toCheckButton = true;        //menu booleans
 
 //tekenen van de grond waar de speler op loopt
 void tekenLijn(){
@@ -97,9 +97,9 @@ void sidescroll(){
     checkJump();
     
     if(obstakelLocatie1 == -32){
-      if(geland == 1){
+      if(geland){
         score++;
-      }else if(geland == 0){
+      }else if(!geland){
         score += 2;
       }
       
@@ -147,7 +147,7 @@ void Update(){
   velocityY += gravity;
   positionY += velocityY;
 
-  if(positionY > 160){
+  if(positionY > 162){
     positionY = 160;
     velocityY = 0;
     in_air = false;
@@ -172,10 +172,10 @@ void drawScores(){
   lcd.drawRoundRect(9, 199, 102, 27, 5, RGB(0, 0, 0));
   lcd.drawText(28, 205, "BACK", RGB(0, 0, 0), RGB(0, 034, 255), 2);
   //back knop
-  while (scoresBack == 0) {
+  while (!scoresBack) {
     checkButtonPress();
   }
-  scoresBack = 0;
+  scoresBack = false;
 }
 
 //de char inputs in het game over menu:
@@ -247,16 +247,16 @@ void inputScore(){
   tekenVak2();
   tekenVak3();
 
-  while (scoreSubmit == 0) {
+  while (!scoreSubmit) {
     checkButtonPress();
-    if (charVerandering == 1) {
-      gameStart = 0;
+    if (charVerandering) {
+      gameStart = false;
   
       tekenVak1();
       tekenVak2();
       tekenVak3();
   
-      charVerandering = 0;
+      charVerandering = false;
     }
     _delay_ms(100);
   }
@@ -297,10 +297,10 @@ void drawMenu(){
 
 //kijkt of er op een knop wordt gedrukt:
 void checkButtonPress(){
-  while (gameStart == 0) {      //loopt zolang er niet op een knop is gedrukt
+  while (!gameStart) {      //loopt zolang er niet op een knop is gedrukt
     lcd.touchRead();
     if (lcd.touchZ() > 80) {    //de minimum drukkracht op het scherm nodig om een druk te registreren
-      if (postGame == 0) {
+      if (postGame == false) {
         if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85) {  //kijkt of er wordt gedrukt op start
           buttonPressed = 1;
         }
@@ -312,65 +312,64 @@ void checkButtonPress(){
         }
         if (lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225) { //kijkt of er wordt gedrukt op back in scores
           buttonPressed = 4;
-          scoresBack = 1;
+          scoresBack = true;
         }
       }
-      if (postGame == 1) {
+      if (postGame == true) {
         if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
           if (eerste == 'Z') {
             eerste = 'A';
           } else {
             eerste++;
           }
-          charVerandering = 1;
+          charVerandering = true;
         } else if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 122 && lcd.touchY() < 175) {
           if (eerste == 'A') {
             eerste = 'Z';
           } else {
             eerste--;
           }
-          charVerandering = 1;
+          charVerandering = true;
         } else if (lcd.touchX() > 130 && lcd.touchX() < 180 && lcd.touchY() > 70 && lcd.touchY() < 122) {
           if (tweede == 'Z') {
             tweede = 'A';
           } else {
             tweede++;
           }
-          charVerandering = 1;
+          charVerandering = true;
         } else if (lcd.touchX() > 130 && lcd.touchX() < 180 && lcd.touchY() > 122 && lcd.touchY() < 175) {
           if (tweede == 'A') {
             tweede = 'Z';
           } else {
             tweede--;
           }
-          charVerandering = 1;
+          charVerandering = true;
         } else if (lcd.touchX() > 190 && lcd.touchX() < 240 && lcd.touchY() > 70 && lcd.touchY() < 122) {
           if (derde == 'Z') {
             derde = 'A';
           } else {
             derde++;
           }
-          charVerandering = 1;
+          charVerandering = true;
         } else if (lcd.touchX() > 190 && lcd.touchX() < 240 && lcd.touchY() > 122 && lcd.touchY() < 175) {
           if (derde == 'A') {
             derde = 'Z';
           } else {
             derde--;
           }
-          charVerandering = 1;
+          charVerandering = true;
         } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {
-          scoreSubmit = 0;
-          charVerandering = 1;
+          scoreSubmit = true;
+          charVerandering = true;
         } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
-          scoreSubmit = 1;
-          charVerandering = 1;
+          scoreSubmit = true;
+          charVerandering = true;
           Serial.println("test");
         }
       }
     }
-    if (buttonPressed != 0 || charVerandering == 1) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
-      gameStart = 1;
-      break;
+    if (buttonPressed != 0 || charVerandering) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
+      gameStart = true;
     }
   }
 }
@@ -407,10 +406,10 @@ void teken(){
       lcd.fillRect(32, positionY - 15, 15, 15, RGB(0, 0, 0));
       lcd.fillRect(32, last_y - 15, 15, (positionY - 15) - (last_y - 15) , RGB(255, 255, 255));
     }
-    keren = 0;
-  } else if (keren != 1) {
+    keren = false;
+  } else if (!keren) {
     speler();
-    keren = 1;
+    keren = true;
   }
   _delay_ms(2);
 }
@@ -424,7 +423,7 @@ void game(){
   nunchuck_init();
   speler();
 
-  while(gameIsLive == 1){
+  while(gameIsLive){
     nunchuck_get_data();
     zbutton = nunchuck_zbutton();
     
@@ -434,8 +433,8 @@ void game(){
     teken();
     hitbox();
 
-    if(death == 1){
-      gameIsLive = 0;
+    if(death){
+      gameIsLive = false;
     }
   }
 
@@ -453,20 +452,20 @@ void hitbox(){
         velocityY = 0;
         in_air = false;
         positionY = 128;
-        geland = 1;
+        geland = true;
       }
       if(positionY > 128){
-        death++;
+        death = true;
       }
     }
-    if(32 < obstakelLocatie1 && geland == 1){
+    if(32 < obstakelLocatie1 && geland){
       in_air = true;
     }
   }
   if(obstakelVorm1 == 1){
     if(47 > obstakelLocatie1){
       if(positionY > currentY){
-        death++;
+        death = true;
       }
       currentY -= 2;
     }
@@ -484,58 +483,57 @@ int main(){
   Serial.begin(9600);
 
   while(1){
-    if(firstTime == 1){
+    if(firstTime){
       drawMenu();
-      firstTime = 0;
+      firstTime = false;
     }
 
     if(buttonPressed == 1){
-      gameIsLive = 1;
-      death = 0;
+      gameIsLive = true;
+      death = false;
       score = 0;
       game();
-      firstTime = 1;
+      firstTime = true;
       buttonPressed = 10;
-      gameStart = 0;
-      toCheckButton = 0;
+      gameStart = false;
+      toCheckButton = false;
     }
     if(buttonPressed == 2){
       buttonPressed = 0;
-      gameStart = 0;
+      gameStart = false;
       drawScores();
-      firstTime = 1;
-      toCheckButton = 0;
+      firstTime = true;
+      toCheckButton = false;
     }
     if(buttonPressed == 3){
       //multiplayer
-      firstTime = 1;
+      firstTime = true;
       buttonPressed = 0;
-      gameStart = 0;
+      gameStart = false;
     }
     if(buttonPressed == 4){
-      firstTime = 1;
+      firstTime = true;
       buttonPressed = 0;
-      gameStart = 0;
-      toCheckButton = 0;
+      gameStart = false;
+      toCheckButton = false;
     }
     if(buttonPressed == 10){
-      postGame = 1;
+      postGame = true;
       buttonPressed = 0;
-      gameStart = 0;
+      gameStart = false;
       inputScore();
-      firstTime = 1;
-      Serial.println("einde");
+      firstTime = true;
       buttonPressed = 0;
-      gameStart = 0;
-      postGame = 0;
-      toCheckButton = 0;
-      scoreSubmit = 0;
+      gameStart = false;
+      postGame = false;
+      toCheckButton = false;
+      scoreSubmit = false;
     }
 
-    if(toCheckButton == 1){
+    if(toCheckButton){
       checkButtonPress();
     }
-    toCheckButton = 1;
+    toCheckButton = true;
   }
 
   return 0;
