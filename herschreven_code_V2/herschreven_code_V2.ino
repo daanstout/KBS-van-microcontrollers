@@ -15,25 +15,25 @@ MI0283QT9 lcd;
 
 //getallen:
 
-uint8_t randomObstakels = 0, randomObstakelVorm, aantalObstakels = 0, nieuwObstakel, obstakelVorm1 = 0, obstakelVorm2 = 0;
-uint8_t moeilijkheid = 5, rank = 0;
-uint8_t buttonPressed = 0;
-uint8_t currentY = 160;
-uint16_t obstakelLocatie1, obstakelLocatie2, vorigeObstakel1, vorigeObstakel2;
-uint16_t score;
-double velocityY = 0.0, positionY = 160, last_y, gravity = 0.05;
+uint8_t randomObstakels = 0, randomObstakelVorm, aantalObstakels = 0, nieuwObstakel, obstakelVorm1 = 0, obstakelVorm2 = 0;    //level generatie variabelen
+uint8_t moeilijkheid = 5, rank = 0;     //game variabelen
+uint8_t buttonPressed = 0;      //menu variabelen
+uint8_t currentY = 160;     //draw variabelen
+uint16_t obstakelLocatie1, obstakelLocatie2, vorigeObstakel1, vorigeObstakel2;      //obstakel variabelen
+uint16_t score;     //game variabelen
+double velocityY = 0.0, positionY = 160, last_y, gravity = 0.05;      //gravity variabelen
 
 //namen:
-
+//beide voor de score
 char eerste = 'A', tweede = 'B', derde = 'C';
 String eerste2, tweede2, derde2;
 
 //booleans:
 
-uint8_t zbutton, in_air = 0, keren;
-uint8_t scoresBack = 0, scoreSubmit = 0, charVerandering = 0, gameStart = 0, postGame = 0;
-uint8_t gameIsLive = 0, death = 0, geland = 0;
-uint8_t firstTime = 1, toCheckButton = 1;
+uint8_t zbutton, in_air = 0, keren;         //jump variabelen
+uint8_t scoresBack = 0, scoreSubmit = 0, charVerandering = 0, gameStart = 0, postGame = 0;      //menu variabelen
+uint8_t gameIsLive = 0, death = 0, geland = 0;      //game variabelen
+uint8_t firstTime = 1, toCheckButton = 1;       //menu variabelen
 
 //tekenen van de grond waar de speler op loopt
 void tekenLijn(){
@@ -72,7 +72,7 @@ void randomLevel(){
     }
     obstakelLocatie1 = 320;
   }
-  if(obstakelLocatie1 < 255 && aantalObstakels < 2){
+  if(obstakelLocatie1 < 160 && aantalObstakels < 2){
     nieuwObstakel = (random(0, 3)) + 1;
     if(nieuwObstakel == 1){
       randomObstakelVorm = (random(0, moeilijkheid)) + 1;
@@ -91,7 +91,10 @@ void randomLevel(){
 void sidescroll(){
   if(aantalObstakels > 0){
     vorigeObstakel1 = obstakelLocatie1;
+    vorigeObstakel2 = obstakelLocatie2;
 
+    checkJump();
+    
     if(obstakelLocatie1 == -32){
       if(geland == 1){
         score++;
@@ -126,7 +129,7 @@ void checkJump(){
 }
 
 void StartJump(){
-  if(in_air = 0){
+  if(in_air == 0){
     velocityY = -2.5;
     in_air = 1;
   }
@@ -358,13 +361,15 @@ void checkButtonPress(){
           scoreSubmit = 0;
           charVerandering = 1;
         } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
-          scoreSubmit = 0;
+          scoreSubmit = 1;
           charVerandering = 1;
+          Serial.println("test");
         }
       }
     }
     if (buttonPressed != 0 || charVerandering == 1) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
       gameStart = 1;
+      break;
     }
   }
 }
@@ -391,11 +396,13 @@ void teken(){
       resetDriehoek(vorigeObstakel2);
     }
   }
-  if (in_air) {
+  if (in_air == 1) {
     if (velocityY <= 0) {
+      Serial.println("test1");
       lcd.fillRect(32, positionY - 15, 15, 15 , RGB(0, 0, 0));
       lcd.fillRect(32, positionY, 15, last_y - positionY + 1, RGB(255, 255, 255));
     } else if (velocityY > 0 || positionY == 160) {
+      Serial.println("test2");
       lcd.fillRect(32, positionY - 15, 15, 15, RGB(0, 0, 0));
       lcd.fillRect(32, last_y - 15, 15, (positionY - 15) - (last_y - 15) , RGB(255, 255, 255));
     }
@@ -420,6 +427,7 @@ void game(){
     nunchuck_get_data();
     zbutton = nunchuck_zbutton();
     
+    //checkJump();
     sidescroll();
     randomLevel();
     teken();
@@ -484,6 +492,7 @@ int main(){
       gameIsLive = 1;
       death = 0;
       score = 0;
+      in_air = 0;
       game();
       firstTime = 1;
       buttonPressed = 10;
@@ -515,10 +524,12 @@ int main(){
       gameStart = 0;
       inputScore();
       firstTime = 1;
+      Serial.println("einde");
       buttonPressed = 0;
       gameStart = 0;
       postGame = 0;
       toCheckButton = 0;
+      scoreSubmit = 0;
     }
 
     if(toCheckButton == 1){
