@@ -130,6 +130,7 @@ void checkJump(){
 }
 
 void StartJump(){
+  Serial.println(in_air);
   if(!in_air){
     velocityY = -2.5;
     in_air = true;
@@ -147,9 +148,9 @@ void Update(){
   velocityY += gravity;
   positionY += velocityY;
 
-  if(positionY > 159){
-    positionY = 160;
-    velocityY = 0;
+  if(positionY > 160.0){
+    positionY = 160.0;
+    velocityY = 0.0;
     in_air = false;
   }
 }
@@ -401,13 +402,13 @@ void teken(){
       lcd.fillRect(32, positionY, 15, last_y - positionY + 1, RGB(255, 255, 255));
     } else if (velocityY > 0 || positionY == 160) {
       lcd.fillRect(32, positionY - 15, 15, 15, RGB(0, 0, 0));
-      lcd.fillRect(32, last_y - 15, 15, (positionY - 15) - (last_y - 15) , RGB(255, 255, 255));
+      lcd.fillRect(32, last_y - 15 - 1, 15, (positionY - 15) - (last_y - 15) + 1, RGB(255, 255, 255));
     }
-    keren = false;
-  } else if (!keren) {
-    speler();
-    keren = true;
   }
+//  if(!in_air){
+//    speler();
+//    lcd.fillRect(32, positionY - 22, 15 ,7 , RGB(255, 255, 255));
+//  }
   _delay_ms(2);
 }
 
@@ -427,9 +428,9 @@ void game(){
     //checkJump();
     sidescroll();
     randomLevel();
-    teken();
     hitbox();
-
+    teken();
+    
     if(death){
       gameIsLive = false;
     }
@@ -456,7 +457,7 @@ void hitbox(){
       }
     }
     if(32 < obstakelLocatie1 && geland){
-      in_air = true;
+      in_air = false;
     }
   }
   if(obstakelVorm1 == 1){
@@ -464,7 +465,11 @@ void hitbox(){
       if(positionY > currentY){
         death = true;
       }
-      currentY -= 2;
+      if(obstakelLocatie1 < 31){
+        currentY += 2;
+      }else{
+        currentY -= 2;
+      }
     }
   }
   if(currentY == 128){
