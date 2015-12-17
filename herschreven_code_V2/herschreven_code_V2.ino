@@ -457,7 +457,7 @@ void hitbox(){
       }
     }
     if(32 < obstakelLocatie1 && geland){
-      in_air = false;
+      in_air = true;
     }
   }
   if(obstakelVorm1 == 1){
