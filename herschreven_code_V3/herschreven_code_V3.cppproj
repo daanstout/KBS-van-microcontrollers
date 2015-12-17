@@ -137,6 +137,11 @@
 </AvrGccCpp>
     </ToolchainSettings>
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../herschreven_code_V3;C:/Users/donovan/Documents/Arduino/libraries/digitalWriteFast;C:/Users/donovan/Documents/Arduino/libraries/digitalWriteFast/utility;C:/Users/donovan/Documents/Arduino/libraries/GraphicsLib;C:/Users/donovan/Documents/Arduino/libraries/GraphicsLib/utility;C:/Users/donovan/Documents/Arduino/libraries/MI0283QT9;C:/Users/donovan/Documents/Arduino/libraries/MI0283QT9/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/donovan/Documents/Arduino/libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include;</VMSETTING_IncludePaths>
+    <VisualMicroSettings>
+      <VisualMicroSettings>
+        <arduino.upload.port>COM5</arduino.upload.port>
+      </VisualMicroSettings>
+    </VisualMicroSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
@@ -236,6 +241,11 @@
 </AvrGccCpp>
     </ToolchainSettings>
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../herschreven_code_V3;C:/Users/donovan/Documents/Arduino/libraries/digitalWriteFast;C:/Users/donovan/Documents/Arduino/libraries/digitalWriteFast/utility;C:/Users/donovan/Documents/Arduino/libraries/GraphicsLib;C:/Users/donovan/Documents/Arduino/libraries/GraphicsLib/utility;C:/Users/donovan/Documents/Arduino/libraries/MI0283QT9;C:/Users/donovan/Documents/Arduino/libraries/MI0283QT9/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/donovan/Documents/Arduino/libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include;</VMSETTING_IncludePaths>
+    <VisualMicroSettings>
+      <VisualMicroSettings>
+        <arduino.upload.port>COM5</arduino.upload.port>
+      </VisualMicroSettings>
+    </VisualMicroSettings>
   </PropertyGroup>
   <ItemGroup>
     <None Include="herschreven_code_V3.ino">

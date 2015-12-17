@@ -14,7 +14,7 @@
 void Jump::checkJump(){
 	if(zbutton == 1) startJump();
 	if(zbutton == 0) endJump();
-
+	if(positionY > 159 && in_air == true) in_air = false;
 	update();
 	
 }
@@ -28,6 +28,7 @@ void Jump::startJump(){
 void Jump::endJump(){
 	if(velocityY < -1.5){
 		velocityY = -1.5;
+		in_air = false;
 	}
 }
 

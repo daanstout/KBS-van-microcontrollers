@@ -123,10 +123,6 @@ void speler() {
   lcd.fillRect(32, J.positionY - 15, 15, 15, RGB(0, 0, 0));
 }
 
-//menu:
-
-//scoreboard:
-
 //het hertekenen van verschillende dingen:
 void teken() {
   if (obstakelLocatie1 != vorigeObstakel1) {
@@ -211,9 +207,6 @@ void hitbox() {
     }
     if (32 < obstakelLocatie1 && geland) {
       J.in_air = true;
-    }
-    if (J.positionY > 160) {
-      J.in_air = false;
     }
   }
   if (obstakelVorm1 == 1) {
