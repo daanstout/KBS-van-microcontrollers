@@ -459,6 +459,9 @@ void hitbox(){
     if(32 < obstakelLocatie1 && geland){
       in_air = true;
     }
+    if(positionY > 160){
+      in_air = false;
+    }
   }
   if(obstakelVorm1 == 1){
     if(47 > obstakelLocatie1){
