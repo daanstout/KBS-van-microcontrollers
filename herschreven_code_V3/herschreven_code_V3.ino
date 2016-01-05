@@ -20,7 +20,7 @@ Jump J;
 Menu M;
 
 uint8_t randomObstakels = 0, randomObstakelVorm, aantalObstakels = 0, nieuwObstakel, obstakelVorm1 = 0, obstakelVorm2 = 0;    //level generatie variabelen
-uint8_t moeilijkheid = 5;    //game variabelen
+uint8_t moeilijkheid = 255;    //game variabelen
 uint8_t currentY = 160;     //draw variabelen
 uint16_t obstakelLocatie1, obstakelLocatie2, vorigeObstakel1, vorigeObstakel2;      //obstakel variabelen
 
@@ -63,7 +63,7 @@ void randomLevel() {
   if (aantalObstakels == 0) {
     randomObstakelVorm = (random(0, moeilijkheid)) + 1;
     aantalObstakels++;
-    if (randomObstakelVorm == 1) {
+    if (randomObstakelVorm <= 50) {
       obstakelVorm1 = 1;
     } else {
       obstakelVorm1 = 2;
@@ -71,11 +71,11 @@ void randomLevel() {
     obstakelLocatie1 = 320;
   }
   if (obstakelLocatie1 < 160 && aantalObstakels < 2) {
-    nieuwObstakel = (random(0, 3)) + 1;
+    nieuwObstakel = (random(0, 10)) + 1;
     if (nieuwObstakel == 1) {
       randomObstakelVorm = (random(0, moeilijkheid)) + 1;
       aantalObstakels++;
-      if (randomObstakelVorm == 1) {
+      if (randomObstakelVorm <= 50) {
         obstakelVorm2 = 1;
       } else {
         obstakelVorm2 = 2;
@@ -96,10 +96,18 @@ void sidescroll() {
     if (obstakelLocatie1 == -32) {
       if (geland) {
         M.score++;
+        if(moeilijkheid > 100){
+          moeilijkheid--;
+        }
       } else if (!geland) {
         M.score += 2;
+        if(moeilijkheid > 101){
+          moeilijkheid -= 2;
+        }
       }
-
+      
+      drawMoeilijkheid();
+      
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
       lcd.drawInteger(105, 210, M.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
 
@@ -161,10 +169,31 @@ void teken() {
   _delay_ms(2);
 }
 
+void drawMoeilijkheid(){
+  if(moeilijkheid == 255){
+    for(uint16_t c = 195; c < 300; c += 25){
+      lcd.drawCircle(c, 15, 10, RGB(0, 0, 0));
+    }
+  }else{
+    if(moeilijkheid == 130 || moeilijkheid == 129){
+      lcd.fillCircle(295, 15, 10, RGB(0, 0, 0));
+    }else if(moeilijkheid == 160 || moeilijkheid == 159){
+      lcd.fillCircle(270, 15, 10, RGB(0, 0, 0));
+    }else if(moeilijkheid == 190 || moeilijkheid == 189){
+      lcd.fillCircle(245, 15, 10, RGB(0, 0, 0));
+    }else if(moeilijkheid == 220 || moeilijkheid == 219){
+      lcd.fillCircle(220, 15, 10, RGB(0, 0, 0));
+    }else if(moeilijkheid == 250 || moeilijkheid == 249){
+      lcd.fillCircle(195, 15, 10, RGB(0, 0, 0));
+    }
+  }
+}
+
 void game() {
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
   lcd.drawInteger(105, 210, M.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  drawMoeilijkheid();
   tekenLijn();
   nunchuck_setpowerpins();
   nunchuck_init();
