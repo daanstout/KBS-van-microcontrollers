@@ -76,6 +76,7 @@ void Opmaak::randomLevel() {
 }
 void Opmaak::teken(MI0283QT9 lcd) {
   Jump J;
+ // J.checkJump();
   if (obstakelLocatie1 != vorigeObstakel1) {
     if (obstakelVorm1 == 2) {
       drawVierkant(obstakelLocatie1, lcd);

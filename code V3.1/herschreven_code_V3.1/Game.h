@@ -8,6 +8,7 @@ class Game{
   uint8_t currentY = 160;     //draw variabelen
   uint8_t moeilijkheid = 255;    //game variabelen
   
+  
   void game(MI0283QT9 lcd);
   void hitbox();
   

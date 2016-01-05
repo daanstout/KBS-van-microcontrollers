@@ -27,7 +27,7 @@ int main() {
   Serial.begin(9600);
 
   while (1) {
-
+    
     if (M.firstTime) {
       M.drawMenu(lcd);
       M.firstTime = false;

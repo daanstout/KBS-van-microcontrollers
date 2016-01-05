@@ -12,16 +12,18 @@
 
 
 void Jump::checkJump() {
-  if (zbutton == 1) startJump();
+Serial.begin(9600);
+Serial.print("check");
+  if (zbutton == 1) startJump();  
   if (zbutton == 0) endJump();
-  if (positionY == 160 && in_air == true) in_air = false;
-  update();
-
+  //if (positionY > 160 && in_air == true) in_air = false;
+  updateJump();
 }
 void Jump::startJump() {
   if (!in_air) {
     velocityY = -2.5;
     in_air = true;
+    Serial.print("sjump");
   }
 }
 
@@ -30,10 +32,12 @@ void Jump::endJump() {
   if (velocityY < -1.5) {
     velocityY = -1.5;
     in_air = false;
+     Serial.print("ejump");
+   
   }
 }
 
-void Jump::update() {
+void Jump::updateJump() {
   last_y = positionY;
   velocityY += gravity;
   positionY += velocityY;
@@ -43,4 +47,5 @@ void Jump::update() {
     velocityY = 0.0;
     in_air = false;
   }
+  Serial.print("ujump");
 }

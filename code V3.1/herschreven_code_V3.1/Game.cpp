@@ -28,8 +28,8 @@ void Game::game(MI0283QT9 lcd) {
 
   while (gameIsLive) {
     nunchuck_get_data();
-    J.zbutton = nunchuck_zbutton();
-
+    J.zbutton = nunchuck_get_data();
+    
     J.checkJump();
     O.sidescroll(lcd);
     O.randomLevel();
@@ -64,7 +64,10 @@ void Game::hitbox() {
       }
     }
     if (32 < O.obstakelLocatie1 && geland) {
-      J.in_air = true;
+     J.in_air = true;
+    }
+    if(J.positionY > 160){
+      J.in_air = false;
     }
   }
   if (O.obstakelVorm1 == 1) {
