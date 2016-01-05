@@ -12,14 +12,14 @@
 #include <EEPROM.h>
 
 MI0283QT9 lcd;
-struct Score{
+struct Score {
   uint16_t punten;
   String letter1;
   String letter2;
   String letter3;
 };
 //highscores
-int eeAdress = 0, eeAdressKleinste; 
+int eeAdress = 0, eeAdressKleinste;
 Score nummer1, nummer2, nummer3, nummer4, nummer5, kleinste, nummer;
 
 //getallen:
@@ -74,21 +74,21 @@ void randomLevel() {
     }
     obstakelLocatie1 = 320;
   }
-//  if (obstakelLocatie1 < 255 && aantalObstakels < 2) {
-//    uint8_t temprand = (random(0, 3)) + 1;
-//    if (temprand == 1) {
-//      randomObstakel = (random(0, moeilijkheid)) + 1;
-//      aantalObstakels++;
-//      if (randomObstakel == 1) {
-//        aantalDriehoek++;
-//      } else {
-//        aantalVierkant++;
-//      }
-//      if (aantalObstakels == 1) {
-//        obstakelLocatie2 = 320;
-//      }
-//    }
-//  }
+  //  if (obstakelLocatie1 < 255 && aantalObstakels < 2) {
+  //    uint8_t temprand = (random(0, 3)) + 1;
+  //    if (temprand == 1) {
+  //      randomObstakel = (random(0, moeilijkheid)) + 1;
+  //      aantalObstakels++;
+  //      if (randomObstakel == 1) {
+  //        aantalDriehoek++;
+  //      } else {
+  //        aantalVierkant++;
+  //      }
+  //      if (aantalObstakels == 1) {
+  //        obstakelLocatie2 = 320;
+  //      }
+  //    }
+  //  }
 }
 
 void sidescroll() {
@@ -111,24 +111,24 @@ void sidescroll() {
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
       lcd.drawInteger(105, 210, score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
       geland = 0;
-//      if (aantalObstakels == 2) {
-//        aantalObstakels--;
-//        obstakelLocatie1 = obstakelLocatie2;
-//        if (vierkant == 1) {
-//          aantalVierkant--;
-//        } else if (driehoek == 1) {
-//          aantalDriehoek--;
-//        }
-//        if (aantalVierkant == 1) {
-//          vierkant = 1;
-//          driehoek = 0;
-//        } else if (aantalDriehoek == 1) {
-//          vierkant = 1;
-//          driehoek = 1;
-//        }
-//      } else
-        if (aantalObstakels == 1) {
-          aantalObstakels--;
+      //      if (aantalObstakels == 2) {
+      //        aantalObstakels--;
+      //        obstakelLocatie1 = obstakelLocatie2;
+      //        if (vierkant == 1) {
+      //          aantalVierkant--;
+      //        } else if (driehoek == 1) {
+      //          aantalDriehoek--;
+      //        }
+      //        if (aantalVierkant == 1) {
+      //          vierkant = 1;
+      //          driehoek = 0;
+      //        } else if (aantalDriehoek == 1) {
+      //          vierkant = 1;
+      //          driehoek = 1;
+      //        }
+      //      } else
+      if (aantalObstakels == 1) {
+        aantalObstakels--;
         if (vierkant == 1) {
           aantalVierkant--;
           vierkant = 0;
@@ -234,79 +234,70 @@ void tekenVak3() {
   lcd.fillTriangle(197, 145, 212, 145, 204, 153, RGB(0, 0, 0));
   //tekent het derde vak om je initialen in te vullen
 }
-
-//void getScores(){
-//  EEPROM.get(eeAdress, nummer1);
-//  eeAdress += sizeof(Score);
-//  EEPROM.get(eeAdress, nummer2);
-//  eeAdress += sizeof(Score);
-//  EEPROM.get(eeAdress, nummer3);
-//  eeAdress += sizeof(Score);
-//  EEPROM.get(eeAdress, nummer4);
-//  eeAdress += sizeof(Score);
-//  EEPROM.get(eeAdress, nummer5);
-//  eeAdress = 0;
-//}
-
-void bepaalKleinste(){
-  for(int i = 0; i < 5; i++){
+//bepalen van de laagste score om te bepalen welke score over kan worden geschreven voor de nieuwe
+void bepaalKleinste() {
+  for (int i = 0; i < 5; i++) {
     EEPROM.get(eeAdress, nummer);
-    if(nummer.punten < kleinste.punten){
+    if (nummer.punten < kleinste.punten) {
       kleinste = nummer;
       eeAdressKleinste = eeAdress;
+      Serial.println(eeAdressKleinste);
+      Serial.println(" eeAdressKleinste");
     }
     eeAdress += sizeof(Score);
   }
   eeAdress = 0;
 }
 
-void saveScore(){
-    bepaalKleinste();
-    if(score > kleinste.punten){
-      kleinste = {score, eerste2, tweede2, derde2};
-      EEPROM.put(eeAdressKleinste, kleinste);
-    }
-}
-
-void vulEEPROM(){
-  Score een = {0, "A", "A", "P"};
-  EEPROM.put(eeAdress, een);
-  eeAdress += sizeof(Score);
-  Score twee = {0, "R", "I", "K"};
-  EEPROM.put(eeAdress, twee);
-  eeAdress += sizeof(Score);
-  Score drie = {0, "D", "A", "N"};
-  EEPROM.put(eeAdress, drie);
-  eeAdress += sizeof(Score);
-  Score vier = {0, "D", "O", "N"};
-  EEPROM.put(eeAdress, vier);
-  eeAdress += sizeof(Score);
-  Score vijf = {1, "P", "A", "P"};
-  EEPROM.put(eeAdress, vijf);
+//score opslaan op de plaats van de laagste score
+void saveScore() {
   eeAdress = 0;
+  bepaalKleinste();
+  
+  kleinste = {score, eerste2, tweede2, derde2};
+  EEPROM.put(eeAdressKleinste, kleinste);
 }
 
-void checkScore(){
+//eenmalig vullen van de EEPROM
+//void vulEEPROM() {
+//  Score een = {0, "A", "A", "P"};
+//  EEPROM.put(eeAdress, een);
+//  eeAdress += sizeof(Score);
+//  Score twee = {0, "R", "I", "K"};
+//  EEPROM.put(eeAdress, twee);
+//  eeAdress += sizeof(Score);
+//  Score drie = {0, "D", "A", "N"};
+//  EEPROM.put(eeAdress, drie);
+//  eeAdress += sizeof(Score);
+//  Score vier = {0, "D", "O", "N"};
+//  EEPROM.put(eeAdress, vier);
+//  eeAdress += sizeof(Score);
+//  Score vijf = {1, "P", "A", "P"};
+//  EEPROM.put(eeAdress, vijf);
+//  eeAdress = 0;
+//}
 
-  for(int i = 0; i < 5; i++){
+void checkScore() {
+  eeAdress = 0;
+  for (int i = 0; i < 5; i++) {
     EEPROM.get(eeAdress, nummer);
-    if(nummer.punten > nummer1.punten){
+    if (nummer.punten > nummer1.punten) {
       nummer1 = nummer;
       rank = 1;
     }
-    else if(nummer.punten > nummer2.punten && nummer.punten < nummer1.punten){
+    else if (nummer.punten > nummer2.punten && nummer.punten < nummer1.punten) {
       nummer2 = nummer;
       rank = 2;
     }
-    else if(nummer.punten > nummer3.punten && nummer.punten < nummer2.punten){
+    else if (nummer.punten > nummer3.punten && nummer.punten < nummer2.punten) {
       nummer3 = nummer;
       rank = 3;
     }
-    else if(nummer.punten > nummer4.punten && nummer.punten < nummer3.punten){
+    else if (nummer.punten > nummer4.punten && nummer.punten < nummer3.punten) {
       nummer4 = nummer;
       rank = 4;
     }
-    else if(nummer.punten > nummer5.punten && nummer.punten < nummer4.punten){
+    else if (nummer.punten > nummer5.punten && nummer.punten < nummer4.punten) {
       nummer5 = nummer;
       rank = 5;
     }
@@ -316,43 +307,43 @@ void checkScore(){
   eeAdress = 0;
 }
 
-void printScore(){
+void printScore() {
   checkScore();
-  lcd.drawText(90, 10, "HIGHSCORES", RGB(0,0,0),RGB(111,111,111), 2);                  //HIGHSCORE schrijven
-  
-  lcd.drawText(60, 37, "1.", RGB(0,0,0),RGB(111,111,111), 2);                         //rank 1 schrijven
-  lcd.drawText(110, 37, nummer1.letter1, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(125, 37, nummer1.letter2, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(140, 37, nummer1.letter3, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawInteger(200, 37, nummer1.punten, DEC, RGB(0,0,0),RGB(111,111,111), 2);
+  lcd.drawText(90, 10, "HIGHSCORES", RGB(0, 0, 0), RGB(111, 111, 111), 2);             //HIGHSCORE schrijven
+
+  lcd.drawText(60, 37, "1.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 1 schrijven
+  lcd.drawText(110, 37, nummer1.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(125, 37, nummer1.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(140, 37, nummer1.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 37, nummer1.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   Serial.println(nummer1.punten);
-  
-  lcd.drawText(60, 62, "2.", RGB(0,0,0),RGB(111,111,111), 2);                         //rank 2 schrijven
-  lcd.drawText(110, 62, nummer2.letter1, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(125, 62, nummer2.letter2, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(140, 62, nummer2.letter3, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawInteger(200, 62, nummer2.punten, DEC, RGB(0,0,0),RGB(111,111,111), 2);
+
+  lcd.drawText(60, 62, "2.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 2 schrijven
+  lcd.drawText(110, 62, nummer2.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(125, 62, nummer2.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(140, 62, nummer2.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 62, nummer2.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   Serial.println(nummer2.punten);
-  
-  lcd.drawText(60, 87, "3.", RGB(0,0,0),RGB(111,111,111), 2);                         //rank 3 schrijven
-  lcd.drawText(110, 87, nummer3.letter1, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(125, 87, nummer3.letter2, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(140, 87, nummer3.letter3, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawInteger(200, 87, nummer3.punten, DEC, RGB(0,0,0),RGB(111,111,111), 2);
+
+  lcd.drawText(60, 87, "3.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 3 schrijven
+  lcd.drawText(110, 87, nummer3.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(125, 87, nummer3.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(140, 87, nummer3.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 87, nummer3.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   Serial.println(nummer3.punten);
-  
-  lcd.drawText(60, 112, "4.", RGB(0,0,0),RGB(111,111,111), 2);                        //rank 4 schrijven
-  lcd.drawText(110, 112, nummer4.letter1, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(125, 112, nummer4.letter2, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(140, 112, nummer4.letter3, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0,0,0),RGB(111,111,111), 2);
+
+  lcd.drawText(60, 112, "4.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 4 schrijven
+  lcd.drawText(110, 112, nummer4.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(125, 112, nummer4.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(140, 112, nummer4.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   Serial.println(nummer4.punten);
-  
-  lcd.drawText(60, 137, "5.", RGB(0,0,0),RGB(111,111,111), 2);                        //rank 5 schrijven
-  lcd.drawText(110, 137, nummer5.letter1, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(125, 137, nummer5.letter2, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawText(140, 137, nummer5.letter3, RGB(0,0,0),RGB(111,111,111), 2);
-  lcd.drawInteger(200, 137, nummer5.punten, DEC, RGB(0,0,0),RGB(111,111,111), 2);
+
+  lcd.drawText(60, 137, "5.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 5 schrijven
+  lcd.drawText(110, 137, nummer5.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(125, 137, nummer5.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(140, 137, nummer5.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 137, nummer5.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   Serial.println(nummer5.punten);
 }
 
@@ -532,39 +523,39 @@ void teken() {
       resetSpijker(last_x);
     }
   }
-//  if (aantalObstakels == 2 && obstakelLocatie2 != last_x2) {
-//    if (vierkant == 1) {
-//      if (aantalVierkant == 2) {
-//        obstakel(obstakelLocatie2);
-//        resetObstakel(last_x2);
-//      } else if (aantalDriehoek == 1) {
-//        spijker(obstakelLocatie2);
-//        resetSpijker(last_x2);
-//      }
-//    } else if (driehoek == 1) {
-//      if (aantalVierkant == 1) {
-//        obstakel(obstakelLocatie2);
-//        resetObstakel(last_x2);
-//      } else if (aantalDriehoek == 2) {
-//        spijker(obstakelLocatie2);
-//        resetSpijker(last_x2);
-//      }
-//    }
-//  }
+  //  if (aantalObstakels == 2 && obstakelLocatie2 != last_x2) {
+  //    if (vierkant == 1) {
+  //      if (aantalVierkant == 2) {
+  //        obstakel(obstakelLocatie2);
+  //        resetObstakel(last_x2);
+  //      } else if (aantalDriehoek == 1) {
+  //        spijker(obstakelLocatie2);
+  //        resetSpijker(last_x2);
+  //      }
+  //    } else if (driehoek == 1) {
+  //      if (aantalVierkant == 1) {
+  //        obstakel(obstakelLocatie2);
+  //        resetObstakel(last_x2);
+  //      } else if (aantalDriehoek == 2) {
+  //        spijker(obstakelLocatie2);
+  //        resetSpijker(last_x2);
+  //      }
+  //    }
+  //  }
   if (in_air) {
     if (velocityY <= 0) {
       lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
       lcd.fillRect(positionX, positionY, grootteSpeler , last_y - positionY + 1, RGB(255, 255, 255));
     } else if (velocityY > 0) {
       lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
-      lcd.fillRect(positionX, (last_y - grootteSpeler) - 1, grootteSpeler , ((positionY - grootteSpeler) - (last_y - grootteSpeler)) +1 , RGB(255, 255, 255));
+      lcd.fillRect(positionX, (last_y - grootteSpeler) - 1, grootteSpeler , ((positionY - grootteSpeler) - (last_y - grootteSpeler)) + 1 , RGB(255, 255, 255));
     }
     //_delay_ms(4);
 
   }
   if (!in_air) {
     speler();
-    lcd.fillRect(positionX, positionY -grootteSpeler - 7, grootteSpeler ,7 , RGB(255, 255, 255));
+    lcd.fillRect(positionX, positionY - grootteSpeler - 7, grootteSpeler , 7 , RGB(255, 255, 255));
   }
 }
 
