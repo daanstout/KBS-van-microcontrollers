@@ -34,7 +34,7 @@ Game G;
 
 //booleans:
 
-     //jump variabelen      moet een int zijn omdat de nunchuk functie 1 of 0 returned
+//jump variabelen      moet een int zijn omdat de nunchuk functie 1 of 0 returned
 
 
 //tekenen van de grond waar de speler op loopt
@@ -67,8 +67,8 @@ int main() {
   lcd.touchStartCal();
   Serial.begin(9600);
 
-  while (1){
-    
+  while (1) {
+
     if (M.firstTime) {
       M.drawMenu(lcd);
       M.firstTime = false;
