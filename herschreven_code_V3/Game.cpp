@@ -17,7 +17,7 @@ void Game::game(MI0283QT9 lcd) {
   Menu M;
   Opmaak O;
   Jump J;
-
+  
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
   lcd.drawInteger(105, 210, M.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
