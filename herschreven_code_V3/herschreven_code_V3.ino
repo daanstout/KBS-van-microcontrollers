@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include "Jump.h"
 #include "Menu.h"
+#include "Opmaak.h"
+#include "Game.h"
 
 MI0283QT9 lcd;
 
@@ -18,11 +20,20 @@ MI0283QT9 lcd;
 //getallen:
 Jump J;
 Menu M;
+Opmaak O;
+Game G;
 
+
+
+
+
+<<<<<<< HEAD
 uint8_t randomObstakels = 0, randomObstakelVorm, aantalObstakels = 0, nieuwObstakel, obstakelVorm1 = 0, obstakelVorm2 = 0;    //level generatie variabelen
 uint8_t moeilijkheid = 255;    //game variabelen
 uint8_t currentY = 160;     //draw variabelen
 uint16_t obstakelLocatie1, obstakelLocatie2, vorigeObstakel1, vorigeObstakel2;      //obstakel variabelen
+=======
+>>>>>>> origin/Daan's-Workplace
 
 
 
@@ -30,35 +41,19 @@ uint16_t obstakelLocatie1, obstakelLocatie2, vorigeObstakel1, vorigeObstakel2;  
 
 //booleans:
 
-uint8_t zbutton;         //jump variabelen      moet een int zijn omdat de nunchuk functie 1 of 0 returned
-bool gameIsLive = false, death = false, geland = false;     //game booleans
+     //jump variabelen      moet een int zijn omdat de nunchuk functie 1 of 0 returned
+
 
 //tekenen van de grond waar de speler op loopt
-void tekenLijn() {
-  lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
-}
+
 
 //obstakels:
 
 //vierkant:
-void drawVierkant(int x) {
-  lcd.drawLine(x, 160, x, 128, RGB(255, 0, 0)); //eerste rij genereren
-}
 
-void resetVierkant(int x) {
-  lcd.drawLine(x + 32, 160, x + 32, 128, RGB(255, 255, 255)); //laatste rij van obstakel resetten
-}
-
-//driehoek:
-void drawDriehoek(int x) {
-  lcd.drawLine(x, 160, x + 16, 128, RGB(200, 0, 0));
-}
-
-void resetDriehoek(int x) {
-  lcd.drawLine(x + 16, 128, x + 32, 160, RGB(255, 255, 255));
-}
 
 //randomlevel generatie:
+<<<<<<< HEAD
 void randomLevel() {
   if (aantalObstakels == 0) {
     randomObstakelVorm = (random(0, moeilijkheid)) + 1;
@@ -125,50 +120,18 @@ void sidescroll() {
     obstakelLocatie2--;
   }
 }
+=======
 
 
-void speler() {
-  lcd.fillRect(32, J.positionY - 15, 15, 15, RGB(0, 0, 0));
-}
+//scrollen van het scherm:
+>>>>>>> origin/Daan's-Workplace
+
+
+
 
 //het hertekenen van verschillende dingen:
-void teken() {
-  if (obstakelLocatie1 != vorigeObstakel1) {
-    if (obstakelVorm1 == 2) {
-      drawVierkant(obstakelLocatie1);
-      resetVierkant(vorigeObstakel1);
-    }
-    if (obstakelVorm1 == 1) {
-      drawDriehoek(obstakelLocatie1);
-      resetDriehoek(vorigeObstakel1);
-    }
-  }
-  if (aantalObstakels == 2 && obstakelLocatie2 != vorigeObstakel2) {
-    if (obstakelVorm2 == 2) {
-      drawVierkant(obstakelLocatie2);
-      resetVierkant(vorigeObstakel2);
-    }
-    if (obstakelVorm2 == 1) {
-      drawDriehoek(obstakelLocatie2);
-      resetDriehoek(vorigeObstakel2);
-    }
-  }
-  if (J.in_air) {
-    if (J.velocityY <= 0) {
-      lcd.fillRect(32, J.positionY - 15, 15, 15 , RGB(0, 0, 0));
-      lcd.fillRect(32, J.positionY, 15, J.last_y - J.positionY + 1, RGB(255, 255, 255));
-    } else if (J.velocityY > 0 || J.positionY == 160) {
-      lcd.fillRect(32, J.positionY - 15, 15, 15, RGB(0, 0, 0));
-      lcd.fillRect(32, J.last_y - 15 - 1, 15, (J.positionY - 15) - (J.last_y - 15) + 1, RGB(255, 255, 255));
-    }
-  }
-  //  if(!J.in_air){
-  //    speler();
-  //    lcd.fillRect(32, J.positionY - 22, 15 ,7 , RGB(255, 255, 255));
-  //  }
-  _delay_ms(2);
-}
 
+<<<<<<< HEAD
 void drawMoeilijkheid(){
   if(moeilijkheid == 255){
     for(uint16_t c = 195; c < 300; c += 25){
@@ -213,47 +176,12 @@ void game() {
       gameIsLive = false;
     }
   }
+=======
+>>>>>>> origin/Daan's-Workplace
 
-  J.positionY = 160;
-  obstakelLocatie1 = 0;
-  obstakelLocatie2 = 0;
-  aantalObstakels = 0;
-  J.in_air = false;
-}
 
-void hitbox() {
-  if (obstakelVorm1 == 2) {
-    if (47 > obstakelLocatie1) {
-      if (J.positionY > 121 && J.positionY < 129) {
-        J.velocityY = 0;
-        J.in_air = false;
-        J.positionY = 128;
-        geland = true;
-      }
-      if (J.positionY > 128) {
-        death = true;
-      }
-    }
-    if (32 < obstakelLocatie1 && geland) {
-      J.in_air = true;
-    }
-  }
-  if (obstakelVorm1 == 1) {
-    if (47 > obstakelLocatie1) {
-      if (J.positionY > currentY) {
-        death = true;
-      }
-      if (obstakelLocatie1 < 31) {
-        currentY += 2;
-      } else {
-        currentY -= 2;
-      }
-    }
-  }
-  if (currentY == 128) {
-    currentY = 160;
-  }
-}
+
+
 
 int main() {
   init();
@@ -262,17 +190,18 @@ int main() {
   lcd.touchStartCal();
   Serial.begin(9600);
 
-  while (1) {
+  while (1){
+    
     if (M.firstTime) {
       M.drawMenu(lcd);
       M.firstTime = false;
     }
 
     if (M.buttonPressed == 1) {
-      gameIsLive = true;
-      death = false;
+      G.gameIsLive = true;
+      G.death = false;
       M.score = 0;
-      game();
+      G.game(lcd);
       M.firstTime = true;
       M.buttonPressed = 10;
       M.gameStart = false;

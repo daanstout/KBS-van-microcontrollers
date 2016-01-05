@@ -14,7 +14,11 @@
 void Jump::checkJump(){
 	if(zbutton == 1) startJump();
 	if(zbutton == 0) endJump();
+<<<<<<< HEAD
 //	if(positionY > 159 && in_air == true) in_air = false;
+=======
+	if(positionY == 160 && in_air == true) in_air = false;
+>>>>>>> origin/Daan's-Workplace
 	update();
 	
 }
