@@ -13,11 +13,4 @@ class Game{
   void hitbox();
   
 };
-
-
-
-
-
-
-
 #endif

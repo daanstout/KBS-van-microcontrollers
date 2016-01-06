@@ -6,7 +6,7 @@ class Opmaak{
     uint8_t randomObstakels = 0, randomObstakelVorm, nieuwObstakel, obstakelVorm2 = 0;    //level generatie variabelen
     uint16_t  vorigeObstakel1, vorigeObstakel2;      //obstakel variabelen
     public:
-    uint8_t  aantalObstakels = 0, obstakelVorm1 = 0;
+    uint8_t  aantalObstakels = 0, obstakelVorm1;
     uint16_t obstakelLocatie1, obstakelLocatie2;
     
     void sidescroll(MI0283QT9 lcd);

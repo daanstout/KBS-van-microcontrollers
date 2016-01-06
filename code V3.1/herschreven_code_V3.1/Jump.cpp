@@ -9,7 +9,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include "Jump.h"
-#include "Game.h"
+
 
 
 void Jump::checkJump() {

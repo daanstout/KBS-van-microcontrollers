@@ -12,12 +12,14 @@
 #include "Menu.h"
 #include "Jump.h"
 #include "Opmaak.h"
-
-void Game::game(MI0283QT9 lcd) {
-  Menu M;
-  Opmaak O;
-  Jump J;
   
+
+  
+void Game::game(MI0283QT9 lcd) {
+Jump J;
+Menu M;
+Opmaak O;
+
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
   lcd.drawInteger(105, 210, M.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
@@ -25,6 +27,7 @@ void Game::game(MI0283QT9 lcd) {
   nunchuck_setpowerpins();
   nunchuck_init();
   O.speler(lcd);
+  O.drawMoeilijkheid(lcd);
 
   J.positionY = 160;
   O.obstakelLocatie1 = 0;
@@ -37,9 +40,12 @@ void Game::game(MI0283QT9 lcd) {
     J.zbutton = nunchuck_zbutton();
     
     //Serial.print(J.zbutton);
+    
+    O.randomLevel();
+    Serial.print(O.obstakelVorm1);
     hitbox();
     O.sidescroll(lcd);
-    O.randomLevel();
+    
     O.teken(lcd);
     J.checkJump();
     J.tekenJump(lcd);
@@ -59,10 +65,11 @@ void Game::game(MI0283QT9 lcd) {
   
 }
 void Game::hitbox() {
-  Menu M;
-  Opmaak O;
   Jump J;
-  if (O.obstakelVorm1 == 2) { // <--- probleem
+  Opmaak O;
+  
+  Serial.println(O.obstakelVorm1);
+  if (O.obstakelVorm1 == 2) { //als eerste figuur == 4kant
     Serial.println("vorm1 == 2");
     if (47 > O.obstakelLocatie1) {
       Serial.println("47 > O.Obstakel1");

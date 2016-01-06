@@ -53,10 +53,10 @@ void Opmaak::randomLevel() {
   if (aantalObstakels == 0) {
     randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;
     aantalObstakels++;
-    if (randomObstakelVorm == 1) {
-      obstakelVorm1 = 1;
-    } else {
+    if (randomObstakelVorm != 1) {
       obstakelVorm1 = 2;
+    } else {
+      obstakelVorm1 = 1;
     }
     obstakelLocatie1 = 320;
   }
@@ -73,6 +73,8 @@ void Opmaak::randomLevel() {
       obstakelLocatie2 = 320;
     }
   }
+  
+  
 }
 void Opmaak::teken(MI0283QT9 lcd) {
   Jump J;
@@ -120,7 +122,7 @@ void Opmaak::speler(MI0283QT9 lcd) {
   Jump J;
   lcd.fillRect(32, J.positionY - 15, 15, 15, RGB(0, 0, 0));
 }
-void drawMoeilijkheid(MI0283QT9 lcd){
+void Opmaak::drawMoeilijkheid(MI0283QT9 lcd){
   Game G;
   if(G.moeilijkheid == 255){
     for(uint16_t c = 195; c < 300; c += 25){
