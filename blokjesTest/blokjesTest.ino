@@ -238,22 +238,24 @@ void tekenVak3() {
 void bepaalKleinste() {
   for (int i = 0; i < 5; i++) {
     EEPROM.get(eeAdress, nummer);
-    if (nummer.punten < kleinste.punten) {
+    if (nummer.punten < kleinste.punten || kleinste.punten == 0) {
       kleinste = nummer;
       eeAdressKleinste = eeAdress;
-      Serial.println(eeAdressKleinste);
+      Serial.print(eeAdressKleinste);
       Serial.println(" eeAdressKleinste");
     }
     eeAdress += sizeof(Score);
+//    Serial.println("uit de if statement");
   }
   eeAdress = 0;
 }
 
 //score opslaan op de plaats van de laagste score
 void saveScore() {
+  Serial.println("savescore aangeroepen");
   eeAdress = 0;
   bepaalKleinste();
-  
+  Serial.println("bepaal kleinste klaar");
   kleinste = {score, eerste2, tweede2, derde2};
   EEPROM.put(eeAdressKleinste, kleinste);
 }
@@ -284,26 +286,36 @@ void checkScore() {
     if (nummer.punten > nummer1.punten) {
       nummer1 = nummer;
       rank = 1;
+      Serial.print(eeAdress);
+      Serial.println(" is nummer 1");
     }
-    else if (nummer.punten > nummer2.punten && nummer.punten < nummer1.punten) {
+    else if (nummer.punten >= nummer2.punten && nummer.punten < nummer1.punten) {
       nummer2 = nummer;
       rank = 2;
+      Serial.print(eeAdress);
+      Serial.println(" is nummer 2");
     }
-    else if (nummer.punten > nummer3.punten && nummer.punten < nummer2.punten) {
+    else if (nummer.punten >= nummer3.punten && nummer.punten < nummer2.punten) {
       nummer3 = nummer;
       rank = 3;
+      Serial.print(eeAdress);
+      Serial.println(" is nummer 3");
     }
-    else if (nummer.punten > nummer4.punten && nummer.punten < nummer3.punten) {
+    else if (nummer.punten >= nummer4.punten && nummer.punten < nummer3.punten) {
       nummer4 = nummer;
       rank = 4;
+      Serial.print(eeAdress);
+      Serial.println(" is nummer 4");
     }
-    else if (nummer.punten > nummer5.punten && nummer.punten < nummer4.punten) {
+    else if (nummer.punten >= nummer5.punten && nummer.punten < nummer4.punten) {
       nummer5 = nummer;
       rank = 5;
+      Serial.print(eeAdress);
+      Serial.println(" is nummer 5");
     }
     eeAdress += sizeof(Score);
-    Serial.println(eeAdress);
   }
+  Serial.println("uit de for loop");
   eeAdress = 0;
 }
 
@@ -386,7 +398,6 @@ void inputScore() {
     checkButtonPress();
     if (charverandering == 1) {
       gameStart = 0;
-
       tekenVak2();
       tekenVak1();
       tekenVak3();
@@ -627,7 +638,7 @@ int main() {
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
   Serial.begin(9600);
-
+  Serial.println(sizeof(Score));
   while (1) {
     if (firstTime == 1) {
       drawMenu();                //drawed het menu
