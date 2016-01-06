@@ -26,41 +26,54 @@ void Game::game(MI0283QT9 lcd) {
   nunchuck_init();
   O.speler(lcd);
 
+  J.positionY = 160;
+  O.obstakelLocatie1 = 0;
+  O.obstakelLocatie2 = 0;
+  O.aantalObstakels = 0;
+  //J.in_air = false;
+  
   while (gameIsLive) {
     nunchuck_get_data();
-    J.zbutton = nunchuck_get_data();
+    J.zbutton = nunchuck_zbutton();
     
-    J.checkJump();
+    //Serial.print(J.zbutton);
+    hitbox();
     O.sidescroll(lcd);
     O.randomLevel();
-    hitbox();
     O.teken(lcd);
-
+    J.checkJump();
+    J.tekenJump(lcd);
+    
+//    Serial.println(death);
+//    Serial.println(J.positionY);
+//    Serial.println(O.obstakelLocatie1);
+//    Serial.print('\n');
+//    _delay_ms(100);
+    
+    
     if (death) {
       gameIsLive = false;
     }
   }
 
-  J.positionY = 160;
-  O.obstakelLocatie1 = 0;
-  O.obstakelLocatie2 = 0;
-  O.aantalObstakels = 0;
-  J.in_air = false;
+  
 }
 void Game::hitbox() {
   Menu M;
   Opmaak O;
   Jump J;
-  if (O.obstakelVorm1 == 2) {
+  if (O.obstakelVorm1 == 2) { // <--- probleem
+    Serial.println("vorm1 == 2");
     if (47 > O.obstakelLocatie1) {
-      if (J.positionY > 121 && J.positionY < 129) {
-        J.velocityY = 0;
+      Serial.println("47 > O.Obstakel1");
+      if (47 > O.obstakelLocatie1 && J.positionY > 128) {
+        death = true;
+      }
+      if (J.positionY <= 128) {
+        J.velocityY = 0.0;
         J.in_air = false;
         J.positionY = 128;
         geland = true;
-      }
-      if (J.positionY > 128) {
-        death = true;
       }
     }
     if (32 < O.obstakelLocatie1 && geland) {

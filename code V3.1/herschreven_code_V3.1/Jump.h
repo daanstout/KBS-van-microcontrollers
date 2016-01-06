@@ -10,8 +10,9 @@
 #define JUMP_H_
 
 class Jump {
-	public:
-	uint8_t zbutton = 0;	// Defines the "gamestate for the while loop. 0 = Main Menu, 1 = Highscores, 2 = How To, 3 = Playing the game
+	public:	
+
+        uint8_t zbutton = 0;
 	double velocityY = 0.0, positionY = 160.0, last_y, gravity = 0.05;      //gravity variabelen
 	bool in_air = false;     //jump booleans
 	
@@ -19,6 +20,7 @@ class Jump {
 	void startJump();
 	void endJump();
 	void updateJump();
+        void tekenJump(MI0283QT9 lcd);
 };
 
 

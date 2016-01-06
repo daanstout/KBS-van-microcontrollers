@@ -76,7 +76,6 @@ void Opmaak::randomLevel() {
 }
 void Opmaak::teken(MI0283QT9 lcd) {
   Jump J;
- // J.checkJump();
   if (obstakelLocatie1 != vorigeObstakel1) {
     if (obstakelVorm1 == 2) {
       drawVierkant(obstakelLocatie1, lcd);
@@ -97,31 +96,21 @@ void Opmaak::teken(MI0283QT9 lcd) {
       resetDriehoek(vorigeObstakel2, lcd);
     }
   }
-  if (J.in_air) {
-    if (J.velocityY <= 0) {
-      lcd.fillRect(32, J.positionY - 15, 15, 15 , RGB(0, 0, 0));
-      lcd.fillRect(32, J.positionY, 15, J.last_y - J.positionY + 1, RGB(255, 255, 255));
-    } else if (J.velocityY > 0 || J.positionY == 160) {
-      lcd.fillRect(32, J.positionY - 15, 15, 15, RGB(0, 0, 0));
-      lcd.fillRect(32, J.last_y - 15 - 1, 15, (J.positionY - 15) - (J.last_y - 15) + 1, RGB(255, 255, 255));
-    }
-  }
   _delay_ms(2);
 }
-void Opmaak::drawVierkant(uint16_t x, MI0283QT9 lcd) {
+void Opmaak::drawVierkant(int x, MI0283QT9 lcd) {
   lcd.drawLine(x, 160, x, 128, RGB(255, 0, 0)); //eerste rij genereren
 }
 
-void Opmaak::resetVierkant(uint16_t x, MI0283QT9 lcd) {
+void Opmaak::resetVierkant(int x, MI0283QT9 lcd) {
   lcd.drawLine(x + 32, 160, x + 32, 128, RGB(255, 255, 255)); //laatste rij van obstakel resetten
 }
 
 //driehoek:
-void Opmaak::drawDriehoek(uint16_t x, MI0283QT9 lcd) {
+void Opmaak::drawDriehoek(int x, MI0283QT9 lcd) {
   lcd.drawLine(x, 160, x + 16, 128, RGB(200, 0, 0));
 }
-
-void Opmaak::resetDriehoek(uint16_t x, MI0283QT9 lcd) {
+void Opmaak::resetDriehoek(int x, MI0283QT9 lcd) {
   lcd.drawLine(x + 16, 128, x + 32, 160, RGB(255, 255, 255));
 }
 void Opmaak::tekenLijn(MI0283QT9 lcd) {
