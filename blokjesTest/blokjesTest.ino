@@ -234,93 +234,71 @@ void tekenVak3() {
   lcd.fillTriangle(197, 145, 212, 145, 204, 153, RGB(0, 0, 0));
   //tekent het derde vak om je initialen in te vullen
 }
-//bepalen van de laagste score om te bepalen welke score over kan worden geschreven voor de nieuwe
-void bepaalKleinste() {
-  for (int i = 0; i < 5; i++) {
-    EEPROM.get(eeAdress, nummer);
-    if (nummer.punten < kleinste.punten || kleinste.punten == 0) {
-      kleinste = nummer;
-      eeAdressKleinste = eeAdress;
-      Serial.print(eeAdressKleinste);
-      Serial.println(" eeAdressKleinste");
-    }
-    eeAdress += sizeof(Score);
-//    Serial.println("uit de if statement");
-  }
-  eeAdress = 0;
-}
 
 //score opslaan op de plaats van de laagste score
 void saveScore() {
-  Serial.println("savescore aangeroepen");
-  eeAdress = 0;
-  bepaalKleinste();
-  Serial.println("bepaal kleinste klaar");
-  kleinste = {score, eerste2, tweede2, derde2};
-  EEPROM.put(eeAdressKleinste, kleinste);
+  sortScore();
+  EEPROM.put(0, nummer1);
+  EEPROM.put(20, nummer2);
+  EEPROM.put(40, nummer3);
+  EEPROM.put(60, nummer4);
+  EEPROM.put(80, nummer5);
 }
 
-//eenmalig vullen van de EEPROM
-//void vulEEPROM() {
-//  Score een = {0, "A", "A", "P"};
-//  EEPROM.put(eeAdress, een);
-//  eeAdress += sizeof(Score);
-//  Score twee = {0, "R", "I", "K"};
-//  EEPROM.put(eeAdress, twee);
-//  eeAdress += sizeof(Score);
-//  Score drie = {0, "D", "A", "N"};
-//  EEPROM.put(eeAdress, drie);
-//  eeAdress += sizeof(Score);
-//  Score vier = {0, "D", "O", "N"};
-//  EEPROM.put(eeAdress, vier);
-//  eeAdress += sizeof(Score);
-//  Score vijf = {1, "P", "A", "P"};
-//  EEPROM.put(eeAdress, vijf);
-//  eeAdress = 0;
-//}
+void getScore() {
+  EEPROM.get(0, nummer1);
+  Serial.println(nummer1.letter1);
+  EEPROM.get(20, nummer2);
+  Serial.println(nummer2.letter1);
+  EEPROM.get(40, nummer3);
+  Serial.println(nummer3.letter1);
+  EEPROM.get(60, nummer4);
+  Serial.println(nummer4.letter1);
+  EEPROM.get(80, nummer5);
+  Serial.println(nummer5.letter1);
+}
 
-void checkScore() {
-  eeAdress = 0;
-  for (int i = 0; i < 5; i++) {
-    EEPROM.get(eeAdress, nummer);
-    if (nummer.punten > nummer1.punten) {
-      nummer1 = nummer;
-      rank = 1;
-      Serial.print(eeAdress);
-      Serial.println(" is nummer 1");
-    }
-    else if (nummer.punten >= nummer2.punten && nummer.punten < nummer1.punten) {
-      nummer2 = nummer;
-      rank = 2;
-      Serial.print(eeAdress);
-      Serial.println(" is nummer 2");
-    }
-    else if (nummer.punten >= nummer3.punten && nummer.punten < nummer2.punten) {
-      nummer3 = nummer;
-      rank = 3;
-      Serial.print(eeAdress);
-      Serial.println(" is nummer 3");
-    }
-    else if (nummer.punten >= nummer4.punten && nummer.punten < nummer3.punten) {
-      nummer4 = nummer;
-      rank = 4;
-      Serial.print(eeAdress);
-      Serial.println(" is nummer 4");
-    }
-    else if (nummer.punten >= nummer5.punten && nummer.punten < nummer4.punten) {
-      nummer5 = nummer;
-      rank = 5;
-      Serial.print(eeAdress);
-      Serial.println(" is nummer 5");
-    }
-    eeAdress += sizeof(Score);
+//nieuwe score invoegen en de rest een plek naar beneden zetten
+void sortScore() {
+  getScore();
+  nummer = {score, eerste2, tweede2, derde2};
+  if (nummer.punten > nummer1.punten) {
+    rank = 1;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer2;
+    nummer2 = nummer1;
+    nummer1 = nummer;
   }
-  Serial.println("uit de for loop");
-  eeAdress = 0;
+  else if (nummer.punten >= nummer2.punten && nummer.punten < nummer1.punten) {
+    rank = 2;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer2;
+    nummer2 = nummer;
+  }
+  else if (nummer.punten >= nummer3.punten && nummer.punten < nummer2.punten) {
+    rank = 3;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer;
+  }
+  else if (nummer.punten >= nummer4.punten && nummer.punten < nummer3.punten) {
+    rank = 4;
+    nummer5 = nummer4;
+    nummer4 = nummer;
+  }
+  else if (nummer.punten >= nummer5.punten && nummer.punten < nummer4.punten) {
+    rank = 5;
+    nummer5 = nummer;
+  }
+  else if (nummer.punten < nummer5.punten) {
+    rank = 8;
+  }
 }
 
 void printScore() {
-  checkScore();
+  getScore();
   lcd.drawText(90, 10, "HIGHSCORES", RGB(0, 0, 0), RGB(111, 111, 111), 2);             //HIGHSCORE schrijven
 
   lcd.drawText(60, 37, "1.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 1 schrijven
@@ -328,35 +306,35 @@ void printScore() {
   lcd.drawText(125, 37, nummer1.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(140, 37, nummer1.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 37, nummer1.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer1.punten);
+  Serial.println(nummer1.letter1);
 
   lcd.drawText(60, 62, "2.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 2 schrijven
   lcd.drawText(110, 62, nummer2.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(125, 62, nummer2.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(140, 62, nummer2.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 62, nummer2.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer2.punten);
+  Serial.println(nummer2.letter1);
 
   lcd.drawText(60, 87, "3.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 3 schrijven
   lcd.drawText(110, 87, nummer3.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(125, 87, nummer3.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(140, 87, nummer3.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 87, nummer3.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer3.punten);
+  Serial.println(nummer3.letter1);
 
   lcd.drawText(60, 112, "4.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 4 schrijven
   lcd.drawText(110, 112, nummer4.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(125, 112, nummer4.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(140, 112, nummer4.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer4.punten);
+  Serial.println(nummer4.letter1);
 
   lcd.drawText(60, 137, "5.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 5 schrijven
   lcd.drawText(110, 137, nummer5.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(125, 137, nummer5.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(140, 137, nummer5.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 137, nummer5.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer5.punten);
+  Serial.println(nummer5.letter1);
 }
 
 void inputScore() {
@@ -369,42 +347,62 @@ void inputScore() {
   lcd.drawInteger(200, 50, score, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   //schrijft de tekst op het game over scherm als je dood gaat
 
-  checkScore();
+  sortScore();
   if (rank == 1) {
     lcd.drawText(80, 80, "HIGHSCORE!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  } else if (rank <= 6) {
+  } else if (rank < 6) {
     lcd.drawText(110, 80, "TOP 5!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  } else if (rank == 8) {
+    lcd.drawText(55, 80, "NO HIGHSCORE", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   }
   //meldt of je de highscore hebt of dat je in de top 5 bent gekomen
 
-  lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
-  lcd.drawRoundRect(22, 164, 170, 25, 5, RGB(0, 0, 0));
-  lcd.drawRoundRect(21, 163, 172, 27, 5, RGB(0, 0, 0));
-  lcd.drawText(27, 170, "SAVE SCORE", RGB(0, 0, 0), RGB(0, 034, 255), 2);
-  //tekent de save score knop
-
-  lcd.fillRoundRect(210, 164, 80, 25, 5, RGB(0, 034, 255));
-  lcd.drawRoundRect(210, 164, 80, 25, 5, RGB(0, 0, 0));
-  lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
-  lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
-  //tekent de quit knop
-
-  tekenVak1();
-  tekenVak2();
-  tekenVak3();
-
-  scoreSubmit = 1;
-  while (scoreSubmit) {
-    checkButtonPress();
-    if (charverandering == 1) {
-      gameStart = 0;
-      tekenVak2();
-      tekenVak1();
-      tekenVak3();
-
-      charverandering = 0;
+  if (rank == 8) {
+    lcd.fillRoundRect(110, 164, 80, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(110, 164, 80, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(109, 163, 82, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(120, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de quit knop
+    scoreSubmit = 1;
+    
+    while (scoreSubmit) {
+      checkButtonPress();
+      if (charverandering == 1) {
+        gameStart = 0;
+        charverandering = 0;
+      }
+      _delay_ms(100);
     }
-    _delay_ms(100);
+  } else {
+    lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(22, 164, 170, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(21, 163, 172, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(27, 170, "SAVE SCORE", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de save score knop
+
+    lcd.fillRoundRect(210, 164, 80, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(210, 164, 80, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de quit knop
+
+    tekenVak1();
+    tekenVak2();
+    tekenVak3();
+
+    scoreSubmit = 1;
+    while (scoreSubmit) {
+      checkButtonPress();
+      if (charverandering == 1) {
+        gameStart = 0;
+        tekenVak2();
+        tekenVak1();
+        tekenVak3();
+
+        charverandering = 0;
+      }
+      _delay_ms(100);
+    }
   }
   Serial.println("check1");
 }
@@ -638,7 +636,7 @@ int main() {
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
   Serial.begin(9600);
-  Serial.println(sizeof(Score));
+  //vulEEPROM();
   while (1) {
     if (firstTime == 1) {
       drawMenu();                //drawed het menu
