@@ -3,7 +3,7 @@
 
 class Opmaak{
     private:
-    uint8_t randomObstakels = 0, randomObstakelVorm, nieuwObstakel, obstakelVorm2 = 0;    //level generatie variabelen
+    uint8_t randomObstakels = 0, randomObstakelVorm, nieuwObstakel, obstakelVorm2;    //level generatie variabelen
     uint16_t  vorigeObstakel1, vorigeObstakel2;      //obstakel variabelen
     public:
     uint8_t  aantalObstakels = 0, obstakelVorm1;

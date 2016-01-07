@@ -38,8 +38,8 @@ void Opmaak::sidescroll(MI0283QT9 lcd) {
       aantalObstakels--;
 
       if (aantalObstakels == 1) {
-        Serial.print("sidescroll obstakelvorm 2: ");
-        Serial.println(obstakelVorm1);
+//        Serial.print("sidescroll obstakelvorm 2: ");
+//        Serial.println(obstakelVorm1);
         obstakelLocatie1 = obstakelLocatie2;
         obstakelVorm1 = obstakelVorm2;
         obstakelVorm2 = 0;
@@ -54,6 +54,7 @@ void Opmaak::sidescroll(MI0283QT9 lcd) {
 
 void Opmaak::randomLevel() {
   Game G;
+
   if (aantalObstakels == 0) {
     randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;
     aantalObstakels++;
@@ -77,7 +78,6 @@ void Opmaak::randomLevel() {
       obstakelLocatie2 = 320;
     }
   }
-  
   
 }
 void Opmaak::teken(MI0283QT9 lcd) {
