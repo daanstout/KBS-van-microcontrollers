@@ -7,12 +7,26 @@
 #include <Arduino.h>
 #include "nunchuck_funcs.h"
 #include <util/delay.h>
+#include <Time.h>
 #include <stdlib.h>
+#include <EEPROM.h>
 
 MI0283QT9 lcd;
+struct Score {
+  uint16_t punten;
+  char letter1;
+  char letter2;
+  char letter3;
+};
+//highscores
+uint8_t eeAdress = 0;
+Score nummer1, nummer2, nummer3, nummer4, nummer5, kleinste, nummer;
+char buf[4];
+bool veranderd = true;
+
 //getallen:
 uint16_t obstakelLocatie1, obstakelLocatie2, score, i, last_x, last_x2, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
-uint8_t up = 50, moeilijkheid = 5, grooteSpeler = 15, positionX = 32, aantalObstakels, aantalDriehoek = 0, aantalVierkant = 0;
+uint8_t up = 50, moeilijkheid = 5, grootteSpeler = 15, positionX = 32, aantalObstakels, aantalDriehoek = 0, aantalVierkant = 0, rank;
 double positionY = 160, last_y, velocityY = 0.0, gravity = 0.05;
 
 //namen:
@@ -23,6 +37,7 @@ String eerste2, tweede2, derde2;
 uint8_t firstTime = 1, top5 = 1, directie = 1, scoreSubmit = 1, eersteKeerScore = 1, toCheckButton = 1;
 uint8_t zbutton, obstakelActief1, toJump, gameStart, buttonPressed, gameIsLive, death, postGame, charverandering, scoresBack, vierkant, driehoek, jumpPause, geland;
 bool in_air = false;
+
 
 
 void tekenLijn() {
@@ -61,21 +76,21 @@ void randomLevel() {
     }
     obstakelLocatie1 = 320;
   }
-  if (obstakelLocatie1 < 255 && aantalObstakels < 2) {
-    uint8_t temprand = (random(0, 3)) + 1;
-    if (temprand == 1) {
-      randomObstakel = (random(0, moeilijkheid)) + 1;
-      aantalObstakels++;
-      if (randomObstakel == 1) {
-        aantalDriehoek++;
-      } else {
-        aantalVierkant++;
-      }
-      if (aantalObstakels == 1) {
-        obstakelLocatie2 = 320;
-      }
-    }
-  }
+  //  if (obstakelLocatie1 < 255 && aantalObstakels < 2) {
+  //    uint8_t temprand = (random(0, 3)) + 1;
+  //    if (temprand == 1) {
+  //      randomObstakel = (random(0, moeilijkheid)) + 1;
+  //      aantalObstakels++;
+  //      if (randomObstakel == 1) {
+  //        aantalDriehoek++;
+  //      } else {
+  //        aantalVierkant++;
+  //      }
+  //      if (aantalObstakels == 1) {
+  //        obstakelLocatie2 = 320;
+  //      }
+  //    }
+  //  }
 }
 
 void sidescroll() {
@@ -98,23 +113,24 @@ void sidescroll() {
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
       lcd.drawInteger(105, 210, score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
       geland = 0;
-      if (aantalObstakels == 2) {
+      //      if (aantalObstakels == 2) {
+      //        aantalObstakels--;
+      //        obstakelLocatie1 = obstakelLocatie2;
+      //        if (vierkant == 1) {
+      //          aantalVierkant--;
+      //        } else if (driehoek == 1) {
+      //          aantalDriehoek--;
+      //        }
+      //        if (aantalVierkant == 1) {
+      //          vierkant = 1;
+      //          driehoek = 0;
+      //        } else if (aantalDriehoek == 1) {
+      //          vierkant = 1;
+      //          driehoek = 1;
+      //        }
+      //      } else
+      if (aantalObstakels == 1) {
         aantalObstakels--;
-        obstakelLocatie1 = obstakelLocatie2;
-        if (vierkant == 1) {
-          aantalVierkant--;
-        } else if (driehoek == 1) {
-          aantalDriehoek--;
-        }
-        if (aantalVierkant == 1) {
-          vierkant = 1;
-          driehoek = 0;
-        } else if (aantalDriehoek == 1) {
-          vierkant = 1;
-          driehoek = 1;
-        }
-      } else if (aantalObstakels == 1) {
-          aantalObstakels--;
         if (vierkant == 1) {
           aantalVierkant--;
           vierkant = 0;
@@ -140,7 +156,7 @@ void checkJump() {
 }
 
 void speler() {
-  lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
+  lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
 }
 
 void StartJump() {
@@ -175,6 +191,7 @@ void drawScores() {
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm
+  printScore();
 
   lcd.fillRoundRect(10, 200, 100, 25, 5, RGB(0, 034, 255));
   lcd.drawRoundRect(10, 200, 100, 25, 5, RGB(0, 0, 0));
@@ -220,6 +237,103 @@ void tekenVak3() {
   //tekent het derde vak om je initialen in te vullen
 }
 
+void emptyEEPROM() {
+  Score leeg = {1 , 'A', 'B', 'C'};
+  EEPROM.put(0, leeg);
+  EEPROM.put(20, leeg);
+  EEPROM.put(40, leeg);
+  EEPROM.put(60, leeg);
+  EEPROM.put(80, leeg);
+}
+
+//score opslaan op de plaats van de laagste score
+void saveScore() {
+  sortScore();
+  EEPROM.put(0, nummer1);
+  EEPROM.put(20, nummer2);
+  EEPROM.put(40, nummer3);
+  EEPROM.put(60, nummer4);
+  EEPROM.put(80, nummer5);
+  veranderd = true;
+}
+//scores ophalen uit de EEPROM
+void getScore() {
+  EEPROM.get(0, nummer1);
+  EEPROM.get(20, nummer2);
+  EEPROM.get(40, nummer3);
+  EEPROM.get(60, nummer4);
+  EEPROM.get(80, nummer5);
+}
+
+//nieuwe score invoegen en de rest een plek naar beneden zetten
+void sortScore() {
+  getScore();
+  nummer = {score, eerste, tweede, derde};
+  if (nummer.punten > nummer1.punten) {
+    rank = 1;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer2;
+    nummer2 = nummer1;
+    nummer1 = nummer;
+  }
+  else if (nummer.punten >= nummer2.punten && nummer.punten < nummer1.punten) {
+    rank = 2;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer2;
+    nummer2 = nummer;
+  }
+  else if (nummer.punten >= nummer3.punten && nummer.punten < nummer2.punten) {
+    rank = 3;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer;
+  }
+  else if (nummer.punten >= nummer4.punten && nummer.punten < nummer3.punten) {
+    rank = 4;
+    nummer5 = nummer4;
+    nummer4 = nummer;
+  }
+  else if (nummer.punten >= nummer5.punten && nummer.punten < nummer4.punten) {
+    rank = 5;
+    nummer5 = nummer;
+  }
+  else if (nummer.punten < nummer5.punten) {
+    rank = 8;
+  }
+}
+
+void printScore() {
+  getScore();
+  lcd.drawText(90, 10, "HIGHSCORES", RGB(0, 0, 0), RGB(111, 111, 111), 2);             //HIGHSCORE schrijven
+  sprintf(buf, "%c%c%c", nummer1.letter1, nummer1.letter2, nummer1.letter3);
+  lcd.drawText(60, 37, "1.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 1 schrijven
+  lcd.drawText(110, 37, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 37, nummer1.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer2.letter1, nummer2.letter2, nummer2.letter3);
+  lcd.drawText(60, 62, "2.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 2 schrijven
+  lcd.drawText(110, 62, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 62, nummer2.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer3.letter1, nummer3.letter2, nummer3.letter3);
+  lcd.drawText(60, 87, "3.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 3 schrijven
+  lcd.drawText(110, 87, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 87, nummer3.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer4.letter1, nummer4.letter2, nummer4.letter3);
+  lcd.drawText(60, 112, "4.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 4 schrijven
+  lcd.drawText(110, 112, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer5.letter1, nummer5.letter2, nummer5.letter3);
+  lcd.drawText(60, 137, "5.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 5 schrijven
+  lcd.drawText(110, 137, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 137, nummer5.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+}
+
 void inputScore() {
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
@@ -230,43 +344,65 @@ void inputScore() {
   lcd.drawInteger(200, 50, score, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   //schrijft de tekst op het game over scherm als je dood gaat
 
-  if (topscore == 1) {
+  sortScore();
+  if (rank == 1) {
     lcd.drawText(80, 80, "HIGHSCORE!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  } else if (top5 == 1) {
+  } else if (rank < 6) {
     lcd.drawText(110, 80, "TOP 5!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  } else if (rank == 8) {
+    lcd.drawText(55, 80, "NO HIGHSCORE", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   }
   //meldt of je de highscore hebt of dat je in de top 5 bent gekomen
 
-  lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
-  lcd.drawRoundRect(22, 164, 170, 25, 5, RGB(0, 0, 0));
-  lcd.drawRoundRect(21, 163, 172, 27, 5, RGB(0, 0, 0));
-  lcd.drawText(27, 170, "SAVE SCORE", RGB(0, 0, 0), RGB(0, 034, 255), 2);
-  //tekent de save score knop
+  if (rank == 8) {
+    lcd.fillRoundRect(110, 164, 80, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(110, 164, 80, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(109, 163, 82, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(120, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de quit knop
+    scoreSubmit = 1;
 
-  lcd.fillRoundRect(210, 164, 80, 25, 5, RGB(0, 034, 255));
-  lcd.drawRoundRect(210, 164, 80, 25, 5, RGB(0, 0, 0));
-  lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
-  lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
-  //tekent de quit knop
-
-  tekenVak1();
-  tekenVak2();
-  tekenVak3();
-
-  scoreSubmit = 1;
-  while (scoreSubmit) {
-    checkButtonPress();
-    if (charverandering == 1) {
-      gameStart = 0;
-
-      tekenVak1();
-      tekenVak2();
-      tekenVak3();
-
-      charverandering = 0;
+    while (scoreSubmit) {
+      checkButtonPress();
+      if (charverandering == 1) {
+        gameStart = 0;
+        charverandering = 0;
+      }
+      _delay_ms(100);
     }
-    _delay_ms(100);
+  } else {
+    lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(22, 164, 170, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(21, 163, 172, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(27, 170, "SAVE SCORE", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de save score knop
+
+    lcd.fillRoundRect(210, 164, 80, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(210, 164, 80, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de quit knop
+
+    tekenVak1();
+    tekenVak2();
+    tekenVak3();
+
+    scoreSubmit = 1;
+    while (scoreSubmit) {
+      checkButtonPress();
+      if (charverandering == 1) {
+        gameStart = 0;
+        tekenVak2();
+        tekenVak1();
+        tekenVak3();
+
+        charverandering = 0;
+      }
+      _delay_ms(100);
+    }
   }
+  eerste = 'A', tweede = 'B', derde = 'C';
+  Serial.println("check1");
 }
 
 void checkButtonPress() {
@@ -334,16 +470,18 @@ void checkButtonPress() {
             derde--;
           }
           charverandering = 1;
-        } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {
+        } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {     // save score button
           scoreSubmit = 0;
+          saveScore();
           charverandering = 1;
-        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
+        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {    //quit knop
           scoreSubmit = 0;
+          veranderd = false;
           charverandering = 1;
         }
       }
     }
-    if (buttonPressed != 0 || charverandering == 1) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
+    if (buttonPressed != 0 || charverandering == 1) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt
       gameStart = 1;
     }
   }
@@ -393,39 +531,40 @@ void teken() {
       resetSpijker(last_x);
     }
   }
-  if (aantalObstakels == 2 && obstakelLocatie2 != last_x2) {
-    if (vierkant == 1) {
-      if (aantalVierkant == 2) {
-        obstakel(obstakelLocatie2);
-        resetObstakel(last_x2);
-      } else if (aantalDriehoek == 1) {
-        spijker(obstakelLocatie2);
-        resetSpijker(last_x2);
-      }
-    } else if (driehoek == 1) {
-      if (aantalVierkant == 1) {
-        obstakel(obstakelLocatie2);
-        resetObstakel(last_x2);
-      } else if (aantalDriehoek == 2) {
-        spijker(obstakelLocatie2);
-        resetSpijker(last_x2);
-      }
-    }
-  }
+  //  if (aantalObstakels == 2 && obstakelLocatie2 != last_x2) {
+  //    if (vierkant == 1) {
+  //      if (aantalVierkant == 2) {
+  //        obstakel(obstakelLocatie2);
+  //        resetObstakel(last_x2);
+  //      } else if (aantalDriehoek == 1) {
+  //        spijker(obstakelLocatie2);
+  //        resetSpijker(last_x2);
+  //      }
+  //    } else if (driehoek == 1) {
+  //      if (aantalVierkant == 1) {
+  //        obstakel(obstakelLocatie2);
+  //        resetObstakel(last_x2);
+  //      } else if (aantalDriehoek == 2) {
+  //        spijker(obstakelLocatie2);
+  //        resetSpijker(last_x2);
+  //      }
+  //    }
+  //  }
   if (in_air) {
     if (velocityY <= 0) {
-      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-      lcd.fillRect(positionX, positionY, grooteSpeler , last_y - positionY + 1, RGB(255, 255, 255));
-    } else if (velocityY > 0 || positionY == 160) {
-      lcd.fillRect(positionX, positionY - grooteSpeler, grooteSpeler, grooteSpeler , RGB(0, 0, 0));
-      lcd.fillRect(positionX, last_y - grooteSpeler, grooteSpeler , (positionY - grooteSpeler) - (last_y - grooteSpeler) , RGB(255, 255, 255));
+      lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
+      lcd.fillRect(positionX, positionY, grootteSpeler , last_y - positionY + 1, RGB(255, 255, 255));
+    } else if (velocityY > 0) {
+      lcd.fillRect(positionX, positionY - grootteSpeler, grootteSpeler, grootteSpeler , RGB(0, 0, 0));
+      lcd.fillRect(positionX, (last_y - grootteSpeler) - 1, grootteSpeler , ((positionY - grootteSpeler) - (last_y - grootteSpeler)) + 1 , RGB(255, 255, 255));
     }
-    keren = 0;
-  } else if (keren != 1) {
-    speler();
-    keren = 1;
+    //_delay_ms(4);
+
   }
-  _delay_ms(2);
+  if (!in_air) {
+    speler();
+    lcd.fillRect(positionX, positionY - grootteSpeler - 7, grootteSpeler , 7 , RGB(255, 255, 255));
+  }
 }
 
 void game() {
@@ -451,7 +590,7 @@ void game() {
     }
 
   }
-  positionY = 160;
+  current = 140;
   obstakelLocatie1 = 0;
   obstakelActief1 = 0;
   toJump = 0;
@@ -496,7 +635,7 @@ int main() {
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
   Serial.begin(9600);
-
+  //emptyEEPROM();
   while (1) {
     if (firstTime == 1) {
       drawMenu();                //drawed het menu
@@ -517,7 +656,9 @@ int main() {
     if (buttonPressed == 2) {
       buttonPressed = 0;
       gameStart = 0;
-      drawScores();
+      if (veranderd) {
+        drawScores();
+      }
       firstTime = 1;
       toCheckButton = 0;
       //dit gebeurt er als er op scores wordt gedrukt
