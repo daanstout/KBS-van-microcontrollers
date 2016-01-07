@@ -13,12 +13,12 @@
 #include "Jump.h"
 #include "Opmaak.h"
   
+
+  
+void Game::game(MI0283QT9 lcd) {
 Jump J;
 Menu M;
 Opmaak O;
-  
-void Game::game(MI0283QT9 lcd) {
-
 
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
@@ -73,31 +73,31 @@ void Game::game(MI0283QT9 lcd) {
   
 }
 void Game::hitbox() {
-//  Jump J;
-//  Opmaak O;
+  Jump J;
+  Opmaak O;
 
   Serial.print(" - ");
   Serial.print(O.obstakelVorm1);
   Serial.print(" - ");
   Serial.println(vormObstakel1);
-  if (O.obstakelVorm1 == 2) { //als eerste figuur == 4kant
+  if (vormObstakel1 == 2) { //als eerste figuur == 4kant
     Serial.println("vorm1 == 2");
-    if (47 > O.obstakelLocatie1) {
+    if (47 > locatieObstakel1) {
       Serial.println("47 > O.Obstakel1");
-      if (47 > O.obstakelLocatie1 && J.positionY > 128) {
+      if (47 > locatieObstakel1 && yPosition > 128) {
         death = true;
       }
-      if (J.positionY <= 128) {
+      if (yPosition <= 128) {
         J.velocityY = 0.0;
         J.in_air = false;
         J.positionY = 128;
         geland = true;
       }
     }
-    if (32 < O.obstakelLocatie1 && geland) {
+    if (32 < locatieObstakel1 && geland) {
      J.in_air = true;
     }
-    if(J.positionY > 160){
+    if(yPosition > 160){
       J.in_air = false;
     }
   }
