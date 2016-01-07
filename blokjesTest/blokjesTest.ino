@@ -336,9 +336,9 @@ void printScore() {
 //  lcd.drawText(140, 112, nummer4.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   
-  sprintf(buf, "%c%c%c", nummer4.letter1, nummer4.letter2, nummer4.letter3);
+  sprintf(buf, "%c%c%c", nummer5.letter1, nummer5.letter2, nummer5.letter3);
   lcd.drawText(60, 137, "5.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 5 schrijven
-  lcd.drawText(110, 112, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(110, 137, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
 //  lcd.drawText(110, 137, nummer5.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
 //  lcd.drawText(125, 137, nummer5.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
 //  lcd.drawText(140, 137, nummer5.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
@@ -413,6 +413,7 @@ void inputScore() {
       _delay_ms(100);
     }
   }
+  eerste = 'A', tweede = 'B', derde = 'C';
   Serial.println("check1");
 }
 
@@ -645,7 +646,7 @@ int main() {
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
   Serial.begin(9600);
-  //emptyEEPROM();
+  emptyEEPROM();
   while (1) {
     if (firstTime == 1) {
       drawMenu();                //drawed het menu
