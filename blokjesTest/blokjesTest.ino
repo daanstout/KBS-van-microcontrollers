@@ -14,13 +14,14 @@
 MI0283QT9 lcd;
 struct Score {
   uint16_t punten;
-  String letter1;
-  String letter2;
-  String letter3;
+  char letter1;
+  char letter2;
+  char letter3;
 };
 //highscores
 int eeAdress = 0, eeAdressKleinste;
 Score nummer1, nummer2, nummer3, nummer4, nummer5, kleinste, nummer;
+char buf[4];
 
 //getallen:
 uint16_t obstakelLocatie1, obstakelLocatie2, score, i, last_x, last_x2, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
@@ -235,6 +236,15 @@ void tekenVak3() {
   //tekent het derde vak om je initialen in te vullen
 }
 
+void emptyEEPROM(){
+  Score leeg = {1 ,'A', 'B', 'C'};
+  EEPROM.put(0, leeg);
+  EEPROM.put(20, leeg);
+  EEPROM.put(40, leeg);
+  EEPROM.put(60, leeg);
+  EEPROM.put(80, leeg);
+}
+
 //score opslaan op de plaats van de laagste score
 void saveScore() {
   sortScore();
@@ -244,24 +254,19 @@ void saveScore() {
   EEPROM.put(60, nummer4);
   EEPROM.put(80, nummer5);
 }
-
+//scores ophalen uit de EEPROM
 void getScore() {
   EEPROM.get(0, nummer1);
-  Serial.println(nummer1.letter1);
   EEPROM.get(20, nummer2);
-  Serial.println(nummer2.letter1);
   EEPROM.get(40, nummer3);
-  Serial.println(nummer3.letter1);
   EEPROM.get(60, nummer4);
-  Serial.println(nummer4.letter1);
   EEPROM.get(80, nummer5);
-  Serial.println(nummer5.letter1);
 }
 
 //nieuwe score invoegen en de rest een plek naar beneden zetten
 void sortScore() {
   getScore();
-  nummer = {score, eerste2, tweede2, derde2};
+  nummer = {score, eerste, tweede, derde};
   if (nummer.punten > nummer1.punten) {
     rank = 1;
     nummer5 = nummer4;
@@ -300,41 +305,45 @@ void sortScore() {
 void printScore() {
   getScore();
   lcd.drawText(90, 10, "HIGHSCORES", RGB(0, 0, 0), RGB(111, 111, 111), 2);             //HIGHSCORE schrijven
-
+  sprintf(buf, "%c%c%c", nummer1.letter1, nummer1.letter2, nummer1.letter3);
   lcd.drawText(60, 37, "1.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 1 schrijven
-  lcd.drawText(110, 37, nummer1.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(125, 37, nummer1.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(140, 37, nummer1.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(110, 37, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(125, 37, nummer1.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(140, 37, nummer1.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 37, nummer1.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer1.letter1);
 
+  sprintf(buf, "%c%c%c", nummer2.letter1, nummer2.letter2, nummer2.letter3);
   lcd.drawText(60, 62, "2.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 2 schrijven
-  lcd.drawText(110, 62, nummer2.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(125, 62, nummer2.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(140, 62, nummer2.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(110, 62, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(110, 62, nummer2.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(125, 62, nummer2.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(140, 62, nummer2.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 62, nummer2.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer2.letter1);
 
+  sprintf(buf, "%c%c%c", nummer3.letter1, nummer3.letter2, nummer3.letter3);
   lcd.drawText(60, 87, "3.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 3 schrijven
-  lcd.drawText(110, 87, nummer3.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(125, 87, nummer3.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(140, 87, nummer3.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(110, 87, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(110, 87, nummer3.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(125, 87, nummer3.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(140, 87, nummer3.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 87, nummer3.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer3.letter1);
 
+  sprintf(buf, "%c%c%c", nummer4.letter1, nummer4.letter2, nummer4.letter3);
   lcd.drawText(60, 112, "4.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 4 schrijven
-  lcd.drawText(110, 112, nummer4.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(125, 112, nummer4.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(140, 112, nummer4.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(110, 112, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(110, 112, nummer4.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(125, 112, nummer4.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(140, 112, nummer4.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer4.letter1);
-
+  
+  sprintf(buf, "%c%c%c", nummer4.letter1, nummer4.letter2, nummer4.letter3);
   lcd.drawText(60, 137, "5.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 5 schrijven
-  lcd.drawText(110, 137, nummer5.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(125, 137, nummer5.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawText(140, 137, nummer5.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawText(110, 112, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(110, 137, nummer5.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(125, 137, nummer5.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+//  lcd.drawText(140, 137, nummer5.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 137, nummer5.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  Serial.println(nummer5.letter1);
+
 }
 
 void inputScore() {
@@ -636,7 +645,7 @@ int main() {
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
   Serial.begin(9600);
-  //vulEEPROM();
+  //emptyEEPROM();
   while (1) {
     if (firstTime == 1) {
       drawMenu();                //drawed het menu
