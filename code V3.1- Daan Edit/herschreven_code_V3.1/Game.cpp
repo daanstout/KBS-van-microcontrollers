@@ -33,7 +33,7 @@ void Game::game(MI0283QT9 lcd) {
     J.checkJump();
     O.sidescroll(lcd);
     O.randomLevel();
-    hitbox();
+    hitbox(O, J);
     O.teken(lcd);
 
     if (death) {
@@ -47,32 +47,33 @@ void Game::game(MI0283QT9 lcd) {
   O.aantalObstakels = 0;
   J.in_air = false;
 }
-void Game::hitbox() {
-  Menu M;
-  Opmaak O;
-  Jump J;
-  if (O.obstakelVorm1 == 2) {
-    if (47 > O.obstakelLocatie1) {
-      if (J.positionY > 121 && J.positionY < 129) {
-        J.velocityY = 0;
-        J.in_air = false;
-        J.positionY = 128;
+void Game::hitbox(Opmaak P, Jump U) {
+//  Menu M;
+//  Opmaak O;
+//  Jump J;
+  
+  if (P.obstakelVorm1 == 2) {
+    if (47 > P.obstakelLocatie1) {
+      if (U.positionY > 121 && U.positionY < 129) {
+        U.velocityY = 0;
+        U.in_air = false;
+        U.positionY = 128;
         geland = true;
       }
-      if (J.positionY > 128) {
+      if (U.positionY > 128) {
         death = true;
       }
     }
-    if (32 < O.obstakelLocatie1 && geland) {
-      J.in_air = true;
+    if (32 < P.obstakelLocatie1 && geland) {
+      U.in_air = true;
     }
   }
-  if (O.obstakelVorm1 == 1) {
-    if (47 > O.obstakelLocatie1) {
-      if (J.positionY > currentY) {
+  if (P.obstakelVorm1 == 1) {
+    if (47 > P.obstakelLocatie1) {
+      if (U.positionY > currentY) {
         death = true;
       }
-      if (O.obstakelLocatie1 < 31) {
+      if (P.obstakelLocatie1 < 31) {
         currentY += 2;
       } else {
         currentY -= 2;

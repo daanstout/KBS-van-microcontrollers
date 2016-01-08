@@ -50,6 +50,7 @@ void Opmaak::sidescroll(MI0283QT9 lcd) {
 
 void Opmaak::randomLevel() {
   Game G;
+  Serial.println(G.moeilijkheid);
   if (aantalObstakels == 0) {
     randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;
     aantalObstakels++;

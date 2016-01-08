@@ -9,6 +9,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include "Menu.h"
+#include "Game.h"
 
 
 
@@ -75,6 +76,8 @@ void Menu::tekenVak3(MI0283QT9 lcd) {
 
 //het game over scherm:
 void Menu::inputScore(MI0283QT9 lcd) {
+  Game G;
+  
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm

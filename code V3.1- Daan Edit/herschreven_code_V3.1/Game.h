@@ -1,5 +1,7 @@
 #ifndef GAME_H_
 #define GAME_H_
+#include "Jump.h"
+#include "Opmaak.h"
 
 class Game{
   private:
@@ -9,7 +11,7 @@ class Game{
   uint8_t moeilijkheid;    //game variabelen
   
   void game(MI0283QT9 lcd);
-  void hitbox();
+  void hitbox(Opmaak P, Jump U);
   
 };
 
