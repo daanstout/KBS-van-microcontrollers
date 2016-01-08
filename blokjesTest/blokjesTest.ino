@@ -19,9 +19,10 @@ struct Score {
   char letter3;
 };
 //highscores
-int eeAdress = 0, eeAdressKleinste;
+uint8_t eeAdress = 0;
 Score nummer1, nummer2, nummer3, nummer4, nummer5, kleinste, nummer;
 char buf[4];
+bool veranderd = true;
 
 //getallen:
 uint16_t obstakelLocatie1, obstakelLocatie2, score, i, last_x, last_x2, x, topscore, obstakelBovenkant = 128, spelerRechterZijde = 47, current = 140, randomObstakel, randomAfstand, currentX, currentY = 160;
@@ -236,8 +237,8 @@ void tekenVak3() {
   //tekent het derde vak om je initialen in te vullen
 }
 
-void emptyEEPROM(){
-  Score leeg = {1 ,'A', 'B', 'C'};
+void emptyEEPROM() {
+  Score leeg = {1 , 'A', 'B', 'C'};
   EEPROM.put(0, leeg);
   EEPROM.put(20, leeg);
   EEPROM.put(40, leeg);
@@ -253,6 +254,7 @@ void saveScore() {
   EEPROM.put(40, nummer3);
   EEPROM.put(60, nummer4);
   EEPROM.put(80, nummer5);
+  veranderd = true;
 }
 //scores ophalen uit de EEPROM
 void getScore() {
@@ -308,40 +310,26 @@ void printScore() {
   sprintf(buf, "%c%c%c", nummer1.letter1, nummer1.letter2, nummer1.letter3);
   lcd.drawText(60, 37, "1.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 1 schrijven
   lcd.drawText(110, 37, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(125, 37, nummer1.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(140, 37, nummer1.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 37, nummer1.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
 
   sprintf(buf, "%c%c%c", nummer2.letter1, nummer2.letter2, nummer2.letter3);
   lcd.drawText(60, 62, "2.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 2 schrijven
   lcd.drawText(110, 62, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(110, 62, nummer2.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(125, 62, nummer2.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(140, 62, nummer2.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 62, nummer2.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
 
   sprintf(buf, "%c%c%c", nummer3.letter1, nummer3.letter2, nummer3.letter3);
   lcd.drawText(60, 87, "3.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 3 schrijven
   lcd.drawText(110, 87, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(110, 87, nummer3.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(125, 87, nummer3.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(140, 87, nummer3.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 87, nummer3.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
 
   sprintf(buf, "%c%c%c", nummer4.letter1, nummer4.letter2, nummer4.letter3);
   lcd.drawText(60, 112, "4.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 4 schrijven
   lcd.drawText(110, 112, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(110, 112, nummer4.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(125, 112, nummer4.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(140, 112, nummer4.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  
+
   sprintf(buf, "%c%c%c", nummer5.letter1, nummer5.letter2, nummer5.letter3);
   lcd.drawText(60, 137, "5.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 5 schrijven
   lcd.drawText(110, 137, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(110, 137, nummer5.letter1, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(125, 137, nummer5.letter2, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-//  lcd.drawText(140, 137, nummer5.letter3, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawInteger(200, 137, nummer5.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
 
 }
@@ -373,7 +361,7 @@ void inputScore() {
     lcd.drawText(120, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
     //tekent de quit knop
     scoreSubmit = 1;
-    
+
     while (scoreSubmit) {
       checkButtonPress();
       if (charverandering == 1) {
@@ -486,8 +474,9 @@ void checkButtonPress() {
           scoreSubmit = 0;
           saveScore();
           charverandering = 1;
-        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
+        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {    //quit knop
           scoreSubmit = 0;
+          veranderd = false;
           charverandering = 1;
         }
       }
@@ -646,7 +635,7 @@ int main() {
   lcd.touchRead();
   lcd.touchStartCal(); //calibrate touchpanel
   Serial.begin(9600);
-  emptyEEPROM();
+  //emptyEEPROM();
   while (1) {
     if (firstTime == 1) {
       drawMenu();                //drawed het menu
@@ -667,7 +656,9 @@ int main() {
     if (buttonPressed == 2) {
       buttonPressed = 0;
       gameStart = 0;
-      drawScores();
+      if (veranderd) {
+        drawScores();
+      }
       firstTime = 1;
       toCheckButton = 0;
       //dit gebeurt er als er op scores wordt gedrukt
