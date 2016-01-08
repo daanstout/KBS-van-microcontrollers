@@ -12,7 +12,7 @@ class Menu{
 	public:
 	uint8_t buttonPressed = 0, multiplayerWinner;      //menu variabelen
 	uint16_t score, score2;     //game variabelen
-	bool firstTime = true, toCheckButton = true;        //menu booleans
+	bool firstTime = true, toCheckButton = true, howToContinue = false;        //menu booleans
 	bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false, postGame = false;     //menu booleans
 
   void compare();
@@ -22,6 +22,8 @@ class Menu{
 	void tekenVak3(MI0283QT9 lcd);
 	void inputScore(MI0283QT9 lcd);
 	void drawMenu(MI0283QT9 lcd);
+  void howToNext(MI0283QT9 lcd);
+  void howTo(MI0283QT9 lcd);
 	void checkButtonPress(MI0283QT9 lcd);
 	
 };

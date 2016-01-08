@@ -76,6 +76,15 @@ int main() {
       M.gameStart = false;
       M.toCheckButton = false;
     }
+    if(M.buttonPressed == 5){
+      M.firstTime = true;
+      M.buttonPressed = 0;
+      M.gameStart = false;
+      M.toCheckButton = false;
+      M.howTo(lcd);
+      M.gameStart = false;
+      M.howToContinue = false;
+    }
     if (M.buttonPressed == 10) {
       M.postGame = true;
       M.buttonPressed = 0;

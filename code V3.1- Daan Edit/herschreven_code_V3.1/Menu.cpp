@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "Menu.h"
 #include "Game.h"
+#include "Opmaak.h"
 
 
 
@@ -77,7 +78,7 @@ void Menu::tekenVak3(MI0283QT9 lcd) {
 //het game over scherm:
 void Menu::inputScore(MI0283QT9 lcd) {
   Game G;
-  
+
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm
@@ -110,19 +111,19 @@ void Menu::inputScore(MI0283QT9 lcd) {
   tekenVak2(lcd);
   tekenVak3(lcd);
 
-  if(G.multiplayerMode){
+  if (G.multiplayerMode) {
     lcd.drawText(30, 208, "Winner:", RGB(0, 0, 0), RGB(111, 111, 111), 2);
-    if(multiplayerWinner == 1){
+    if (multiplayerWinner == 1) {
       lcd.drawText(150, 208, "Speler", RGB(0, 0, 0), RGB(111, 111, 111), 2);
       lcd.drawInteger(260, 208, 1, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-    }else if(multiplayerWinner == 2){
+    } else if (multiplayerWinner == 2) {
       lcd.drawText(150, 208, "Speler", RGB(0, 0, 0), RGB(111, 111, 111), 2);
       lcd.drawInteger(260, 208, 2, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
-    }else if(multiplayerWinner == 3){
+    } else if (multiplayerWinner == 3) {
       lcd.drawText(150, 208, "Gelijk", RGB(0, 0, 0), RGB(111, 111, 111), 2);
     }
   }
-  
+
   while (!scoreSubmit) {
     checkButtonPress(lcd);
     if (charVerandering) {
@@ -168,7 +169,106 @@ void Menu::drawMenu(MI0283QT9 lcd) {
   lcd.drawText(122, 125, "MULTI", RGB(0, 0, 0), RGB(0, 034, 255), 2);
   lcd.drawText(112, 150, "PLAYER", RGB(0, 0, 0), RGB(0, 255, 255), 2);
   //tekent de multiplayer knop
+
+  lcd.fillRoundRect(110, 175, 100, 25, 5, RGB(0, 034, 255));
+  lcd.drawRoundRect(110, 175, 100, 25, 5, RGB(0, 0, 0));
+  lcd.drawRoundRect(109, 174, 102, 27, 5, RGB(0, 0, 0));
+  lcd.drawText(113, 180, "HOW TO", RGB(0, 0, 0), RGB(0, 034, 255), 2);
 }
+
+void Menu::howToNext(MI0283QT9 lcd) {
+  lcd.fillRoundRect(200, 200, 100, 25, 5, RGB(0, 255, 239));
+  lcd.drawRoundRect(200, 200, 100, 25, 5, RGB(0, 0, 0));
+  lcd.drawRoundRect(199, 199, 102, 27, 5, RGB(0, 0, 0));
+  lcd.drawText(215, 205, "NEXT", RGB(0, 0, 0), RGB(0, 255, 239), 2);
+}
+
+void Menu::howTo(MI0283QT9 lcd) {
+  lcd.fillScreen(RGB(255, 255, 255));
+  lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  lcd.drawInteger(105, 210, 5, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
+  lcd.fillRect(32, 145, 15, 15, RGB(0, 0, 0));
+  lcd.fillRect(150, 128, 32, 32, RGB(255, 0, 0));
+  for (uint16_t c = 195; c < 300; c += 25) {
+    lcd.drawCircle(c, 15, 10, RGB(0, 0, 0));
+  }
+
+  lcd.drawText(18, 120, "Jij", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  lcd.drawText(98, 100, "Obstakels", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  lcd.drawText(110, 35, "Moeilijkheid", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+
+  howToNext(lcd);
+
+  _delay_ms(500);
+  howToContinue = false;
+  checkButtonPress(lcd);
+
+  lcd.fillScreen(RGB(255, 255, 255));
+  lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
+  lcd.fillRect(64, 128, 32, 32, RGB(255, 0, 0));
+  lcd.fillTriangle(224, 160, 240, 128, 256, 160, RGB(255, 0, 0));
+
+  lcd.drawText(40, 90, "Hier kun je", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+  lcd.drawText(42, 105, "op landen!", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+
+  lcd.drawText(180, 90, "Hier kun je niet", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+  lcd.drawText(202, 105, "op landen!", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+
+  lcd.drawText(70, 30, "Met de Z-knop spring je!", RGB(0,0,0), RGB(255,255,255), 1);
+
+  howToNext(lcd);
+
+  _delay_ms(500);
+  howToContinue = false;
+  gameStart = false;
+  checkButtonPress(lcd);
+
+  lcd.fillScreen(RGB(255, 255, 255));
+  lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
+
+  lcd.fillRect(144, 128, 32, 32, RGB(255, 0, 0));
+  lcd.fillRect(150, 100, 15, 15, RGB(0, 0, 0));
+  lcd.drawLine(128, 108, 143, 103, RGB(0, 0, 0));
+  lcd.drawLine(128, 113, 143, 108, RGB(0, 0, 0));
+  lcd.drawLine(128, 118, 143, 113, RGB(0, 0, 0));
+  lcd.drawLine(180, 136, 210, 136, RGB(0, 0, 0));
+  lcd.drawLine(180, 144, 210, 144, RGB(0, 0, 0));
+  lcd.drawLine(180, 152, 210, 152, RGB(0, 0, 0));
+
+  lcd.drawText(70, 60, "Spring er in 1 keer over", RGB(0,0,0), RGB(255,255,255), 1);
+  lcd.drawText(75, 70, "om 2 punten te krijgen!", RGB(0,0,0), RGB(255,255,255),1);
+
+  howToNext(lcd);
+  
+  _delay_ms(500);
+  howToContinue = false;
+  gameStart = false;
+  checkButtonPress(lcd);
+
+  lcd.fillScreen(RGB(255, 255, 255));
+  lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
+
+  lcd.fillRect(144, 128, 32, 32, RGB(255, 0, 0));
+  lcd.fillRect(150, 100, 15, 15, RGB(0, 0, 0));
+  lcd.drawLine(128, 95, 143, 100, RGB(0, 0, 0));
+  lcd.drawLine(128, 100, 143, 105, RGB(0, 0, 0));
+  lcd.drawLine(128, 105, 143, 110, RGB(0, 0, 0));
+  lcd.drawLine(180, 136, 210, 136, RGB(0, 0, 0));
+  lcd.drawLine(180, 144, 210, 144, RGB(0, 0, 0));
+  lcd.drawLine(180, 152, 210, 152, RGB(0, 0, 0));
+
+  lcd.drawText(100, 60, "Land erop om 1", RGB(0,0,0), RGB(255,255,255), 1);
+  lcd.drawText(95, 70, "punt te krijgen!", RGB(0,0,0), RGB(255,255,255),1);
+
+  howToNext(lcd);
+  
+  _delay_ms(500);
+  howToContinue = false;
+  gameStart = false;
+  checkButtonPress(lcd);
+}
+
 //kijkt of er op een knop wordt gedrukt:
 void Menu::checkButtonPress(MI0283QT9 lcd) {
   while (!gameStart) {      //loopt zolang er niet op een knop is gedrukt
@@ -188,9 +288,15 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
           buttonPressed = 4;
           scoresBack = true;
         }
-        if (lcd.touchX() > 270) {
-          buttonPressed = 10;
+        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 175 && lcd.touchY() < 200) { //kijkt of er wordt gedrukt op how to
+          buttonPressed = 5;
         }
+        if (lcd.touchX() > 200 && lcd.touchX() < 300 && lcd.touchY() > 200 && lcd.touchY() < 225) {
+          howToContinue = true;
+        }
+        //        if (lcd.touchX() > 270) {       // om naar score input scherm te gaan zonder de game te spelen
+        //          buttonPressed = 10;
+        //        }
       }
       if (postGame == true) {
         if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
@@ -244,7 +350,7 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
         }
       }
     }
-    if (buttonPressed != 0 || charVerandering) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
+    if (buttonPressed != 0 || charVerandering || howToContinue) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
       gameStart = true;
     }
   }
