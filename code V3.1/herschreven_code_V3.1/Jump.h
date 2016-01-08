@@ -13,7 +13,7 @@ class Jump {
         
         uint8_t zbutton = 0;
 	double velocityY = 0.0, positionY = 160.0, last_y, gravity = 0.05;      //gravity variabelen
-	bool in_air = false;     //jump booleans
+	bool in_air = false, geland = false;     //jump booleans
 	
 	void checkJump();
 	void startJump();
