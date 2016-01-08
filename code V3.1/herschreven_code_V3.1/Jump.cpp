@@ -9,6 +9,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include "Jump.h"
+#include "Game.h"
 
 
 
@@ -23,7 +24,7 @@ void Jump::startJump() {
   if (!in_air) {
     velocityY = -2.5;
     in_air = true;
-    //Serial.print("sjump");
+  //Serial.print("sjump");
   }
 }
 
@@ -41,7 +42,7 @@ void Jump::updateJump() {
   last_y = positionY;
   velocityY += gravity;
   positionY += velocityY;
-
+  
   if (positionY >= 160.0) {
     positionY = 160.0;
     velocityY = 0.0;
@@ -50,9 +51,9 @@ void Jump::updateJump() {
   if(positionY == 160){
   in_air = false;
   }
-  //Serial.print("ujump");
 }
 void Jump::tekenJump(MI0283QT9 lcd){
+  
   if (in_air) {
     if (velocityY <= 0) {
       lcd.fillRect(32, positionY - 15, 15, 15 , RGB(0, 0, 0));
@@ -62,4 +63,7 @@ void Jump::tekenJump(MI0283QT9 lcd){
       lcd.fillRect(32, last_y - 15 - 1, 15, (positionY - 15) - (last_y - 15) + 1, RGB(255, 255, 255));
     }
   }
+//      Serial.println("teken:");
+//      Serial.println(velocityY);
+//      
 }

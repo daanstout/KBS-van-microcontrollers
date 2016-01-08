@@ -8,10 +8,9 @@
 
 #ifndef JUMP_H_
 #define JUMP_H_
-
 class Jump {
-	public:	
-
+  public:	
+        
         uint8_t zbutton = 0;
 	double velocityY = 0.0, positionY = 160.0, last_y, gravity = 0.05;      //gravity variabelen
 	bool in_air = false;     //jump booleans
