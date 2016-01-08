@@ -191,6 +191,7 @@ void drawScores() {
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm
+
   printScore();
 
   lcd.fillRoundRect(10, 200, 100, 25, 5, RGB(0, 034, 255));
@@ -305,7 +306,9 @@ void sortScore() {
 }
 
 void printScore() {
-  getScore();
+  if (veranderd) {
+    getScore();
+  }
   lcd.drawText(90, 10, "HIGHSCORES", RGB(0, 0, 0), RGB(111, 111, 111), 2);             //HIGHSCORE schrijven
   sprintf(buf, "%c%c%c", nummer1.letter1, nummer1.letter2, nummer1.letter3);
   lcd.drawText(60, 37, "1.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 1 schrijven
@@ -656,9 +659,7 @@ int main() {
     if (buttonPressed == 2) {
       buttonPressed = 0;
       gameStart = 0;
-      if (veranderd) {
-        drawScores();
-      }
+      drawScores();
       firstTime = 1;
       toCheckButton = 0;
       //dit gebeurt er als er op scores wordt gedrukt
