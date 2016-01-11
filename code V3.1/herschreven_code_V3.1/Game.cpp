@@ -33,7 +33,7 @@ Opmaak O;
   O.obstakelLocatie1 = 0;
   O.obstakelLocatie2 = 0;
   O.aantalObstakels = 0;
-<<<<<<< HEAD
+
 
 
   while (gameIsLive) {
@@ -49,7 +49,12 @@ Opmaak O;
    
     hitbox(O, J);
     J.tekenJump(lcd);
-=======
+
+  //J.in_air = false;
+  
+  while (gameIsLive) {
+    nunchuck_get_data();
+    J.zbutton = nunchuck_zbutton();
   //J.in_air = false;
   
   while (gameIsLive) {
@@ -69,15 +74,15 @@ Opmaak O;
     Serial.print(" - ");
     Serial.print(vormObstakel1);
     hitbox();
->>>>>>> parent of 15d180a... valt door bovenkant heen
+
     O.sidescroll(lcd);
     
     O.teken(lcd);
     J.checkJump();
-<<<<<<< HEAD
 
 
-=======
+
+
     J.tekenJump(lcd);
     
 //    Serial.println(death);
@@ -87,12 +92,12 @@ Opmaak O;
 //    _delay_ms(100);
     
     
->>>>>>> parent of 15d180a... valt door bovenkant heen
+
     if (death) {
       gameIsLive = false;
     }
   }
-<<<<<<< HEAD
+
 }
 void Game::hitbox(Opmaak P, Jump J) {
   if (P.obstakelVorm1 == 2) {
@@ -103,7 +108,7 @@ void Game::hitbox(Opmaak P, Jump J) {
    
   if (P.obstakelVorm1 == 1) {
     if (47 > P.obstakelLocatie1) {
-=======
+
 
   
 }
@@ -138,7 +143,8 @@ void Game::hitbox() {
   }
   if (O.obstakelVorm1 == 1) {
     if (47 > O.obstakelLocatie1) {
->>>>>>> parent of 15d180a... valt door bovenkant heen
+
+
       if (J.positionY > currentY) {
         death = true;
       }
