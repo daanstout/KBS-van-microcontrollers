@@ -8,13 +8,13 @@
 #include "nunchuck_funcs.h"
 #include <util/delay.h>
 #include <stdlib.h>
-#include "Jump.h"
+//#include "Jump.h"
 #include "Menu.h"
 #include "Opmaak.h"
 #include "Game.h"
 
 MI0283QT9 lcd;
-Jump J;
+//Jump J;
 Menu M;
 Opmaak O;
 Game G;

@@ -11,15 +11,18 @@
 class Jump {
   public:	
         
-        uint8_t zbutton = 0;
-	double velocityY = 0.0, positionY = 160.0, last_y, gravity = 0.05;      //gravity variabelen
-	bool in_air = false, geland = false;     //jump booleans
+  uint8_t zbutton = 0;
+	double velocityY = 0.0, positionY = 160, last_y, gravity = 0.05;      //gravity variabelen
+	bool in_air = false;     //jump booleans
 	
 	void checkJump();
 	void startJump();
 	void endJump();
 	void updateJump();
-        void tekenJump(MI0283QT9 lcd);
+  void tekenJump(MI0283QT9 lcd);
+
+  private:
+  bool eerstekeer;
 };
 
 

@@ -26,9 +26,9 @@ void Opmaak::sidescroll(MI0283QT9 lcd) {
     if (obstakelLocatie1 == -32) {
      // Serial.print("sidescroll obstakelvorm 1: ");
       //Serial.println(obstakelVorm1);
-      if (J.geland) {
+      if (G.geland) {
         M.score++;
-      } else if (!J.geland) {
+      } else if (!G.geland) {
         M.score += 2;
       }
 

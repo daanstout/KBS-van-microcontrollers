@@ -6,7 +6,7 @@
 class Game{
   private:
   public:
-  bool gameIsLive = false, death = false, lucht;     //game booleans
+  bool gameIsLive = false, death = false, geland;     //game booleans
   uint8_t currentY = 160;     //draw variabelen
   uint8_t moeilijkheid = 255, vormObstakel1;    //game variabelen
   uint16_t locatieObstakel1;
