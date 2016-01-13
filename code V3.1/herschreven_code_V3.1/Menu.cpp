@@ -12,7 +12,6 @@
 #include "Menu.h"
 #include "Opmaak.h"
 
-
 void Menu::compare() {
   if (score > score2) {
     multiplayerWinner = 2;
@@ -41,9 +40,11 @@ void Menu::drawScores(MI0283QT9 lcd) {
 
 
 void Menu::incScore(){
-  Serial.println(score);
-  score++;
   
+  score++;
+  this->score = score;
+  //Serial.println(score);
+  //Serial.println(this->score);
 }
 //de char inputs in het game over menu:
 
@@ -197,7 +198,6 @@ void Menu::inputScore(MI0283QT9 lcd) {
     lcd.drawText(55, 80, "NO HIGHSCORE", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   }
   //meldt of je de highscore hebt of dat je in de top 5 bent gekomen
-
   if (rank == 8) {
     lcd.fillRoundRect(110, 164, 80, 25, 5, RGB(0, 034, 255));
     lcd.drawRoundRect(110, 164, 80, 25, 5, RGB(0, 0, 0));
@@ -206,14 +206,14 @@ void Menu::inputScore(MI0283QT9 lcd) {
     //tekent de quit knop
     scoreSubmit = 1;
 
-    while (scoreSubmit) {
+//    while (scoreSubmit) {
       checkButtonPress(lcd);
-      if (charVerandering == true) {
+//      if (charVerandering == true) {
         gameStart = 0;
         charVerandering = false;
-      }
+     // }
       _delay_ms(100);
-    }
+    //}
   } else {
     lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
     lcd.drawRoundRect(22, 164, 170, 25, 5, RGB(0, 0, 0));

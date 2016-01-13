@@ -15,7 +15,7 @@ class Game{
   
   
   void game(MI0283QT9 lcd, Menu M, Opmaak O, Jump J);
-  void hitbox(Opmaak P, Jump U);
+  void hitbox(Opmaak P, Jump U, Menu E);
   
 };
 #endif

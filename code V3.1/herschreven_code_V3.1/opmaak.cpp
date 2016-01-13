@@ -38,7 +38,7 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu E) {
       //        M.score++;
 //      E.incScore();
       
-      score++;
+      E.score++;
 
       //        Serial.println("score + 1");
       //        scoreUpdate = true;
@@ -69,8 +69,8 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu E) {
     }
     obstakelLocatie1--;
     obstakelLocatie2--;
-    Serial.print(score);
-    Serial.println(" EIND");
+    //Serial.print(score);
+   // Serial.println(" EIND");
   }
 }
 
