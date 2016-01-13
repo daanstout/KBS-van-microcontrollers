@@ -22,21 +22,28 @@ Game G;
 int main() {
   init();
   lcd.begin();
-  lcd.touchRead();
-  lcd.touchStartCal();
-  Serial.begin(9600);
+  lcd.tp_matrix.a = 79800;
+  lcd.tp_matrix.b = 4294966596;
+  lcd.tp_matrix.c = 4250933096;
+  lcd.tp_matrix.d = 2700;
+  lcd.tp_matrix.e = 57800;
+  lcd.tp_matrix.f = 4291263596;
+  lcd.tp_matrix.div = 109865;
 
-  while (1) {
-    
+  Serial.begin(9600);
+while (1) {
+
     if (M.firstTime) {
       M.drawMenu(lcd);
       M.firstTime = false;
     }
 
     if (M.buttonPressed == 1) {
+      G.multiplayerMode = false;
       G.gameIsLive = true;
       G.death = false;
       M.score = 0;
+      G.moeilijkheid = 255;
       G.game(lcd);
       M.firstTime = true;
       M.buttonPressed = 10;
@@ -51,9 +58,21 @@ int main() {
       M.toCheckButton = false;
     }
     if (M.buttonPressed == 3) {
-      //multiplayer
+      G.multiplayerMode = true;
+      G.gameIsLive = true;
+      G.death = false;
+      M.score = 0;
+      G.moeilijkheid = 255;
+      G.game(lcd);
+      M.score2 = M.score;
+      M.score = 0;
+      G.death = false;
+      G.gameIsLive = true;
+      G.game(lcd);
+      M.compare();
+
       M.firstTime = true;
-      M.buttonPressed = 0;
+      M.buttonPressed = 10;
       M.gameStart = false;
     }
     if (M.buttonPressed == 4) {
@@ -61,6 +80,15 @@ int main() {
       M.buttonPressed = 0;
       M.gameStart = false;
       M.toCheckButton = false;
+    }
+    if(M.buttonPressed == 5){
+      M.firstTime = true;
+      M.buttonPressed = 0;
+      M.gameStart = false;
+      M.toCheckButton = false;
+      M.howTo(lcd);
+      M.gameStart = false;
+      M.howToContinue = false;
     }
     if (M.buttonPressed == 10) {
       M.postGame = true;
@@ -80,6 +108,6 @@ int main() {
     }
     M.toCheckButton = true;
   }
-
+  
   return 0;
 }
