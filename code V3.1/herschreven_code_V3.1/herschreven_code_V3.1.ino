@@ -8,13 +8,14 @@
 #include "nunchuck_funcs.h"
 #include <util/delay.h>
 #include <stdlib.h>
+#include <EEPROM.h>
 //#include "Jump.h"
 #include "Menu.h"
 #include "Opmaak.h"
 #include "Game.h"
 
 MI0283QT9 lcd;
-//Jump J;
+Jump J;
 Menu M;
 Opmaak O;
 Game G;
@@ -31,8 +32,8 @@ int main() {
   lcd.tp_matrix.div = 109865;
 
   Serial.begin(9600);
+  
 while (1) {
-
     if (M.firstTime) {
       M.drawMenu(lcd);
       M.firstTime = false;
@@ -45,7 +46,7 @@ while (1) {
       M.score = 0;
       G.moeilijkheid = 255;
 //      O.dubbelPunten = false;
-      G.game(lcd);
+      G.game(lcd, M, O, J);
       M.firstTime = true;
       M.buttonPressed = 10;
       M.gameStart = false;
@@ -62,16 +63,16 @@ while (1) {
       G.multiplayerMode = true;
       G.gameIsLive = true;
       G.death = false;
-      M.score = 0;
+//      M.score = 0;
       G.moeilijkheid = 255;
-///      O.dubbelPunten = true;
-      G.game(lcd);
+//      O.dubbelPunten = true;
+      G.game(lcd, M, O, J);
       M.score2 = M.score;
-      M.score = 0;
+//      M.score = 0;
       G.death = false;
       G.gameIsLive = true;
 //      O.dubbelPunten = true;
-      G.game(lcd);
+      G.game(lcd, M, O, J);
       M.compare();
 
       M.firstTime = true;

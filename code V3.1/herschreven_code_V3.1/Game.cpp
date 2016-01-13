@@ -8,6 +8,7 @@
 #include "nunchuck_funcs.h"
 #include <util/delay.h>
 #include <stdlib.h>
+#include <EEPROM.h>
 #include "Game.h"
 #include "Menu.h"
 #include "Jump.h"
@@ -15,10 +16,7 @@
 
 
 
-void Game::game(MI0283QT9 lcd) {
-  Jump J;
-  Menu M;
-  Opmaak O;
+void Game::game(MI0283QT9 lcd, Menu M, Opmaak O, Jump J) {
 
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
@@ -60,15 +58,14 @@ void Game::game(MI0283QT9 lcd) {
   while (gameIsLive) {
     nunchuck_get_data();
     J.zbutton = nunchuck_zbutton();
-
+    
     //Serial.print(J.zbutton);
 
     O.randomLevel();
     vormObstakel1 = O.obstakelVorm1;
     locatieObstakel1 = O.obstakelLocatie1;
-
-
-    O.sidescroll(lcd);
+    O.sidescroll(lcd, M);
+ 
     O.teken(lcd);
 
     hitbox(O, J);

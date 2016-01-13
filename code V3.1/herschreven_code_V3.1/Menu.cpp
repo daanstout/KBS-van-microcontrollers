@@ -8,7 +8,9 @@
 #include "nunchuck_funcs.h"
 #include <util/delay.h>
 #include <stdlib.h>
+#include <EEPROM.h>
 #include "Menu.h"
+#include "Opmaak.h"
 
 
 void Menu::compare() {
@@ -25,6 +27,7 @@ void Menu::drawScores(MI0283QT9 lcd) {
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
   //achtergrond van het scherm
 
+  printScore(lcd);
   lcd.fillRoundRect(10, 200, 100, 25, 5, RGB(0, 034, 255));
   lcd.drawRoundRect(10, 200, 100, 25, 5, RGB(0, 0, 0));
   lcd.drawRoundRect(9, 199, 102, 27, 5, RGB(0, 0, 0));
@@ -36,10 +39,11 @@ void Menu::drawScores(MI0283QT9 lcd) {
   scoresBack = false;
 }
 
+
 void Menu::incScore(){
-  score = score + 1;
-  Serial.print("Score + 1, Score: ");
   Serial.println(score);
+  score++;
+  
 }
 //de char inputs in het game over menu:
 
@@ -76,6 +80,103 @@ void Menu::tekenVak3(MI0283QT9 lcd) {
   //tekent het derde vak om je initialen in te vullen
 }
 
+void Menu::emptyEEPROM() {
+  Score leeg = {1 , 'A', 'B', 'C'};
+  EEPROM.put(0, leeg);
+  EEPROM.put(20, leeg);
+  EEPROM.put(40, leeg);
+  EEPROM.put(60, leeg);
+  EEPROM.put(80, leeg);
+}
+
+//score opslaan op de plaats van de laagste score
+void Menu::saveScore() {
+  sortScore();
+  EEPROM.put(0, nummer1);
+  EEPROM.put(20, nummer2);
+  EEPROM.put(40, nummer3);
+  EEPROM.put(60, nummer4);
+  EEPROM.put(80, nummer5);
+  veranderd = true;
+}
+//scores ophalen uit de EEPROM
+void Menu::getScore() {
+  EEPROM.get(0, nummer1);
+  EEPROM.get(20, nummer2);
+  EEPROM.get(40, nummer3);
+  EEPROM.get(60, nummer4);
+  EEPROM.get(80, nummer5);
+}
+
+//nieuwe score invoegen en de rest een plek naar beneden zetten
+void Menu::sortScore() {
+  getScore();
+  nummer = {score, eerste, tweede, derde};
+  if (nummer.punten > nummer1.punten) {
+    rank = 1;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer2;
+    nummer2 = nummer1;
+    nummer1 = nummer;
+  }
+  else if (nummer.punten >= nummer2.punten && nummer.punten < nummer1.punten) {
+    rank = 2;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer2;
+    nummer2 = nummer;
+  }
+  else if (nummer.punten >= nummer3.punten && nummer.punten < nummer2.punten) {
+    rank = 3;
+    nummer5 = nummer4;
+    nummer4 = nummer3;
+    nummer3 = nummer;
+  }
+  else if (nummer.punten >= nummer4.punten && nummer.punten < nummer3.punten) {
+    rank = 4;
+    nummer5 = nummer4;
+    nummer4 = nummer;
+  }
+  else if (nummer.punten >= nummer5.punten && nummer.punten < nummer4.punten) {
+    rank = 5;
+    nummer5 = nummer;
+  }
+  else if (nummer.punten < nummer5.punten) {
+    rank = 8;
+  }
+}
+
+void Menu::printScore(MI0283QT9 lcd) {
+  getScore();
+  lcd.drawText(90, 10, "HIGHSCORES", RGB(0, 0, 0), RGB(111, 111, 111), 2);             //HIGHSCORE schrijven
+  sprintf(buf, "%c%c%c", nummer1.letter1, nummer1.letter2, nummer1.letter3);
+  lcd.drawText(60, 37, "1.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 1 schrijven
+  lcd.drawText(110, 37, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 37, nummer1.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer2.letter1, nummer2.letter2, nummer2.letter3);
+  lcd.drawText(60, 62, "2.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 2 schrijven
+  lcd.drawText(110, 62, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 62, nummer2.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer3.letter1, nummer3.letter2, nummer3.letter3);
+  lcd.drawText(60, 87, "3.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                    //rank 3 schrijven
+  lcd.drawText(110, 87, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 87, nummer3.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer4.letter1, nummer4.letter2, nummer4.letter3);
+  lcd.drawText(60, 112, "4.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 4 schrijven
+  lcd.drawText(110, 112, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 112, nummer4.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+  sprintf(buf, "%c%c%c", nummer5.letter1, nummer5.letter2, nummer5.letter3);
+  lcd.drawText(60, 137, "5.", RGB(0, 0, 0), RGB(111, 111, 111), 2);                   //rank 5 schrijven
+  lcd.drawText(110, 137, buf, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 137, nummer5.punten, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+
+}
+
 //het game over scherm:
 void Menu::inputScore(MI0283QT9 lcd) {
   lcd.fillScreen(RGB(111, 111, 111));
@@ -87,42 +188,64 @@ void Menu::inputScore(MI0283QT9 lcd) {
   lcd.drawInteger(200, 50, score, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   //schrijft de tekst op het game over scherm als je dood gaat
 
+  sortScore();
   if (rank == 1) {
     lcd.drawText(80, 80, "HIGHSCORE!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   } else if (rank < 6) {
     lcd.drawText(110, 80, "TOP 5!", RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  } else if (rank == 8) {
+    lcd.drawText(55, 80, "NO HIGHSCORE", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   }
   //meldt of je de highscore hebt of dat je in de top 5 bent gekomen
 
-  lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
-  lcd.drawRoundRect(22, 164, 170, 25, 5, RGB(0, 0, 0));
-  lcd.drawRoundRect(21, 163, 172, 27, 5, RGB(0, 0, 0));
-  lcd.drawText(27, 170, "SAVE SCORE", RGB(0, 0, 0), RGB(0, 034, 255), 2);
-  //tekent de save score knop
+  if (rank == 8) {
+    lcd.fillRoundRect(110, 164, 80, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(110, 164, 80, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(109, 163, 82, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(120, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de quit knop
+    scoreSubmit = 1;
 
-  lcd.fillRoundRect(210, 164, 80, 25, 5, RGB(0, 034, 255));
-  lcd.drawRoundRect(210, 164, 80, 25, 5, RGB(0, 0, 0));
-  lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
-  lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
-  //tekent de quit knop
-
-  tekenVak1(lcd);
-  tekenVak2(lcd);
-  tekenVak3(lcd);
-
-  while (!scoreSubmit) {
-    checkButtonPress(lcd);
-    if (charVerandering) {
-      gameStart = false;
-
-      tekenVak1(lcd);
-      tekenVak2(lcd);
-      tekenVak3(lcd);
-
-      charVerandering = false;
+    while (scoreSubmit) {
+      checkButtonPress(lcd);
+      if (charVerandering == true) {
+        gameStart = 0;
+        charVerandering = false;
+      }
+      _delay_ms(100);
     }
-    _delay_ms(100);
+  } else {
+    lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(22, 164, 170, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(21, 163, 172, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(27, 170, "SAVE SCORE", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de save score knop
+
+    lcd.fillRoundRect(210, 164, 80, 25, 5, RGB(0, 034, 255));
+    lcd.drawRoundRect(210, 164, 80, 25, 5, RGB(0, 0, 0));
+    lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
+    lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+    //tekent de quit knop
+
+    tekenVak1(lcd);
+    tekenVak2(lcd);
+    tekenVak3(lcd);
+
+    scoreSubmit = 1;
+    while (scoreSubmit) {
+      checkButtonPress(lcd);
+      if (charVerandering == true) {
+        gameStart = 0;
+        tekenVak2(lcd);
+        tekenVak1(lcd);
+        tekenVak3(lcd);
+
+        charVerandering = false;
+      }
+      _delay_ms(100);
+    }
   }
+  eerste = 'A', tweede = 'B', derde = 'C';
 }
 //tekent het main menu:
 void Menu::drawMenu(MI0283QT9 lcd) {
@@ -325,11 +448,13 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
             derde--;
           }
           charVerandering = true;
-        } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {
+        } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {                     //save knop
           scoreSubmit = true;
+          saveScore();
           charVerandering = true;
-        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {
+        } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {                    //quit knop
           scoreSubmit = true;
+          veranderd = false;
           charVerandering = true;
         }
       }

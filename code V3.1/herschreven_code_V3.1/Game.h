@@ -2,6 +2,7 @@
 #define GAME_H_
 #include "Jump.h"
 #include "Opmaak.h"
+#include "Menu.h"
 
 class Game{
   private:
@@ -13,7 +14,7 @@ class Game{
  
   
   
-  void game(MI0283QT9 lcd);
+  void game(MI0283QT9 lcd, Menu M, Opmaak O, Jump J);
   void hitbox(Opmaak P, Jump U);
   
 };

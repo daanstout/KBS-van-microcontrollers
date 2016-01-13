@@ -13,45 +13,49 @@
 #include "Menu.h"
 #include "Game.h"
 
-void Opmaak::sidescroll(MI0283QT9 lcd) {
-  Menu M;
+void Opmaak::sidescroll(MI0283QT9 lcd, Menu E) {
+
   Jump J;
   Game G;
+  
   if (aantalObstakels > 0) {
     vorigeObstakel1 = obstakelLocatie1;
     vorigeObstakel2 = obstakelLocatie2;
 
-    J.checkJump();
+    //J.checkJump();
 
     if (obstakelLocatie1 == -32) {
-     // Serial.print("sidescroll obstakelvorm 1: ");
+      // Serial.print("sidescroll obstakelvorm 1: ");
       //Serial.println(obstakelVorm1);
 
-//      if(!G.punten){
-//        dubbelPunten = false;
-//      }else{
-//        dubbelPunten = true;
-//      }
-//      Serial.println(dubbelPunten);
-//      if (!dubbelPunten) {
-//        M.score++;
-       M.incScore();
-//        Serial.println("score + 1");
-//        scoreUpdate = true;
-//      } else if (dubbelPunten) {
-//        M.score += 2;
-//        Serial.println("score + 2");
-//        scoreUpdate = true;
-//      }
+      //      if(!G.punten){
+      //        dubbelPunten = false;
+      //      }else{
+      //        dubbelPunten = true;
+      //      }
+      //      Serial.println(dubbelPunten);
+      //      if (!dubbelPunten) {
+      //        M.score++;
+//      E.incScore();
+      
+      score++;
+
+      //        Serial.println("score + 1");
+      //        scoreUpdate = true;
+      //      } else if (dubbelPunten) {
+      //        M.score += 2;
+      //        Serial.println("score + 2");
+      //        scoreUpdate = true;
+      //      }
       //G.geland = false;
-//      Serial.println(dubbelPunten);
-//      if(!dubbelPunten && scoreUpdate){
-//        dubbelPunten = true;
-//        scoreUpdate = false;
-//        Serial.println("reset");
-//      }
+      //      Serial.println(dubbelPunten);
+      //      if(!dubbelPunten && scoreUpdate){
+      //        dubbelPunten = true;
+      //        scoreUpdate = false;
+      //        Serial.println("reset");
+      //      }
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
-      lcd.drawInteger(105, 210, M.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
+      lcd.drawInteger(105, 210, E.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
 
       aantalObstakels--;
 
@@ -65,6 +69,8 @@ void Opmaak::sidescroll(MI0283QT9 lcd) {
     }
     obstakelLocatie1--;
     obstakelLocatie2--;
+    Serial.print(score);
+    Serial.println(" EIND");
   }
 }
 
@@ -93,8 +99,8 @@ void Opmaak::randomLevel() {
       obstakelLocatie2 = 320;
     }
   }
-  
-  
+
+
 }
 void Opmaak::teken(MI0283QT9 lcd) {
   Jump J;
@@ -142,22 +148,22 @@ void Opmaak::speler(MI0283QT9 lcd) {
   Jump J;
   lcd.fillRect(32, J.positionY - 15, 15, 15, RGB(0, 0, 0));
 }
-void Opmaak::drawMoeilijkheid(MI0283QT9 lcd){
+void Opmaak::drawMoeilijkheid(MI0283QT9 lcd) {
   Game G;
-  if(G.moeilijkheid == 255){
-    for(uint16_t c = 195; c < 300; c += 25){
+  if (G.moeilijkheid == 255) {
+    for (uint16_t c = 195; c < 300; c += 25) {
       lcd.drawCircle(c, 15, 10, RGB(0, 0, 0));
     }
-  }else{
-    if(G.moeilijkheid == 130 || G.moeilijkheid == 129){
+  } else {
+    if (G.moeilijkheid == 130 || G.moeilijkheid == 129) {
       lcd.fillCircle(295, 15, 10, RGB(0, 0, 0));
-    }else if(G.moeilijkheid == 160 || G.moeilijkheid == 159){
+    } else if (G.moeilijkheid == 160 || G.moeilijkheid == 159) {
       lcd.fillCircle(270, 15, 10, RGB(0, 0, 0));
-    }else if(G.moeilijkheid == 190 || G.moeilijkheid == 189){
+    } else if (G.moeilijkheid == 190 || G.moeilijkheid == 189) {
       lcd.fillCircle(245, 15, 10, RGB(0, 0, 0));
-    }else if(G.moeilijkheid == 220 || G.moeilijkheid == 219){
+    } else if (G.moeilijkheid == 220 || G.moeilijkheid == 219) {
       lcd.fillCircle(220, 15, 10, RGB(0, 0, 0));
-    }else if(G.moeilijkheid == 250 || G.moeilijkheid == 249){
+    } else if (G.moeilijkheid == 250 || G.moeilijkheid == 249) {
       lcd.fillCircle(195, 15, 10, RGB(0, 0, 0));
     }
   }
