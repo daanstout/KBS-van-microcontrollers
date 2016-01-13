@@ -120,7 +120,9 @@ void Game::hitbox(Opmaak P, Jump U) {
         U.in_air = false;
         U.positionY = 128;
         geland = true;
-
+//        punten = false;
+//        P.dubbelPunten = false;
+//        Serial.println(P.dubbelPunten);
 
         U.updateJump();
       }
@@ -149,6 +151,7 @@ void Game::hitbox(Opmaak P, Jump U) {
   if (currentY == 128) {
     currentY = 160;
   }
-
+//  Serial.println(geland);
+//  Serial.println(P.dubbelPunten);
 }
 

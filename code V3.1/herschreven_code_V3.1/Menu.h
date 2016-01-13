@@ -11,10 +11,11 @@ class Menu{
 	
 	public:
 	uint8_t buttonPressed = 0, multiplayerWinner;      //menu variabelen
-	uint16_t score, score2;     //game variabelen
+	uint16_t score = 0, score2;     //game variabelen
 	bool firstTime = true, toCheckButton = true, howToContinue = false;        //menu booleans
 	bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false, postGame = false;     //menu booleans
 
+  void incScore();
 	void drawScores(MI0283QT9 lcd);
 	void tekenVak1(MI0283QT9 lcd);
 	void tekenVak2(MI0283QT9 lcd);

@@ -44,6 +44,7 @@ while (1) {
       G.death = false;
       M.score = 0;
       G.moeilijkheid = 255;
+//      O.dubbelPunten = false;
       G.game(lcd);
       M.firstTime = true;
       M.buttonPressed = 10;
@@ -63,11 +64,13 @@ while (1) {
       G.death = false;
       M.score = 0;
       G.moeilijkheid = 255;
+///      O.dubbelPunten = true;
       G.game(lcd);
       M.score2 = M.score;
       M.score = 0;
       G.death = false;
       G.gameIsLive = true;
+//      O.dubbelPunten = true;
       G.game(lcd);
       M.compare();
 

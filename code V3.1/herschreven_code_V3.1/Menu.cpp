@@ -36,6 +36,11 @@ void Menu::drawScores(MI0283QT9 lcd) {
   scoresBack = false;
 }
 
+void Menu::incScore(){
+  score = score + 1;
+  Serial.print("Score + 1, Score: ");
+  Serial.println(score);
+}
 //de char inputs in het game over menu:
 
 void Menu::tekenVak1(MI0283QT9 lcd) {

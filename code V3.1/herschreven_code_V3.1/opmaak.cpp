@@ -26,20 +26,36 @@ void Opmaak::sidescroll(MI0283QT9 lcd) {
     if (obstakelLocatie1 == -32) {
      // Serial.print("sidescroll obstakelvorm 1: ");
       //Serial.println(obstakelVorm1);
-      if (G.geland) {
-        M.score++;
-      } else if (!G.geland) {
-        M.score += 2;
-      }
 
+//      if(!G.punten){
+//        dubbelPunten = false;
+//      }else{
+//        dubbelPunten = true;
+//      }
+//      Serial.println(dubbelPunten);
+//      if (!dubbelPunten) {
+//        M.score++;
+       M.incScore();
+//        Serial.println("score + 1");
+//        scoreUpdate = true;
+//      } else if (dubbelPunten) {
+//        M.score += 2;
+//        Serial.println("score + 2");
+//        scoreUpdate = true;
+//      }
+      //G.geland = false;
+//      Serial.println(dubbelPunten);
+//      if(!dubbelPunten && scoreUpdate){
+//        dubbelPunten = true;
+//        scoreUpdate = false;
+//        Serial.println("reset");
+//      }
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
       lcd.drawInteger(105, 210, M.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
 
       aantalObstakels--;
 
       if (aantalObstakels == 1) {
-        Serial.print("sidescroll obstakelvorm 2: ");
-        Serial.println(obstakelVorm1);
         obstakelLocatie1 = obstakelLocatie2;
         obstakelVorm1 = obstakelVorm2;
         obstakelVorm2 = 0;
