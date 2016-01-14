@@ -6,16 +6,17 @@
 
 class Game{
   private:
+  uint16_t localScore;
   public:
-  bool gameIsLive = false, death = false, geland, multiplayerMode = false;//, punten;     //game booleans
+  bool gameIsLive = false, death = false, geland, multiplayerMode = false, eersteKeer = true;//, punten;     //game booleans
   uint8_t currentY = 160;     //draw variabelen
   uint8_t moeilijkheid = 255, vormObstakel1;    //game variabelen
   uint16_t locatieObstakel1;
  
   
   
-  void game(MI0283QT9 lcd, Menu M, Opmaak O, Jump J);
-  void hitbox(Opmaak P, Jump U, Menu E);
+  void game(MI0283QT9 lcd, Menu *M, Opmaak O, Jump J);
+  void hitbox(Opmaak P, Jump U, Menu *E);
   
 };
 #endif

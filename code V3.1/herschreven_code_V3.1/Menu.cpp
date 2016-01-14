@@ -40,11 +40,13 @@ void Menu::drawScores(MI0283QT9 lcd) {
 
 
 void Menu::incScore(){
-  
   score++;
-  this->score = score;
-  //Serial.println(score);
-  //Serial.println(this->score);
+}
+uint16_t Menu::getterScore(){
+    return this->score;
+}
+void Menu::setterScore(uint16_t x){
+   x = this->score; 
 }
 //de char inputs in het game over menu:
 
@@ -112,7 +114,7 @@ void Menu::getScore() {
 //nieuwe score invoegen en de rest een plek naar beneden zetten
 void Menu::sortScore() {
   getScore();
-  nummer = {score, eerste, tweede, derde};
+  nummer = {getterScore() , eerste, tweede, derde};
   if (nummer.punten > nummer1.punten) {
     rank = 1;
     nummer5 = nummer4;
@@ -186,7 +188,7 @@ void Menu::inputScore(MI0283QT9 lcd) {
 
   lcd.drawText(82, 20, "GAME OVER", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(80, 50, "SCORE:", RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawInteger(200, 50, score, DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 50, getterScore() , DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   //schrijft de tekst op het game over scherm als je dood gaat
 
   sortScore();
@@ -226,7 +228,7 @@ void Menu::inputScore(MI0283QT9 lcd) {
     lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
     lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
     //tekent de quit knop
-
+    
     tekenVak1(lcd);
     tekenVak2(lcd);
     tekenVak3(lcd);
@@ -243,6 +245,7 @@ void Menu::inputScore(MI0283QT9 lcd) {
         charVerandering = false;
       }
       _delay_ms(100);
+   
     }
   }
   eerste = 'A', tweede = 'B', derde = 'C';
@@ -449,18 +452,24 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
           }
           charVerandering = true;
         } else if (lcd.touchX() > 22 && lcd.touchX() < 192 && lcd.touchY() > 164 && lcd.touchY() < 189) {                     //save knop
-          scoreSubmit = true;
+          scoreSubmit = false;
           saveScore();
           charVerandering = true;
+          score = 0;
+          
+          
         } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {                    //quit knop
-          scoreSubmit = true;
+          scoreSubmit = false;
           veranderd = false;
           charVerandering = true;
+          score = 0;
+          
         }
       }
     }
     if (buttonPressed != 0 || charVerandering || howToContinue) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
       gameStart = true;
     }
+    
   }
 }

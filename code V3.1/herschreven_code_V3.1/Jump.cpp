@@ -9,7 +9,6 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include "Jump.h"
-#include "Opmaak.h"
 
 
 
@@ -36,8 +35,6 @@ void Jump::updateJump() {
   last_y = positionY;
   velocityY += gravity;
   positionY += velocityY;
-
-  Opmaak O;
 
   if (positionY >= 160.0) {
     positionY = 160.0;

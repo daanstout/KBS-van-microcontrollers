@@ -16,31 +16,26 @@
 
 
 
-void Game::game(MI0283QT9 lcd, Menu M, Opmaak O, Jump J) {
-
+void Game::game(MI0283QT9 lcd, Menu *M, Opmaak O, Jump J) {
   lcd.fillScreen(RGB(255, 255, 255)); // scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
-  lcd.drawInteger(105, 210, M.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  lcd.drawInteger(105, 210, M->getterScore() , DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
   O.tekenLijn(lcd);
   nunchuck_setpowerpins();
   nunchuck_init();
   O.speler(lcd);
   O.drawMoeilijkheid(lcd);
 
-  //J.positionY = 160;
   O.obstakelLocatie1 = 0;
   O.obstakelLocatie2 = 0;
   O.aantalObstakels = 0;
 
 
 
-
+  
   while (gameIsLive) {
     nunchuck_get_data();
     J.zbutton = nunchuck_zbutton();
-    
-    //Serial.print(J.zbutton);
-
     O.randomLevel();
     vormObstakel1 = O.obstakelVorm1;
     locatieObstakel1 = O.obstakelLocatie1;
@@ -60,7 +55,7 @@ void Game::game(MI0283QT9 lcd, Menu M, Opmaak O, Jump J) {
     J.tekenJump(lcd);
   }
 }
-void Game::hitbox(Opmaak P, Jump U, Menu E) {
+void Game::hitbox(Opmaak P, Jump U, Menu *E) {
 
   if (vormObstakel1 == 2) { //als eerste figuur == 4kant
 
@@ -70,33 +65,43 @@ void Game::hitbox(Opmaak P, Jump U, Menu E) {
         geland = false;
       }
       if (U.positionY > 127 && U.positionY < 129) {
+        if(eersteKeer){
+        eersteKeer = false;
+        E->incScore();
+        }
+        
         U.velocityY = 0.0;
         U.in_air = false;
         U.positionY = 128;
         geland = true;
-        E.incScore();
-//        punten = false;
-//        P.dubbelPunten = false;
-//        Serial.println(P.dubbelPunten);
-
+        
         U.updateJump();
       }
     }
     if (32 < locatieObstakel1 && geland) {
       U.in_air = true;
       geland = false;
-      E.incScore();
+  }
+  if(32 < locatieObstakel1 && eersteKeer){
+    if(!geland){
+    E->incScore();
+    E->incScore();
     }
-    if (U.positionY > 160) {
+    
+    eersteKeer = false;
+  }
+    
+    if (U.positionY >= 160) {
       U.in_air = false;
+      eersteKeer = true;
     }
   }
-  if (P.obstakelVorm1 == 1) {
-    if (47 > P.obstakelLocatie1) {
-      if (U.positionY > currentY) {
+  if (vormObstakel1 == 1) {
+    if (47 > locatieObstakel1) {
+      if (U.positionY > 128) {
         death = true;
       }
-      if (P.obstakelLocatie1 < 31) {
+      if (locatieObstakel1 < 31) {
         currentY += 2;
       } else {
         currentY -= 2;
@@ -106,7 +111,5 @@ void Game::hitbox(Opmaak P, Jump U, Menu E) {
   if (currentY == 128) {
     currentY = 160;
   }
-//  Serial.println(geland);
-//  Serial.println(P.dubbelPunten);
 }
 

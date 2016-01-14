@@ -13,7 +13,7 @@
 #include "Menu.h"
 #include "Game.h"
 
-void Opmaak::sidescroll(MI0283QT9 lcd, Menu E) {
+void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E) {
 
   Jump J;
   Game G;
@@ -22,40 +22,12 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu E) {
     vorigeObstakel1 = obstakelLocatie1;
     vorigeObstakel2 = obstakelLocatie2;
 
-    //J.checkJump();
+   
 
     if (obstakelLocatie1 == -32) {
-      // Serial.print("sidescroll obstakelvorm 1: ");
-      //Serial.println(obstakelVorm1);
-
-      //      if(!G.punten){
-      //        dubbelPunten = false;
-      //      }else{
-      //        dubbelPunten = true;
-      //      }
-      //      Serial.println(dubbelPunten);
-      //      if (!dubbelPunten) {
-      //        M.score++;
-//      E.incScore();
       
-      E.score++;
-
-      //        Serial.println("score + 1");
-      //        scoreUpdate = true;
-      //      } else if (dubbelPunten) {
-      //        M.score += 2;
-      //        Serial.println("score + 2");
-      //        scoreUpdate = true;
-      //      }
-      //G.geland = false;
-      //      Serial.println(dubbelPunten);
-      //      if(!dubbelPunten && scoreUpdate){
-      //        dubbelPunten = true;
-      //        scoreUpdate = false;
-      //        Serial.println("reset");
-      //      }
       lcd.fillRect(105, 210, 20, 20, RGB(255, 255, 255));
-      lcd.drawInteger(105, 210, E.score, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
+      lcd.drawInteger(105, 210, E->getterScore() , DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
 
       aantalObstakels--;
 
@@ -69,8 +41,6 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu E) {
     }
     obstakelLocatie1--;
     obstakelLocatie2--;
-    //Serial.print(score);
-   // Serial.println(" EIND");
   }
 }
 
@@ -96,6 +66,8 @@ void Opmaak::randomLevel() {
       } else {
         obstakelVorm2 = 2;
       }
+
+
       obstakelLocatie2 = 320;
     }
   }
@@ -103,7 +75,6 @@ void Opmaak::randomLevel() {
 
 }
 void Opmaak::teken(MI0283QT9 lcd) {
-  Jump J;
   if (obstakelLocatie1 != vorigeObstakel1) {
     if (obstakelVorm1 == 2) {
       drawVierkant(obstakelLocatie1, lcd);
