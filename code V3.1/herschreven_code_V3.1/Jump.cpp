@@ -56,4 +56,7 @@ void Jump::tekenJump(MI0283QT9 lcd) {
       lcd.fillRect(32, last_y - 15 - 1, 15, (positionY - 15) - (last_y - 15) + 1, RGB(255, 255, 255));
     }
   }
+//  else{
+//    lcd.fillRect(32, 160 -14, 15 , 15 , RGB(0, 0, 0));
+//  }
 }

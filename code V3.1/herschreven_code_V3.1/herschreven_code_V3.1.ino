@@ -9,7 +9,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 #include <EEPROM.h>
-//#include "Jump.h"
+#include "Jump.h"
 #include "Menu.h"
 #include "Opmaak.h"
 #include "Game.h"
@@ -46,7 +46,7 @@ while (1) {
       M.setterScore(0);
       G.moeilijkheid = 255;
       O.dubbelPunten = false;
-      G.game(lcd, &M, O, J);
+      G.game(lcd, &M, &O, J);
       M.firstTime = true;
       M.buttonPressed = 10;
       M.gameStart = false;
@@ -66,14 +66,14 @@ while (1) {
       M.setterScore(0);
       G.moeilijkheid = 255;
       O.dubbelPunten = true;
-      G.game(lcd, &M, O, J);
+      G.game(lcd, &M, &O, J);
       M.score2 = M.getterScore();
       M.setterScore(0);
       G.death = false;
       _delay_ms(5000);
       G.gameIsLive = true;
       O.dubbelPunten = true;
-      G.game(lcd, &M, O, J);
+      G.game(lcd, &M, &O, J);
       M.compare();
 
       M.firstTime = true;
