@@ -12,6 +12,8 @@
 #include "Menu.h"
 #include "Opmaak.h"
 
+
+//vergelijkt de scores van de speler, bij gelijk spel wordt dat ook gemeld
 void Menu::compare() {
   if (score > score2) {
     multiplayerWinner = 2;
@@ -21,6 +23,8 @@ void Menu::compare() {
     multiplayerWinner = 3;
   }
 }
+
+//tekent de scores.
 void Menu::drawScores(MI0283QT9 lcd) {
   lcd.fillScreen(RGB(111, 111, 111));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 50, 0));
@@ -38,16 +42,22 @@ void Menu::drawScores(MI0283QT9 lcd) {
   scoresBack = false;
 }
 
-
+//telt 1 op bij de score
 void Menu::incScore(){
   score++;
 }
+
+//geeft de score
 uint16_t Menu::getterScore(){
     return this->score;
 }
+
+//set de score
 void Menu::setterScore(uint16_t x){
    x = this->score; 
 }
+
+
 //de char inputs in het game over menu:
 
 void Menu::tekenVak1(MI0283QT9 lcd) {
@@ -83,6 +93,8 @@ void Menu::tekenVak3(MI0283QT9 lcd) {
   //tekent het derde vak om je initialen in te vullen
 }
 
+
+//leegt de eeprom
 void Menu::emptyEEPROM() {
   Score leeg = {1 , 'A', 'B', 'C'};
   EEPROM.put(0, leeg);
@@ -150,6 +162,8 @@ void Menu::sortScore() {
   }
 }
 
+
+//print de scores
 void Menu::printScore(MI0283QT9 lcd) {
   getScore();
   lcd.drawText(90, 10, "HIGHSCORES", RGB(0, 0, 0), RGB(111, 111, 111), 2);             //HIGHSCORE schrijven
@@ -233,6 +247,7 @@ void Menu::inputScore(MI0283QT9 lcd) {
     tekenVak2(lcd);
     tekenVak3(lcd);
 
+    //wacht tot de speler klaar is met zijn characters in te vullen.
     scoreSubmit = 1;
     while (scoreSubmit) {
       checkButtonPress(lcd);
@@ -287,6 +302,7 @@ void Menu::drawMenu(MI0283QT9 lcd) {
   lcd.drawText(113, 180, "HOW TO", RGB(0, 0, 0), RGB(0, 034, 255), 2);
 }
 
+//tekent de knop tijdens de How To
 void Menu::howToNext(MI0283QT9 lcd) {
   lcd.fillRoundRect(200, 200, 100, 25, 5, RGB(0, 255, 239));
   lcd.drawRoundRect(200, 200, 100, 25, 5, RGB(0, 0, 0));
@@ -294,6 +310,7 @@ void Menu::howToNext(MI0283QT9 lcd) {
   lcd.drawText(215, 205, "NEXT", RGB(0, 0, 0), RGB(0, 255, 239), 2);
 }
 
+//tekent de How To
 void Menu::howTo(MI0283QT9 lcd) {
   lcd.fillScreen(RGB(255, 255, 255));
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
