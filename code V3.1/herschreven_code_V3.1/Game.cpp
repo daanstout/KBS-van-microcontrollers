@@ -29,7 +29,7 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
   O->obstakelLocatie1 = 0;                                                                  //set de obstakelLocatie1 op 0
   O->obstakelLocatie2 = 0;                                                                  //set de obstakelLocatie2 op 0
   O->aantalObstakels = 0;                                                                   //set het aantalObstakels op 0
- 
+
   while (gameIsLive) {                                                                      //loopt zolang de speler leeft
     nunchuck_get_data();                                                                    //haalt de data van de nunchuck op
     J.zbutton = nunchuck_zbutton();                                                         //haalt de waarde van de zbutton van de nunchuck op

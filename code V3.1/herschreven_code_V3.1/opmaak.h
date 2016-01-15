@@ -2,15 +2,15 @@
 #define OPMAAK_H_
 #include "Menu.h"
 
-class Opmaak{
-    private:
+class Opmaak {
+  private:
     uint8_t randomObstakels = 0, randomObstakelVorm, nieuwObstakel, obstakelVorm2 = 0;    //level generatie variabelen
     uint16_t  vorigeObstakel1, vorigeObstakel2;      //obstakel variabelen
-    public:
+  public:
     uint8_t  aantalObstakels = 0, obstakelVorm1, score;
     uint16_t obstakelLocatie1, obstakelLocatie2;
     bool scoreUpdate = false; //dubbelPunten;
-    
+
     void sidescroll(MI0283QT9 lcd, Menu *E);
     void randomLevel();
     void teken(MI0283QT9 lcd);

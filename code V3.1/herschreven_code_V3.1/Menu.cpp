@@ -43,18 +43,18 @@ void Menu::drawScores(MI0283QT9 lcd) {
 }
 
 //telt 1 op bij de score
-void Menu::incScore(){
+void Menu::incScore() {
   score++;
 }
 
 //geeft de score
-uint16_t Menu::getterScore(){
-    return this->score;
+uint16_t Menu::getterScore() {
+  return this->score;
 }
 
 //set de score
-void Menu::setterScore(uint16_t x){
-   x = this->score; 
+void Menu::setterScore(uint16_t x) {
+  x = this->score;
 }
 
 
@@ -222,13 +222,13 @@ void Menu::inputScore(MI0283QT9 lcd) {
     //tekent de quit knop
     scoreSubmit = 1;
 
-//    while (scoreSubmit) {
-      checkButtonPress(lcd);
-//      if (charVerandering == true) {
-        gameStart = 0;
-        charVerandering = false;
-     // }
-      _delay_ms(100);
+    //    while (scoreSubmit) {
+    checkButtonPress(lcd);
+    //      if (charVerandering == true) {
+    gameStart = 0;
+    charVerandering = false;
+    // }
+    _delay_ms(100);
     //}
   } else {
     lcd.fillRoundRect(22, 164, 170, 25, 5, RGB(0, 034, 255));
@@ -242,7 +242,7 @@ void Menu::inputScore(MI0283QT9 lcd) {
     lcd.drawRoundRect(209, 163, 82, 27, 5, RGB(0, 0, 0));
     lcd.drawText(220, 170, "QUIT", RGB(0, 0, 0), RGB(0, 034, 255), 2);
     //tekent de quit knop
-    
+
     tekenVak1(lcd);
     tekenVak2(lcd);
     tekenVak3(lcd);
@@ -260,7 +260,7 @@ void Menu::inputScore(MI0283QT9 lcd) {
         charVerandering = false;
       }
       _delay_ms(100);
-   
+
     }
   }
   eerste = 'A', tweede = 'B', derde = 'C';
@@ -473,20 +473,20 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
           saveScore();
           charVerandering = true;
           score = 0;
-          
-          
+
+
         } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {                    //quit knop
           scoreSubmit = false;
           veranderd = false;
           charVerandering = true;
           score = 0;
-          
+
         }
       }
     }
     if (buttonPressed != 0 || charVerandering || howToContinue) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
       gameStart = true;
     }
-    
+
   }
 }

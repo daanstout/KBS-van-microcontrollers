@@ -16,10 +16,10 @@ class Menu {
     String eerste2, tweede2, derde2;
     uint8_t rank = 0;
     uint16_t score;
-    
+
   public:
     uint8_t buttonPressed = 0, multiplayerWinner;      //menu variabelen
-         //game variabelen
+    //game variabelen
     bool firstTime = true, toCheckButton = true, howToContinue = false;        //menu booleans
     bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false, postGame = false;     //menu booleans
     uint16_t score2;
