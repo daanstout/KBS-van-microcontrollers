@@ -9,7 +9,7 @@ class Opmaak{
     public:
     uint8_t  aantalObstakels = 0, obstakelVorm1, score;
     uint16_t obstakelLocatie1, obstakelLocatie2;
-    bool scoreUpdate = false, dubbelPunten;
+    bool scoreUpdate = false; //dubbelPunten;
     
     void sidescroll(MI0283QT9 lcd, Menu *E);
     void randomLevel();
