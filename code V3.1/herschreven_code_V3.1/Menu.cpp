@@ -364,8 +364,8 @@ void Menu::howTo(MI0283QT9 lcd) {
   lcd.drawLine(180, 144, 210, 144, RGB(0, 0, 0));
   lcd.drawLine(180, 152, 210, 152, RGB(0, 0, 0));
 
-  lcd.drawText(70, 60, "Spring er in 1 keer over", RGB(0, 0, 0), RGB(255, 255, 255), 1);
-  lcd.drawText(75, 70, "om 2 punten te krijgen!", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+  lcd.drawText(70, 60, "Spring over een vierkant", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+  lcd.drawText(75, 70, "om 1 punt te krijgen!", RGB(0, 0, 0), RGB(255, 255, 255), 1);
 
   howToNext(lcd);
 
@@ -377,17 +377,17 @@ void Menu::howTo(MI0283QT9 lcd) {
   lcd.fillScreen(RGB(255, 255, 255));
   lcd.fillRect(0, 160, 320, 32, RGB(0, 100, 0));
 
-  lcd.fillRect(144, 128, 32, 32, RGB(255, 0, 0));
-  lcd.fillRect(150, 100, 15, 15, RGB(0, 0, 0));
-  lcd.drawLine(128, 95, 143, 100, RGB(0, 0, 0));
-  lcd.drawLine(128, 100, 143, 105, RGB(0, 0, 0));
-  lcd.drawLine(128, 105, 143, 110, RGB(0, 0, 0));
+  lcd.fillTriangle(144, 160, 160, 128, 176, 160, RGB(255, 0, 0));
+  lcd.fillRect(170, 100, 15, 15, RGB(0, 0, 0));
+  lcd.drawLine(148, 95, 163, 100, RGB(0, 0, 0));
+  lcd.drawLine(148, 100, 163, 105, RGB(0, 0, 0));
+  lcd.drawLine(148, 105, 163, 110, RGB(0, 0, 0));
   lcd.drawLine(180, 136, 210, 136, RGB(0, 0, 0));
   lcd.drawLine(180, 144, 210, 144, RGB(0, 0, 0));
   lcd.drawLine(180, 152, 210, 152, RGB(0, 0, 0));
 
-  lcd.drawText(100, 60, "Land erop om 1", RGB(0, 0, 0), RGB(255, 255, 255), 1);
-  lcd.drawText(95, 70, "punt te krijgen!", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+  lcd.drawText(100, 60, "Spring over een driehoek", RGB(0, 0, 0), RGB(255, 255, 255), 1);
+  lcd.drawText(95, 70, "om 2 punten te krijgen!", RGB(0, 0, 0), RGB(255, 255, 255), 1);
 
   howToNext(lcd);
 
