@@ -63,7 +63,7 @@ void Opmaak::randomLevel() {
     }
     obstakelLocatie1 = 320;
   }
-  if (obstakelLocatie1 < 160 && aantalObstakels < 2) {    //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
+  if (obstakelLocatie1 <= 160 && aantalObstakels < 2) {    //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
     nieuwObstakel = (random(0, 3)) + 1;       //bepaalt of er een nieuw obstakel komt via een random getal
     if (nieuwObstakel == 1) {
       randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;     //bepaalt de vorm via een random getal
@@ -92,17 +92,18 @@ void Opmaak::teken(MI0283QT9 lcd) {
     }
     if (obstakelVorm1 == 1) {
       drawDriehoek(obstakelLocatie1, lcd);
-      resetDriehoek(vorigeObstakel1, lcd);
+      resetDriehoek(vorigeObstakel1 , lcd);
     }
   }
   if (aantalObstakels == 2 && obstakelLocatie2 != vorigeObstakel2) {
     if (obstakelVorm2 == 2) {
       drawVierkant(obstakelLocatie2, lcd);
-      resetVierkant(vorigeObstakel2, lcd);
+      resetVierkant(vorigeObstakel2 - 1, lcd);
     }
     if (obstakelVorm2 == 1) {
       drawDriehoek(obstakelLocatie2, lcd);
-      resetDriehoek(vorigeObstakel2, lcd);
+      resetDriehoek(vorigeObstakel2 - 1, lcd);
+      resetVierkant(vorigeObstakel1 -2, lcd);
     }
   }
   _delay_ms(2);
