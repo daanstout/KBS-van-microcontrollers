@@ -15,14 +15,13 @@ class Menu {
     char eerste = 'A', tweede = 'B', derde = 'C';
     String eerste2, tweede2, derde2;
     uint8_t rank = 0;
-    uint16_t score;
 
   public:
     uint8_t buttonPressed = 0, multiplayerWinner;      //menu variabelen
     //game variabelen
     bool firstTime = true, toCheckButton = true, howToContinue = false;        //menu booleans
     bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false;     //menu booleans
-    uint16_t score2;
+    uint16_t score2, score;
     //highscores
     uint8_t eeAdress = 0, scherm = 0;
     Score nummer1, nummer2, nummer3, nummer4, nummer5, kleinste, nummer;

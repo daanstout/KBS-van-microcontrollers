@@ -24,7 +24,7 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
   nunchuck_setpowerpins();                                                                  //set de power pins van de nunchuck zodat de waardes kunnen worden aangepast
   nunchuck_init();                                                                          //initialiseert de nunchuck
   O->speler(lcd);                                                                           //tekent de speler op het scherm
-  O->drawMoeilijkheid(lcd);                                                                 //tekent de moeilijkheid op het scherm
+  O->drawMoeilijkheid(lcd, moeilijkheid);                                                                 //tekent de moeilijkheid op het scherm
 
   O->obstakelLocatie1 = 0;                                                                  //set de obstakelLocatie1 op 0
   O->obstakelLocatie2 = 0;                                                                  //set de obstakelLocatie2 op 0
@@ -36,8 +36,13 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
     O->randomLevel();                                                                       //kijkt of er een obstakel moet worden gegenereerd, en zo ja, kijkt of er 1 komt.
     vormObstakel1 = O->obstakelVorm1;                                                       //slaat de vorm van het eerste obstakel op onder een lokale variabele
     locatieObstakel1 = O->obstakelLocatie1;                                                 //slaat de locatie van het eerste obstakel op onder een lokale variabele
-    O->sidescroll(lcd, M);                                                                  //scrolled de game opzij
-
+    O->sidescroll(lcd, M, moeilijkheid);                                                                  //scrolled de game opzij
+    if(locatieObstakel1 == -32){
+      if(moeilijkheid > 100){
+        moeilijkheid = 255 - M->score;
+      }
+    }
+    Serial.println(moeilijkheid);
     O->teken(lcd);                                                                          //update de speler in geval van jump
 
     hitbox(&J, M);                                                                           //kijkt of de speler af is

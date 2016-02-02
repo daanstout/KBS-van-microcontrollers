@@ -14,10 +14,10 @@
 #include "Game.h"
 
 //onze sidescroll functie
-void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E) {
+void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E, int moeilijkheid) {
 
-  Jump J;
-  Game G;
+//  Jump J;
+//  Game G;
 
   //kijkt of er obstakels zijn
   if (aantalObstakels > 0) {
@@ -35,6 +35,9 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E) {
       //past het aantal obstakels aan
       aantalObstakels--;
 
+      //tekent de moeilijkheid
+      drawMoeilijkheid(lcd, moeilijkheid);
+      
       //kijkt of er nog een tweede obstakel is, en zo ja, slaat die waardes op onder de eerste
       if (aantalObstakels == 1) {
         obstakelLocatie1 = obstakelLocatie2;
@@ -43,6 +46,7 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E) {
       } else if (aantalObstakels == 0) {
         obstakelVorm1 = 0;
       }
+      
     }
 
     //haalt 1 van de obstakel locaties af zodat ze kunnen scrollen
@@ -64,7 +68,7 @@ void Opmaak::randomLevel() {
     obstakelLocatie1 = 320;
   }
   if (obstakelLocatie1 <= 160 && aantalObstakels < 2) {    //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
-    nieuwObstakel = (random(0, 50)) + 1;       //bepaalt of er een nieuw obstakel komt via een random getal
+    nieuwObstakel = (random(0, 320 - (G.moeilijkheid / 2))) + 1;       //bepaalt of er een nieuw obstakel komt via een random getal
     if (nieuwObstakel == 1) {
       randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;     //bepaalt de vorm via een random getal
       aantalObstakels++;
@@ -73,15 +77,10 @@ void Opmaak::randomLevel() {
       } else {
         obstakelVorm2 = 1;
       }
-
-
       obstakelLocatie2 = 320;
     }
   }
-
-
 }
-
 
 //tekent de obstakels tijdens het scrollen
 void Opmaak::teken(MI0283QT9 lcd) {
@@ -141,22 +140,25 @@ void Opmaak::speler(MI0283QT9 lcd) {
 }
 
 //tekent de moeilijkheid bovenin het scherm en kleurt hem in als de moeilijkheid hoger wordt
-void Opmaak::drawMoeilijkheid(MI0283QT9 lcd) {
-  Game G;
-  if (G.moeilijkheid == 255) {
+void Opmaak::drawMoeilijkheid(MI0283QT9 lcd, int moeilijkheid) {
+  if (moeilijkheid == 255) {
     for (uint16_t c = 195; c < 300; c += 25) {
       lcd.drawCircle(c, 15, 10, RGB(0, 0, 0));
     }
   } else {
-    if (G.moeilijkheid == 130 || G.moeilijkheid == 129) {
+    if(moeilijkheid == 100 || moeilijkheid == 101){
+      for (uint16_t c = 195; c < 300; c += 25) {
+        lcd.fillCircle(c, 15, 10, RGB(255, 0, 0));
+      }
+    }else if (moeilijkheid == 130 || moeilijkheid == 129) {
       lcd.fillCircle(295, 15, 10, RGB(0, 0, 0));
-    } else if (G.moeilijkheid == 160 || G.moeilijkheid == 159) {
+    } else if (moeilijkheid == 160 || moeilijkheid == 159) {
       lcd.fillCircle(270, 15, 10, RGB(0, 0, 0));
-    } else if (G.moeilijkheid == 190 || G.moeilijkheid == 189) {
+    } else if (moeilijkheid == 190 || moeilijkheid == 189) {
       lcd.fillCircle(245, 15, 10, RGB(0, 0, 0));
-    } else if (G.moeilijkheid == 220 || G.moeilijkheid == 219) {
+    } else if (moeilijkheid == 220 || moeilijkheid == 219) {
       lcd.fillCircle(220, 15, 10, RGB(0, 0, 0));
-    } else if (G.moeilijkheid == 250 || G.moeilijkheid == 249) {
+    } else if (moeilijkheid == 250 || moeilijkheid == 249) {
       lcd.fillCircle(195, 15, 10, RGB(0, 0, 0));
     }
   }
