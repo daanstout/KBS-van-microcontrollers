@@ -106,7 +106,7 @@ void Opmaak::teken(MI0283QT9 lcd) {
       resetVierkant(vorigeObstakel1 -2, lcd);
     }
   }
-  //_delay_ms(2);
+  _delay_ms(2);
 }
 
 //tekent een lijn van de vierkant
