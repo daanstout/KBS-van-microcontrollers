@@ -67,6 +67,8 @@ int main() {
       M.firstTime = true;           //zet firstTime op true zodat het menu weer wordt getekend de volgende keer dat de loop loopt
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
       M.scherm = 0;
+      M.buttonPressed = 0;
+      M.gameStart = false;
     }
     //als de integer buttonPressed 3 is, gaat hij de game 2 keer spelen voor multiplayer.
     if (M.buttonPressed == 3) {
@@ -100,10 +102,11 @@ int main() {
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
       M.howToContinue = false;      //zorgt ervoor dat de How To stopt
       M.scherm = 0;
+      M.buttonPressed = 0;
+      M.gameStart = false;
     }
     //als de integer buttonPressed 5 is, gaat hij de How To weergeven.
     if (M.buttonPressed == 10) {
-      M.postGame = true;            //zet postGame op true zodat er andere buttons zijn dan bij het normale menu
       M.scherm = 10;
       M.buttonPressed = 0;          //zet buttonPressed op 0 zodat de game weet dat hij op het menu moet gaan staan
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
@@ -111,7 +114,6 @@ int main() {
       M.firstTime = true;           //zet firstTime op true zodat het menu weer wordt getekend de volgende keer dat de loop loopt
       M.buttonPressed = 0;          //zet buttonPressed op 0 zodat de game weet dat hij op het menu moet gaan staan
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
-      M.postGame = false;           //zet postGame op false zodat de normale knoppen er weer zijn
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
       M.scoreSubmit = false;        //zet scoreSubmit op false zodat de game de volgende keer weet dat de score nog niet is gesubmit
       M.scherm = 0;

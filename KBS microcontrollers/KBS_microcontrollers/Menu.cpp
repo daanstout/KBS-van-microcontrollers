@@ -401,7 +401,6 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
   while (!gameStart) {      //loopt zolang er niet op een knop is gedrukt
     lcd.touchRead();
     if (lcd.touchZ() > 80) {    //de minimum drukkracht op het scherm nodig om een druk te registreren
-//      if (postGame == false) {
       if(scherm == 0){
         if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85) {  //kijkt of er wordt gedrukt op start
           buttonPressed = 1;
@@ -430,8 +429,6 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
         //        if (lcd.touchX() > 270) {       // om naar score input scherm te gaan zonder de game te spelen
         //          buttonPressed = 10;
         //        }
-      
-//      if (postGame == true) {
       if(scherm == 10){
         if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
           if (eerste == 'Z') {
@@ -480,20 +477,16 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
           saveScore();
           charVerandering = true;
           score = 0;
-
-
         } else if (lcd.touchX() > 210 && lcd.touchX() < 290 && lcd.touchY() > 164 && lcd.touchY() < 189) {                    //quit knop
           scoreSubmit = false;
           veranderd = false;
           charVerandering = true;
           score = 0;
-
         }
       }
     }
     if (buttonPressed != 0 || charVerandering || howToContinue) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
       gameStart = true;
     }
-
   }
 }

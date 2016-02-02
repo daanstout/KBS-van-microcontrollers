@@ -114,7 +114,6 @@ void Game::hitbox(Jump *U, Menu *E) {
       } else {
         currentY -= 2;
       }
-      Serial.println(currentY);
     }
   }
   if (locatieObstakel1 == 32) {
