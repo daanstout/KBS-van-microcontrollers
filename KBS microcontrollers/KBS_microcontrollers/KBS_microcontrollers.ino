@@ -14,6 +14,11 @@
 #include "Opmaak.h"
 #include "Game.h"
 
+volatile uint16_t count = 0;
+volatile uint16_t teller = 0;
+
+
+
 //aanmaken van de classen:
 MI0283QT9 lcd;
 Jump J;
@@ -21,6 +26,39 @@ Menu M;
 Opmaak O;
 Game G;
 
+ISR(TIMER2_OVF_vect) {
+  teller++;
+  if(teller >= 12){
+    if(G.gameIsLive){
+      O.teken(lcd);
+      J.tekenJump(lcd);
+      nunchuck_get_data();                                                                    //haalt de data van de nunchuck op
+      J.zbutton = nunchuck_zbutton();                                                         //haalt de waarde van de zbutton van de nunchuck op
+      O.randomLevel();                                                                       //kijkt of er een obstakel moet worden gegenereerd, en zo ja, kijkt of er 1 komt.
+      G.vormObstakel1 = O.obstakelVorm1;                                                       //slaat de vorm van het eerste obstakel op onder een lokale variabele
+      G.locatieObstakel1 = O.obstakelLocatie1;                                                 //slaat de locatie van het eerste obstakel op onder een lokale variabele
+      O.sidescroll(lcd, M, G.moeilijkheid);                                                                  //scrolled de game opzij
+      if(G.locatieObstakel1 == -32){
+        if(G.moeilijkheid > 100){
+          G.moeilijkheid = 255 - M.score;
+        }
+      }
+//      Serial.println(moeilijkheid);
+//      O->teken(lcd);                                                                          //update de speler in geval van jump
+  
+      G.hitbox(&J, M);                                                                           //kijkt of de speler af is
+  
+      J.checkJump();                                                                          //kijkt of er moet worden gesprongen
+      if (G.death) {                                                                            //kijkt of de speler dood is, en zo ja stopt de game
+        G.gameIsLive = false;
+      }
+      if (!G.geland) {                                                                          //kijkt of de speler niet is geland, en zo niet, update hij de jump waardes
+        J.updateJump();
+      }
+//      J.tekenJump(lcd);                                                                       //tekent de jump
+    }
+  }
+}
 int main() {
   //initialiseren van de lcd scherm, we hardcoden de calibratie zodat we dat niet elke keer weer hoeven te doen
   init();
@@ -34,6 +72,11 @@ int main() {
   lcd.tp_matrix.div = 109865;
 
   Serial.begin(9600);
+
+  TCCR2A |= (1 << CS02) | (1 << CS00);
+  TIMSK2 |= (1 << TOIE0);
+  TCNT2 = 0;
+  sei();
 
   //de infinite while loop
   while (1) {

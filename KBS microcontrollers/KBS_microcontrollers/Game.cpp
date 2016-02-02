@@ -42,8 +42,8 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
         moeilijkheid = 255 - M->score;
       }
     }
-    Serial.println(moeilijkheid);
-    O->teken(lcd);                                                                          //update de speler in geval van jump
+//    Serial.println(moeilijkheid);
+//    O->teken(lcd);                                                                          //update de speler in geval van jump
 
     hitbox(&J, M);                                                                           //kijkt of de speler af is
 
@@ -54,7 +54,7 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
     if (!geland) {                                                                          //kijkt of de speler niet is geland, en zo niet, update hij de jump waardes
       J.updateJump();
     }
-    J.tekenJump(lcd);                                                                       //tekent de jump
+//    J.tekenJump(lcd);                                                                       //tekent de jump
   }
 }
 
