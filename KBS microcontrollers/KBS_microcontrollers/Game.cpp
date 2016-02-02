@@ -40,7 +40,7 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
 
     O->teken(lcd);                                                                          //update de speler in geval van jump
 
-    hitbox(J, M);                                                                           //kijkt of de speler af is
+    hitbox(&J, M);                                                                           //kijkt of de speler af is
 
     J.checkJump();                                                                          //kijkt of er moet worden gesprongen
     if (death) {                                                                            //kijkt of de speler dood is, en zo ja stopt de game
@@ -54,22 +54,22 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
 }
 
 //onze hitbox
-void Game::hitbox(Jump U, Menu *E) {
+void Game::hitbox(Jump *U, Menu *E) {
 
   if (vormObstakel1 == 2) {                                                                 //als eerste figuur == 4kant
     if (47 > locatieObstakel1) {                                                            //kijkt of het eerste obstakel dichtbij genoeg is
-      if (U.positionY > 129) {                                                              //kijkt of de speler laag genoeg is om dood te gaan aan het obstakel, en zo ja, zegt dat de speler dood is
+      if (U->positionY > 129) {                                                              //kijkt of de speler laag genoeg is om dood te gaan aan het obstakel, en zo ja, zegt dat de speler dood is
         death = true;
         geland = false;
       }
-      if (U.positionY > 127 && U.positionY < 129) {                                         //kijkt of de speler is geland op het obstakel, en zo ja, zorgt ervoor dat de speler niet meer valt en continue op de obstakel blijft
-        U.velocityY = 0.0;
-        U.in_air = false;
-        U.positionY = 128;
+      if (U->positionY > 127 && U->positionY < 129) {                                         //kijkt of de speler is geland op het obstakel, en zo ja, zorgt ervoor dat de speler niet meer valt en continue op de obstakel blijft
+        U->velocityY = 0.0;
+        U->in_air = false;
+        U->positionY = 128;
         geland = true;
         geraakt = true;
 
-        U.updateJump();
+        U->updateJump();
       }
     }
     if (locatieObstakel1 == 32) {                                                           //kijkt of de eerste obstakel bijna voorbij de speler is en zo ja, geeft de speler punten
@@ -82,7 +82,7 @@ void Game::hitbox(Jump U, Menu *E) {
       }
     }
     if (locatieObstakel1 > 31 && geland) {                                                  //als de speler is geland kijkt hij of het obstakel voorbij is, en zo ja, laat de speler weer vallen
-      U.in_air = true;
+      U->in_air = true;
       geland = false;
     }
 
@@ -91,16 +91,30 @@ void Game::hitbox(Jump U, Menu *E) {
       eersteKeer = true;
     }
 
-    if (U.positionY >= 160) {                                                               //zorgt ervoor dat de speler niet meer valt zodra hij op de vloer staat
-      U.in_air = false;
+    if (U->positionY >= 160) {                                                               //zorgt ervoor dat de speler niet meer valt zodra hij op de vloer staat
+      U->in_air = false;
     }
   }
 
-  if (vormObstakel1 == 1) {                                                                 //kijkt of het eerste obstakel een driehoek is
-    if (47 > locatieObstakel1) {                                                            //kijkt of het eerste obstakel dichtbij genoeg is
-      if (U.positionY > 128) {                                                              //kijkt of de speler tegen het driehoek aan is gekomen en zo ja, maakt de speler dood
+//  if (vormObstakel1 == 1) {                                                                 //kijkt of het eerste obstakel een driehoek is
+//    if (47 > locatieObstakel1) {                                                            //kijkt of het eerste obstakel dichtbij genoeg is
+//      if (U.positionY > 128) {                                                              //kijkt of de speler tegen het driehoek aan is gekomen en zo ja, maakt de speler dood
+//        death = true;
+//      }
+//    }
+//  }
+
+  if (vormObstakel1 == 1) {
+    if (47 > locatieObstakel1 && locatieObstakel1 > 15) {
+      if (U->positionY > currentY) {
         death = true;
       }
+      if (locatieObstakel1 < 31) {
+        currentY += 2;
+      } else {
+        currentY -= 2;
+      }
+      Serial.println(currentY);
     }
   }
   if (locatieObstakel1 == 32) {
@@ -108,14 +122,14 @@ void Game::hitbox(Jump U, Menu *E) {
       E->incScore();
       E->incScore();
       eersteKeer = false;
+
     }
   }
 
   if (locatieObstakel1 == 28) {
     eersteKeer = true;
   }
-
-  if (currentY == 128) {
+  if(locatieObstakel1 == 0){
     currentY = 160;
   }
 }

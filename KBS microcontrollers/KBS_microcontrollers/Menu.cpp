@@ -401,7 +401,8 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
   while (!gameStart) {      //loopt zolang er niet op een knop is gedrukt
     lcd.touchRead();
     if (lcd.touchZ() > 80) {    //de minimum drukkracht op het scherm nodig om een druk te registreren
-      if (postGame == false) {
+//      if (postGame == false) {
+      if(scherm == 0){
         if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 60 && lcd.touchY() < 85) {  //kijkt of er wordt gedrukt op start
           buttonPressed = 1;
         }
@@ -411,21 +412,27 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
         if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 120 && lcd.touchY() < 170) { //kijkt of er wordt gedrukt op multiplayer
           buttonPressed = 3;
         }
+        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 175 && lcd.touchY() < 200) { //kijkt of er wordt gedrukt op how to
+          buttonPressed = 5;
+        }
+      }
+      if(scherm == 1){
         if (lcd.touchX() > 10 && lcd.touchX() < 110 && lcd.touchY() > 200 && lcd.touchY() < 225) { //kijkt of er wordt gedrukt op back in scores
           buttonPressed = 4;
           scoresBack = true;
         }
-        if (lcd.touchX() > 110 && lcd.touchX() < 210 && lcd.touchY() > 175 && lcd.touchY() < 200) { //kijkt of er wordt gedrukt op how to
-          buttonPressed = 5;
-        }
+      }
+      if(scherm == 3){
         if (lcd.touchX() > 200 && lcd.touchX() < 300 && lcd.touchY() > 200 && lcd.touchY() < 225) {
           howToContinue = true;
         }
+      }
         //        if (lcd.touchX() > 270) {       // om naar score input scherm te gaan zonder de game te spelen
         //          buttonPressed = 10;
         //        }
-      }
-      if (postGame == true) {
+      
+//      if (postGame == true) {
+      if(scherm == 10){
         if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
           if (eerste == 'Z') {
             eerste = 'A';

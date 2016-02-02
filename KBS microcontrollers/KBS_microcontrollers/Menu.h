@@ -24,7 +24,7 @@ class Menu {
     bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false, postGame = false;     //menu booleans
     uint16_t score2;
     //highscores
-    uint8_t eeAdress = 0;
+    uint8_t eeAdress = 0, scherm = 0;
     Score nummer1, nummer2, nummer3, nummer4, nummer5, kleinste, nummer;
     char buf[4];
     bool veranderd = true;

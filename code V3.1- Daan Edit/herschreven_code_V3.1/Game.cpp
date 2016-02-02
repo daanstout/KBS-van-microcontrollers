@@ -73,7 +73,7 @@ void Game::hitbox(Opmaak P, Jump U) {
       if (U.positionY > currentY) {
         death = true;
       }
-      if (P.obstakelLocatie1 < 31) {
+      if (P.obstakelLocatie1 < 30) {
         currentY += 2;
       } else {
         currentY -= 2;

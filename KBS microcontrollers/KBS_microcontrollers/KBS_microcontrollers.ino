@@ -41,6 +41,7 @@ int main() {
     if (M.firstTime) {
       M.drawMenu(lcd);
       M.firstTime = false;
+      M.scherm = 0;
     }
     //als de integer buttonPressed 1 is, gaat hij de game spelen. door verschillende variabelen en integers te zetten kan de game worden gestart.
     if (M.buttonPressed == 1) {
@@ -49,19 +50,23 @@ int main() {
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
       M.setterScore(0);             //zet de score op 0
       G.moeilijkheid = 255;         //zet de moeilijkheid op 255
+      G.currentY = 160;
       G.game(lcd, &M, &O, J);       //start de game totdat de speler dood gaat
       M.firstTime = true;           //zet firstTime op true zodat het menu weer wordt getekend de volgende keer dat de loop loopt
       M.buttonPressed = 10;         //zet buttonPressed op 10 zodat je je nickname kan invullen
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
+      M.scherm = 10;
     }
     //als de integer buttonPressed 2 is, gaat hij de highscore weergeven.
     if (M.buttonPressed == 2) {
       M.buttonPressed = 0;          //zet buttonPressed op 0 zodat de game weet dat hij op het menu moet gaan staan
+      M.scherm = 1;
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
       M.drawScores(lcd);            //tekent de highscores op het scherm
       M.firstTime = true;           //zet firstTime op true zodat het menu weer wordt getekend de volgende keer dat de loop loopt
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
+      M.scherm = 0;
     }
     //als de integer buttonPressed 3 is, gaat hij de game 2 keer spelen voor multiplayer.
     if (M.buttonPressed == 3) {
@@ -82,20 +87,24 @@ int main() {
       M.buttonPressed = 10;         //zet buttonPressed op 10 zodat je je nickname kan invullen
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
+      M.scherm = 10;
     }
     //als de integer buttonPressed 5 is, gaat hij de How To weergeven.
     if (M.buttonPressed == 5) {
       M.firstTime = true;           //zet firstTime op true zodat het menu weer wordt getekend de volgende keer dat de loop loopt
+      M.scherm = 3;
       M.buttonPressed = 0;          //zet buttonPressed op 0 zodat de game weet dat hij op het menu moet gaan staan
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
       M.howTo(lcd);                 //tekent de How To
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
       M.howToContinue = false;      //zorgt ervoor dat de How To stopt
+      M.scherm = 0;
     }
     //als de integer buttonPressed 5 is, gaat hij de How To weergeven.
     if (M.buttonPressed == 10) {
       M.postGame = true;            //zet postGame op true zodat er andere buttons zijn dan bij het normale menu
+      M.scherm = 10;
       M.buttonPressed = 0;          //zet buttonPressed op 0 zodat de game weet dat hij op het menu moet gaan staan
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
       M.inputScore(lcd);            //laat het score input scherm zien
@@ -105,6 +114,7 @@ int main() {
       M.postGame = false;           //zet postGame op false zodat de normale knoppen er weer zijn
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
       M.scoreSubmit = false;        //zet scoreSubmit op false zodat de game de volgende keer weet dat de score nog niet is gesubmit
+      M.scherm = 0;
     }
     //kijkt of er moet worden gekeken of er op een knop is gedrukt
     if (M.toCheckButton) {

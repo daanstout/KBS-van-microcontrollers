@@ -56,7 +56,7 @@ void Opmaak::randomLevel() {
   if (aantalObstakels == 0) {//kijkt of er geen obstakels zijn, en zo ja, maakt er 1 aan
     randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;   //bepaalt de vorm via een random getal
     aantalObstakels++;
-    if (randomObstakelVorm != 1) {
+    if (randomObstakelVorm > 50) {
       obstakelVorm1 = 2;
     } else {
       obstakelVorm1 = 1;
@@ -64,14 +64,14 @@ void Opmaak::randomLevel() {
     obstakelLocatie1 = 320;
   }
   if (obstakelLocatie1 <= 160 && aantalObstakels < 2) {    //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
-    nieuwObstakel = (random(0, 3)) + 1;       //bepaalt of er een nieuw obstakel komt via een random getal
+    nieuwObstakel = (random(0, 50)) + 1;       //bepaalt of er een nieuw obstakel komt via een random getal
     if (nieuwObstakel == 1) {
       randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;     //bepaalt de vorm via een random getal
       aantalObstakels++;
-      if (randomObstakelVorm == 1) {
-        obstakelVorm2 = 1;
-      } else {
+      if (randomObstakelVorm > 50) {
         obstakelVorm2 = 2;
+      } else {
+        obstakelVorm2 = 1;
       }
 
 
@@ -106,7 +106,7 @@ void Opmaak::teken(MI0283QT9 lcd) {
       resetVierkant(vorigeObstakel1 -2, lcd);
     }
   }
-  _delay_ms(2);
+  //_delay_ms(2);
 }
 
 //tekent een lijn van de vierkant
