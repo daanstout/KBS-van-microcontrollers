@@ -14,8 +14,7 @@
 #include "Opmaak.h"
 #include "Game.h"
 
-volatile uint16_t count = 0;
-volatile uint16_t teller = 0;
+volatile uint8_t teller = 0;
 
 
 
@@ -26,42 +25,25 @@ Menu M;
 Opmaak O;
 Game G;
 
+
 ISR(TIMER2_OVF_vect) {
-  teller++;
-  if(teller >= 12){
     if(G.gameIsLive){
-      O.teken(lcd);
-      J.tekenJump(lcd);
-      nunchuck_get_data();                                                                    //haalt de data van de nunchuck op
-      J.zbutton = nunchuck_zbutton();                                                         //haalt de waarde van de zbutton van de nunchuck op
-      O.randomLevel();                                                                       //kijkt of er een obstakel moet worden gegenereerd, en zo ja, kijkt of er 1 komt.
-      G.vormObstakel1 = O.obstakelVorm1;                                                       //slaat de vorm van het eerste obstakel op onder een lokale variabele
-      G.locatieObstakel1 = O.obstakelLocatie1;                                                 //slaat de locatie van het eerste obstakel op onder een lokale variabele
-      O.sidescroll(lcd, M, G.moeilijkheid);                                                                  //scrolled de game opzij
-      if(G.locatieObstakel1 == -32){
-        if(G.moeilijkheid > 100){
-          G.moeilijkheid = 255 - M.score;
+      teller++;
+      if(teller > 4){
+        O.sidescroll(lcd, &M, G.moeilijkheid);                                                                  //scrolled de game opzij                                                                                   
+        if (!G.geland) {                                                                          //kijkt of de speler niet is geland, en zo niet, update hij de jump waardes
+          J.updateJump();
         }
-      }
-//      Serial.println(moeilijkheid);
-//      O->teken(lcd);                                                                          //update de speler in geval van jump
-  
-      G.hitbox(&J, M);                                                                           //kijkt of de speler af is
-  
-      J.checkJump();                                                                          //kijkt of er moet worden gesprongen
-      if (G.death) {                                                                            //kijkt of de speler dood is, en zo ja stopt de game
-        G.gameIsLive = false;
-      }
-      if (!G.geland) {                                                                          //kijkt of de speler niet is geland, en zo niet, update hij de jump waardes
-        J.updateJump();
-      }
-//      J.tekenJump(lcd);                                                                       //tekent de jump
+       teller = 0;
+       G.veranderd = true; 
     }
   }
 }
+
 int main() {
   //initialiseren van de lcd scherm, we hardcoden de calibratie zodat we dat niet elke keer weer hoeven te doen
   init();
+  SPI.setClockDivider(SPI_CLOCK_DIV2);
   lcd.begin();
   lcd.tp_matrix.a = 79800;
   lcd.tp_matrix.b = 4294966596;
@@ -71,9 +53,8 @@ int main() {
   lcd.tp_matrix.f = 4291263596;
   lcd.tp_matrix.div = 109865;
 
-  Serial.begin(9600);
 
-  TCCR2A |= (1 << CS02) | (1 << CS00);
+//  TCCR2A |= (1 << CS02) | (1 << CS00);
   TIMSK2 |= (1 << TOIE0);
   TCNT2 = 0;
   sei();
@@ -94,7 +75,7 @@ int main() {
       M.setterScore(0);             //zet de score op 0
       G.moeilijkheid = 255;         //zet de moeilijkheid op 255
       G.currentY = 160;
-      G.game(lcd, &M, &O, J);       //start de game totdat de speler dood gaat
+      G.game(lcd, &M, &O, &J);       //start de game totdat de speler dood gaat
       M.firstTime = true;           //zet firstTime op true zodat het menu weer wordt getekend de volgende keer dat de loop loopt
       M.buttonPressed = 10;         //zet buttonPressed op 10 zodat je je nickname kan invullen
       M.gameStart = false;          //zet gameStart op false zodat er bij de functie checkButtonPress weer kan worden gelooped
@@ -120,13 +101,13 @@ int main() {
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
       M.setterScore(0);             //zet de score op 0
       G.moeilijkheid = 255;         //zet de moeilijkheid op 255
-      G.game(lcd, &M, &O, J);       //start de game totdat de speler dood gaat
+      G.game(lcd, &M, &O, &J);       //start de game totdat de speler dood gaat
       M.score2 = M.getterScore();   //nadat de eerste speler dood is gegaan wordt de score opgeslagen zodat de tweede speler kan spelen
       M.setterScore(0);             //zet de score op 0
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
       _delay_ms(5000);              //een delay zodat de spelers de controller kunnen doorgeven
       G.gameIsLive = true;          //zegt dat de game live is, true = game moet runnen, false = game is false
-      G.game(lcd, &M, &O, J);       //start de game totdat de speler dood gaat
+      G.game(lcd, &M, &O, &J);       //start de game totdat de speler dood gaat
       M.compare();                  //vergelijkt de 2 scores zodat de game weet wie de winnaar is
       M.firstTime = true;           //zet firstTime op true zodat het menu weer wordt getekend de volgende keer dat de loop loopt
       M.buttonPressed = 10;         //zet buttonPressed op 10 zodat je je nickname kan invullen

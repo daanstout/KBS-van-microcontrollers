@@ -11,7 +11,7 @@ class Opmaak {
     uint16_t obstakelLocatie1, obstakelLocatie2;
     bool scoreUpdate = false; //dubbelPunten;
 
-    void sidescroll(MI0283QT9 lcd, Menu *E, int moeilijkheid);
+    void sidescroll(MI0283QT9 lcd, Menu *E, uint8_t moeilijkheid);
     void randomLevel();
     void teken(MI0283QT9 lcd);
     void drawVierkant(int x, MI0283QT9 lcd);

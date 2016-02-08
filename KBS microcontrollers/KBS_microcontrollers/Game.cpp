@@ -16,7 +16,7 @@
 
 
 //onze game, dit is wat er gebeurt als de game draait
-void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
+void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump *J) {
   lcd.fillScreen(RGB(255, 255, 255));                                                       //scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);                     //tekent de tekst score op het scherm
   lcd.drawInteger(105, 210, M->getterScore() , DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);   //tekent het integer score op het scherm
@@ -24,37 +24,36 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump J) {
   nunchuck_setpowerpins();                                                                  //set de power pins van de nunchuck zodat de waardes kunnen worden aangepast
   nunchuck_init();                                                                          //initialiseert de nunchuck
   O->speler(lcd);                                                                           //tekent de speler op het scherm
-  O->drawMoeilijkheid(lcd, moeilijkheid);                                                                 //tekent de moeilijkheid op het scherm
+  O->drawMoeilijkheid(lcd, moeilijkheid);                                                   //tekent de moeilijkheid op het scherm
 
   O->obstakelLocatie1 = 0;                                                                  //set de obstakelLocatie1 op 0
   O->obstakelLocatie2 = 0;                                                                  //set de obstakelLocatie2 op 0
   O->aantalObstakels = 0;                                                                   //set het aantalObstakels op 0
 
   while (gameIsLive) {                                                                      //loopt zolang de speler leeft
-    nunchuck_get_data();                                                                    //haalt de data van de nunchuck op
-    J.zbutton = nunchuck_zbutton();                                                         //haalt de waarde van de zbutton van de nunchuck op
-    O->randomLevel();                                                                       //kijkt of er een obstakel moet worden gegenereerd, en zo ja, kijkt of er 1 komt.
-    vormObstakel1 = O->obstakelVorm1;                                                       //slaat de vorm van het eerste obstakel op onder een lokale variabele
-    locatieObstakel1 = O->obstakelLocatie1;                                                 //slaat de locatie van het eerste obstakel op onder een lokale variabele
-    O->sidescroll(lcd, M, moeilijkheid);                                                                  //scrolled de game opzij
-    if(locatieObstakel1 == -32){
-      if(moeilijkheid > 100){
-        moeilijkheid = 255 - M->score;
+    if(veranderd){
+      nunchuck_get_data();                                                                    //haalt de data van de nunchuck op
+      J->zbutton = nunchuck_zbutton();                                                         //haalt de waarde van de zbutton van de nunchuck op
+      J->checkJump(); 
+      O->randomLevel();                                                                       //kijkt of er een obstakel moet worden gegenereerd, en zo ja, kijkt of er 1 komt.
+      hitbox(J, M);                                                                           //kijkt of de speler af is
+
+      O->teken(lcd);                                                                          //tekent de jump
+      J->tekenJump(lcd);
+      
+      vormObstakel1 = O->obstakelVorm1;                                                       //slaat de vorm van het eerste obstakel op onder een lokale variabele
+      locatieObstakel1 = O->obstakelLocatie1;                                                 //slaat de locatie van het eerste obstakel op onder een lokale variabele
+      
+      if(locatieObstakel1 == -32){
+        if(moeilijkheid > 100){
+          moeilijkheid = 255 - M->score;
+        }
       }
+      if (death) {                                                                            //kijkt of de speler dood is, en zo ja stopt de game
+        gameIsLive = false;
+      }
+      veranderd = false;
     }
-//    Serial.println(moeilijkheid);
-//    O->teken(lcd);                                                                          //update de speler in geval van jump
-
-    hitbox(&J, M);                                                                           //kijkt of de speler af is
-
-    J.checkJump();                                                                          //kijkt of er moet worden gesprongen
-    if (death) {                                                                            //kijkt of de speler dood is, en zo ja stopt de game
-      gameIsLive = false;
-    }
-    if (!geland) {                                                                          //kijkt of de speler niet is geland, en zo niet, update hij de jump waardes
-      J.updateJump();
-    }
-//    J.tekenJump(lcd);                                                                       //tekent de jump
   }
 }
 

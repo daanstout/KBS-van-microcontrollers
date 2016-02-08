@@ -14,7 +14,7 @@
 #include "Game.h"
 
 //onze sidescroll functie
-void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E, int moeilijkheid) {
+void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E, uint8_t moeilijkheid) {
 
 //  Jump J;
 //  Game G;
@@ -67,7 +67,7 @@ void Opmaak::randomLevel() {
     }
     obstakelLocatie1 = 320;
   }
-  if (obstakelLocatie1 <= 160 && aantalObstakels < 2) {    //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
+  if (obstakelLocatie1 <= 320 - (G.moeilijkheid /2) && aantalObstakels < 2) {    //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
     nieuwObstakel = (random(0, 320 - (G.moeilijkheid / 2))) + 1;       //bepaalt of er een nieuw obstakel komt via een random getal
     if (nieuwObstakel == 1) {
       randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;     //bepaalt de vorm via een random getal
