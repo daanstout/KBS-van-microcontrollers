@@ -20,7 +20,7 @@ class Menu {
     uint8_t buttonPressed = 0, multiplayerWinner;      //menu variabelen
     //game variabelen
     bool firstTime = true, toCheckButton = true, howToContinue = false;        //menu booleans
-    bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false;     //menu booleans
+    bool scoresBack = false, scoreSubmit = false, charVerandering = false, gameStart = false, multiplayerBegin = false;     //menu booleans
     uint16_t score2, score;
     //highscores
     uint8_t eeAdress = 0, scherm = 0;

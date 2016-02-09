@@ -16,8 +16,8 @@
 //onze sidescroll functie
 void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E, uint8_t moeilijkheid) {
 
-//  Jump J;
-//  Game G;
+  //  Jump J;
+  //  Game G;
 
   //kijkt of er obstakels zijn
   if (aantalObstakels > 0) {
@@ -37,7 +37,7 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E, uint8_t moeilijkheid) {
 
       //tekent de moeilijkheid
       drawMoeilijkheid(lcd, moeilijkheid);
-      
+
       //kijkt of er nog een tweede obstakel is, en zo ja, slaat die waardes op onder de eerste
       if (aantalObstakels == 1) {
         obstakelLocatie1 = obstakelLocatie2;
@@ -46,7 +46,7 @@ void Opmaak::sidescroll(MI0283QT9 lcd, Menu *E, uint8_t moeilijkheid) {
       } else if (aantalObstakels == 0) {
         obstakelVorm1 = 0;
       }
-      
+
     }
 
     //haalt 1 van de obstakel locaties af zodat ze kunnen scrollen
@@ -67,7 +67,7 @@ void Opmaak::randomLevel() {
     }
     obstakelLocatie1 = 320;
   }
-  if (obstakelLocatie1 <= 320 - (G.moeilijkheid /2) && aantalObstakels < 2) {    //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
+  if (obstakelLocatie1 <= 320 - (G.moeilijkheid / 2) && aantalObstakels < 2) {   //kijkt of er minder dan 2 zijn en het eerste obstakel een bepaalde afstand heeft afgelegd
     nieuwObstakel = (random(0, 320 - (G.moeilijkheid / 2))) + 1;       //bepaalt of er een nieuw obstakel komt via een random getal
     if (nieuwObstakel == 1) {
       randomObstakelVorm = (random(0, G.moeilijkheid)) + 1;     //bepaalt de vorm via een random getal
@@ -102,7 +102,7 @@ void Opmaak::teken(MI0283QT9 lcd) {
     if (obstakelVorm2 == 1) {
       drawDriehoek(obstakelLocatie2, lcd);
       resetDriehoek(vorigeObstakel2 - 1, lcd);
-      resetVierkant(vorigeObstakel1 -2, lcd);
+      resetVierkant(vorigeObstakel1 - 2, lcd);
     }
   }
   //_delay_ms(2);
@@ -146,11 +146,11 @@ void Opmaak::drawMoeilijkheid(MI0283QT9 lcd, int moeilijkheid) {
       lcd.drawCircle(c, 15, 10, RGB(0, 0, 0));
     }
   } else {
-    if(moeilijkheid == 100 || moeilijkheid == 101){
+    if (moeilijkheid == 100 || moeilijkheid == 101) {
       for (uint16_t c = 195; c < 300; c += 25) {
         lcd.fillCircle(c, 15, 10, RGB(255, 0, 0));
       }
-    }else if (moeilijkheid == 130 || moeilijkheid == 129) {
+    } else if (moeilijkheid == 130 || moeilijkheid == 129) {
       lcd.fillCircle(295, 15, 10, RGB(0, 0, 0));
     } else if (moeilijkheid == 160 || moeilijkheid == 159) {
       lcd.fillCircle(270, 15, 10, RGB(0, 0, 0));
@@ -162,4 +162,22 @@ void Opmaak::drawMoeilijkheid(MI0283QT9 lcd, int moeilijkheid) {
       lcd.fillCircle(195, 15, 10, RGB(0, 0, 0));
     }
   }
+}
+
+void Opmaak::tekenMultiplayerScherm(MI0283QT9 lcd, Menu *M, int speler) {
+  lcd.fillScreen(RGB(255, 255, 255));
+  if (speler == 1) {
+    lcd.drawText(101, 50, "Player 1", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  } else if (speler == 2) {
+    lcd.drawText(101, 50, "Player 2", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+    lcd.drawText(25, 90, "Score player 1:", RGB(0, 0, 0), RGB(255, 255, 255), 2);
+    lcd.drawInteger(270, 90, M->score2, DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);
+  }
+  lcd.fillRoundRect(117, 150, 88, 25, 5, RGB(0, 034, 255));
+  lcd.drawRoundRect(117, 150, 88, 25, 5, RGB(0, 0, 0));
+  lcd.drawRoundRect(116, 149, 90, 27, 5, RGB(0, 0, 0));
+  lcd.drawText(122, 154, "Begin", RGB(0, 0, 0), RGB(0, 034, 255), 2);
+  M->scherm = 4;
+  M->checkButtonPress(lcd);
+  M->multiplayerBegin = false;
 }

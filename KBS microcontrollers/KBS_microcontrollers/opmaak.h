@@ -21,6 +21,7 @@ class Opmaak {
     void speler(MI0283QT9 lcd);
     void tekenLijn(MI0283QT9 lcd);
     void drawMoeilijkheid(MI0283QT9 lcd, int moeilijkheid);
+    void tekenMultiplayerScherm(MI0283QT9 lcd, Menu *M, int speler);
 };
 
 #endif

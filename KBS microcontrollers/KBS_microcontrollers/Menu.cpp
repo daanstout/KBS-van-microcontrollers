@@ -429,6 +429,11 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
         //        if (lcd.touchX() > 270) {       // om naar score input scherm te gaan zonder de game te spelen
         //          buttonPressed = 10;
         //        }
+      if(scherm == 4){
+        if(lcd.touchX() > 116 && lcd.touchX() < 206 && lcd.touchY() > 149 && lcd.touchY() < 176){
+          multiplayerBegin = true;
+        }
+      }
       if(scherm == 10){
         if (lcd.touchX() > 70 && lcd.touchX() < 120 && lcd.touchY() > 70 && lcd.touchY() < 122) {
           if (eerste == 'Z') {
@@ -485,7 +490,7 @@ void Menu::checkButtonPress(MI0283QT9 lcd) {
         }
       }
     }
-    if (buttonPressed != 0 || charVerandering || howToContinue) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
+    if (buttonPressed != 0 || charVerandering || howToContinue || multiplayerBegin) {  //kijkt of er succesvol op een knop is gedrukt en zoja, doorbreekt de while loop
       gameStart = true;
     }
   }

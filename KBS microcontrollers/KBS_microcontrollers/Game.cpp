@@ -26,11 +26,14 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump *J) {
   O->speler(lcd);                                                                           //tekent de speler op het scherm
   O->drawMoeilijkheid(lcd, moeilijkheid);                                                   //tekent de moeilijkheid op het scherm
 
-  O->obstakelLocatie1 = 0;                                                                  //set de obstakelLocatie1 op 0
+  O->obstakelLocatie1 = 320;                                                                  //set de obstakelLocatie1 op 0
   O->obstakelLocatie2 = 0;                                                                  //set de obstakelLocatie2 op 0
   O->aantalObstakels = 0;                                                                   //set het aantalObstakels op 0
-
   while (gameIsLive) {                                                                      //loopt zolang de speler leeft
+//    Serial.print("gameIsLive: ");
+//    Serial.println(gameIsLive);
+//    Serial.print("death: ");
+//    Serial.println(death);
     if(veranderd){
       nunchuck_get_data();                                                                    //haalt de data van de nunchuck op
       J->zbutton = nunchuck_zbutton();                                                         //haalt de waarde van de zbutton van de nunchuck op
@@ -52,18 +55,25 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump *J) {
       if (death) {                                                                            //kijkt of de speler dood is, en zo ja stopt de game
         gameIsLive = false;
       }
+      
       veranderd = false;
     }
+//    Serial.print("gameIsLive: ");
+//    Serial.println(gameIsLive);
+//    Serial.print("death: ");
+//    Serial.println(death);
   }
 }
 
 //onze hitbox
 void Game::hitbox(Jump *U, Menu *E) {
-
+  Serial.println(locatieObstakel1);
   if (vormObstakel1 == 2) {                                                                 //als eerste figuur == 4kant
     if (47 > locatieObstakel1) {                                                            //kijkt of het eerste obstakel dichtbij genoeg is
       if (U->positionY > 129) {                                                              //kijkt of de speler laag genoeg is om dood te gaan aan het obstakel, en zo ja, zegt dat de speler dood is
         death = true;
+        Serial.println("2");
+
         geland = false;
       }
       if (U->positionY > 127 && U->positionY < 129) {                                         //kijkt of de speler is geland op het obstakel, en zo ja, zorgt ervoor dat de speler niet meer valt en continue op de obstakel blijft
@@ -112,6 +122,7 @@ void Game::hitbox(Jump *U, Menu *E) {
     if (47 > locatieObstakel1 && locatieObstakel1 > 15) {
       if (U->positionY > currentY) {
         death = true;
+        Serial.println("1");
       }
       if (locatieObstakel1 < 31) {
         currentY += 2;

@@ -59,6 +59,8 @@ int main() {
   TCNT2 = 0;
   sei();
 
+  Serial.begin(9600);
+
   //de infinite while loop
   while (1) {
     //elke keer als de loop voor de eerste keer het scherm tekent komt hij in deze if statement die het menu tekent.
@@ -96,16 +98,24 @@ int main() {
     }
     //als de integer buttonPressed 3 is, gaat hij de game 2 keer spelen voor multiplayer.
     if (M.buttonPressed == 3) {
+      M.buttonPressed = 0;
       G.multiplayerMode = true;     //zet multiplayerMode op true zodat de game weet dat multiplayer actief is
       G.gameIsLive = true;          //zegt dat de game live is, true = game moet runnen, false = game is false
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
       M.setterScore(0);             //zet de score op 0
       G.moeilijkheid = 255;         //zet de moeilijkheid op 255
-      G.game(lcd, &M, &O, &J);       //start de game totdat de speler dood gaat
+      M.gameStart = false;
+      O.tekenMultiplayerScherm(lcd, &M, 1);
+      M.gameStart = false;
+      G.game(lcd, &M, &O, &J);      //start de game totdat de speler dood gaat
       M.score2 = M.getterScore();   //nadat de eerste speler dood is gegaan wordt de score opgeslagen zodat de tweede speler kan spelen
       M.setterScore(0);             //zet de score op 0
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
-      _delay_ms(5000);              //een delay zodat de spelers de controller kunnen doorgeven
+      //_delay_ms(5000);              //een delay zodat de spelers de controller kunnen doorgeven
+      O.tekenMultiplayerScherm(lcd, &M, 2);
+      G.currentY = 160;
+      O.aantalObstakels = 0;
+      O.obstakelLocatie1 = 320;
       G.gameIsLive = true;          //zegt dat de game live is, true = game moet runnen, false = game is false
       G.game(lcd, &M, &O, &J);       //start de game totdat de speler dood gaat
       M.compare();                  //vergelijkt de 2 scores zodat de game weet wie de winnaar is
