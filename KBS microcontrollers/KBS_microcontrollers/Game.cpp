@@ -35,12 +35,14 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump *J) {
 //    Serial.print("death: ");
 //    Serial.println(death);
     if(veranderd){
+      tellert++;
       nunchuck_get_data();                                                                    //haalt de data van de nunchuck op
       J->zbutton = nunchuck_zbutton();                                                         //haalt de waarde van de zbutton van de nunchuck op
       J->checkJump(); 
       O->randomLevel();                                                                       //kijkt of er een obstakel moet worden gegenereerd, en zo ja, kijkt of er 1 komt.
-      hitbox(J, M);                                                                           //kijkt of de speler af is
-
+      if(tellert > 5){
+        hitbox(J, M);                                                                           //kijkt of de speler af is
+      }
       O->teken(lcd);                                                                          //tekent de jump
       J->tekenJump(lcd);
       
@@ -126,19 +128,10 @@ void Game::hitbox(Jump *U, Menu *E) {
       }
       if (locatieObstakel1 < 31) {
         currentY += 2;
-      }
-//      } else {
-//        currentY -= 2;
-//      }
-    }else if(locatieObstakel1 < 32){
-      if(U->positionY > currentY){
-        death = true;
-      }
-      if(locatieObstakel1 < 15){
+      } else {
         currentY -= 2;
       }
-    
-  }
+    }
   }
   if (locatieObstakel1 == 32) {
     if (eersteKeer) {

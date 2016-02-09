@@ -19,6 +19,7 @@ void Menu::compare() {
     multiplayerWinner = 2;
   } else if (score < score2) {
     multiplayerWinner = 1;
+    score = score2;
   } else if (score == score2) {
     multiplayerWinner = 3;
   }
@@ -202,7 +203,7 @@ void Menu::inputScore(MI0283QT9 lcd) {
 
   lcd.drawText(82, 20, "GAME OVER", RGB(0, 0, 0), RGB(111, 111, 111), 2);
   lcd.drawText(80, 50, "SCORE:", RGB(0, 0, 0), RGB(111, 111, 111), 2);
-  lcd.drawInteger(200, 50, getterScore() , DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
+  lcd.drawInteger(200, 50, score , DEC, RGB(0, 0, 0), RGB(111, 111, 111), 2);
   //schrijft de tekst op het game over scherm als je dood gaat
 
   sortScore();
@@ -222,6 +223,16 @@ void Menu::inputScore(MI0283QT9 lcd) {
     //tekent de quit knop
     scoreSubmit = 1;
 
+    if(multiplayerMode){
+      if(multiplayerWinner == 1){
+        lcd.drawText(25, 205, "Winnaar: player 1", RGB(0, 0, 0), RGB(111, 111, 111), 2);
+      }else if(multiplayerWinner == 2){
+        lcd.drawText(25, 205, "Winnaar: player 2", RGB(0, 0, 0), RGB(111, 111, 111), 2);
+      }else if(multiplayerWinner == 3){
+        lcd.drawText(75, 205, "Gelijk Spel", RGB(0, 0, 0), RGB(111, 111, 111), 2);
+      }
+    }
+    
     //    while (scoreSubmit) {
     checkButtonPress(lcd);
     //      if (charVerandering == true) {

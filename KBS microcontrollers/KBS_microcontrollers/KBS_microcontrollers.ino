@@ -71,7 +71,7 @@ int main() {
     }
     //als de integer buttonPressed 1 is, gaat hij de game spelen. door verschillende variabelen en integers te zetten kan de game worden gestart.
     if (M.buttonPressed == 1) {
-      G.multiplayerMode = false;    //zegt of multiplayer actief is, true = wel multiplayer, false = geen multiplayer
+      M.multiplayerMode = false;    //zegt of multiplayer actief is, true = wel multiplayer, false = geen multiplayer
       G.gameIsLive = true;          //zegt dat de game live is, true = game moet runnen, false = game is false
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
       M.setterScore(0);             //zet de score op 0
@@ -99,7 +99,7 @@ int main() {
     //als de integer buttonPressed 3 is, gaat hij de game 2 keer spelen voor multiplayer.
     if (M.buttonPressed == 3) {
       M.buttonPressed = 0;
-      G.multiplayerMode = true;     //zet multiplayerMode op true zodat de game weet dat multiplayer actief is
+      M.multiplayerMode = true;     //zet multiplayerMode op true zodat de game weet dat multiplayer actief is
       G.gameIsLive = true;          //zegt dat de game live is, true = game moet runnen, false = game is false
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
       M.setterScore(0);             //zet de score op 0
@@ -152,6 +152,7 @@ int main() {
       M.toCheckButton = false;      //zet de variabel toCheckButton op false zodat deze loop niet wordt gechecked of er op een knop is gedrukt
       M.scoreSubmit = false;        //zet scoreSubmit op false zodat de game de volgende keer weet dat de score nog niet is gesubmit
       M.scherm = 0;
+      M.multiplayerMode = false;
     }
     //kijkt of er moet worden gekeken of er op een knop is gedrukt
     if (M.toCheckButton) {
