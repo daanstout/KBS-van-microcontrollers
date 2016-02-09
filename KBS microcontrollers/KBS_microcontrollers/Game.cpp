@@ -44,8 +44,9 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump *J) {
       if(tellert > 5){
         hitbox(J, M);                                                                           //kijkt of de speler af is
       }
-      O->teken(lcd);                                                                          //tekent de jump
       J->tekenJump(lcd);
+      O->teken(lcd);                                                                          //tekent de jump
+      
       
       vormObstakel1 = O->obstakelVorm1;                                                       //slaat de vorm van het eerste obstakel op onder een lokale variabele
       locatieObstakel1 = O->obstakelLocatie1;                                                 //slaat de locatie van het eerste obstakel op onder een lokale variabele
@@ -70,7 +71,6 @@ void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump *J) {
 
 //onze hitbox
 void Game::hitbox(Jump *U, Menu *E) {
-  Serial.println(locatieObstakel1);
   if (vormObstakel1 == 2) {                                                                 //als eerste figuur == 4kant
     if (47 > locatieObstakel1) {                                                            //kijkt of het eerste obstakel dichtbij genoeg is
       if (U->positionY > 129) {                                                              //kijkt of de speler laag genoeg is om dood te gaan aan het obstakel, en zo ja, zegt dat de speler dood is

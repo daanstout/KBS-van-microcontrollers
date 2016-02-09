@@ -29,7 +29,7 @@ Game G;
 ISR(TIMER2_OVF_vect) {
     if(G.gameIsLive){
       teller++;
-      if(teller > 2){
+      if(teller > 3){
         O.sidescroll(lcd, &M, G.moeilijkheid);                                                                  //scrolled de game opzij                                                                                   
         if (!G.geland) {                                                                          //kijkt of de speler niet is geland, en zo niet, update hij de jump waardes
           J.updateJump();
