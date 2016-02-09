@@ -118,18 +118,27 @@ void Game::hitbox(Jump *U, Menu *E) {
 //    }
 //  }
 
-  if (vormObstakel1 == 1) {
-    if (47 > locatieObstakel1 && locatieObstakel1 > 15) {
+ if (vormObstakel1 == 1) {
+    if (47 > locatieObstakel1 && locatieObstakel1 > 31) {
       if (U->positionY > currentY) {
         death = true;
         Serial.println("1");
       }
       if (locatieObstakel1 < 31) {
         currentY += 2;
-      } else {
+      }
+//      } else {
+//        currentY -= 2;
+//      }
+    }else if(locatieObstakel1 < 32){
+      if(U->positionY > currentY){
+        death = true;
+      }
+      if(locatieObstakel1 < 15){
         currentY -= 2;
       }
-    }
+    
+  }
   }
   if (locatieObstakel1 == 32) {
     if (eersteKeer) {

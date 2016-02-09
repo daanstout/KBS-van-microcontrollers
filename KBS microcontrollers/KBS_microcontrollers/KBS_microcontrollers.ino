@@ -109,10 +109,11 @@ int main() {
       M.gameStart = false;
       G.game(lcd, &M, &O, &J);      //start de game totdat de speler dood gaat
       M.score2 = M.getterScore();   //nadat de eerste speler dood is gegaan wordt de score opgeslagen zodat de tweede speler kan spelen
-      M.setterScore(0);             //zet de score op 0
+      M.score = 0;            //zet de score op 0
       G.death = false;              //zegt of de speler af is, true = speler is dood, false = speler leeft nog
       //_delay_ms(5000);              //een delay zodat de spelers de controller kunnen doorgeven
       O.tekenMultiplayerScherm(lcd, &M, 2);
+      M.gameStart = false;
       G.currentY = 160;
       O.aantalObstakels = 0;
       O.obstakelLocatie1 = 320;
