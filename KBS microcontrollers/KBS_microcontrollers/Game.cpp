@@ -17,6 +17,7 @@
 
 //onze game, dit is wat er gebeurt als de game draait
 void Game::game(MI0283QT9 lcd, Menu *M, Opmaak *O, Jump *J) {
+  tellert = 0;
   lcd.fillScreen(RGB(255, 255, 255));                                                       //scherm leeg
   lcd.drawText(10, 210, "Score:", RGB(0, 0, 0), RGB(255, 255, 255), 2);                     //tekent de tekst score op het scherm
   lcd.drawInteger(105, 210, M->getterScore() , DEC, RGB(0, 0, 0), RGB(255, 255, 255), 2);   //tekent het integer score op het scherm
